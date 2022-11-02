@@ -5,7 +5,7 @@ setup(
     version='0.0.0-dev',
     packages=find_packages(),
     author="Zakir Hossine, Isaac Towers, Ben Kaehler",
-    description="Expose some SpiecEasi functionality",
+    description="Apply SpiecEasi to generate adjagency matrix.",
     license="BSD-3-Clause",
     url="https://github.com/BenKaehler/q2-SpiecEasi",
     entry_points={
