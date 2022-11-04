@@ -1,9 +1,11 @@
 import qiime2.plugin.model as model
 from qiime2.plugin import ValidationError
 from scipy.io import mmread, mmwrite
-from scipt.sparse import coo_matrix
+from scipy.sparse import coo_matrix
 
 from .plugin_setup import plugin
+
+Network = plugin.SemanticType('Network')
 
 
 class NetworkFormat(model.BinaryFileFormat):
@@ -32,3 +34,8 @@ def _1(matrix: coo_matrix) -> (NetworkFormat):
 @plugin.register_transformer
 def _2(ff: NetworkFormat) -> coo_matrix:
     return mmread(str(ff))
+
+
+plugin.register_semantic_types(Network)
+plugin.register_formats(NetworkFormat)
+plugin.register_semantic_type_to_format(Network, artifact_format=NetworkFormat)

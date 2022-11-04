@@ -1,19 +1,14 @@
-#!/usr/bin/env python3
-
-
-import os
 import tempfile
-import hashlib
 import subprocess
+from pathlib import Path
 
-import biom
-import skbio
-import qiime2.util
+from scipy.io import mmread
+from scipy.sparse import coo_matrix
+
 import pandas as pd
 
 
-
-def run_commands(cmds, verbose=True):
+def run_commands(cmds, verbose=True):  # EEE need to credit the authors of this
     if verbose:
         print("Running external command line application(s). This may print "
               "messages to stdout and/or stderr.")
@@ -26,38 +21,36 @@ def run_commands(cmds, verbose=True):
             print(" ".join(cmd), end='\n\n')
         subprocess.run(cmd, check=True, shell=True)
 
-        
 
+def _q2_SpiecEasi(
+        table: pd.DataFrame,
+        method: str = 'glasso',
+        lambda_min_ratio: float = 1e-3,
+        nlambda: int = 20,
+        rep_num: int = 20) -> coo_matrix:
 
-        
-        
-
-def _q2_SpiecEasi(input_data,output_file, method,lambda_min_ratio,nlambda,rep_num):
-   
-   
-    #with tempfile.TemporaryDirectory() as temp_dir_name:
-       # biom_fp = os.path.join(temp_dir_name, 'output.tsv.biom')
-       # track_fp = os.path.join(temp_dir_name, 'track.tsv')
+    with tempfile.TemporaryDirectory() as temp_dir_name:
+        temp_dir = Path(temp_dir_name)
+        table_file = temp_dir / 'input-data.tsv'
+        network_file = temp_dir / 'network.mtx'
+        # EEE would be better to save as a biom
+        table.to_csv(str(table_file), sep='\t')
 
         cmd = ['run_SpiecEasi.R',
-               '--input_file', str(input_data),
-               '--output_file', str(output_file),
-               '--method', str(method),
+               '--input_file', str(table_file),
+               '--output_file', str(network_file),
+               '--method', method,
                '--lambda.min.ratio', str(lambda_min_ratio),
                '--nlambda', str(nlambda),
                '--rep.num', str(rep_num)]
-        
+
         try:
             run_commands([cmd])
         except subprocess.CalledProcessError as e:
-            if e.returncode == 2:
-                raise ValueError(
-                    "No reads passed the filter. trunc_len (%r) may be longer"
-                    " than read lengths, or other arguments (such as max_ee"
-                    " or trunc_q) may be preventing reads from passing the"
-                    " filter." )
-            else:
-                raise Exception("An error was encountered while running SpiecEasi"
-                                " in R (return code %d), please inspect stdout"
-                                " and stderr to learn more.")
-        return _q2_SpiecEasi(output_file)
+            raise Exception(
+                    "An error was encountered while running SpiecEasi"
+                    f" in R (return code {e.returncode}), please inspect "
+                    "stdout and stderr to learn more.")
+
+    # EEE would be better to figure out how to return this without reading it
+    return mmread(str(network_file))
