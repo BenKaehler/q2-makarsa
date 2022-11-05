@@ -1,21 +1,19 @@
-import os
 import json
-
+from pathlib import Path
 import pkg_resources
+
 import q2templates
 
-TEMPLATES = pkg_resources.resource_filename('q2_SpiecEasi', 'assets')
+TEMPLATES = Path(pkg_resources.resource_filename('q2_SpiecEasi', 'assets'))
 
 
 def visualise_network(
         output_dir: str = None):
-    # contexts = q2templates.df_to_html(caches, index=False)
     title = 'SpiecEasi Network'
-    # EEEE change to new-style paths
-    index = os.path.join(TEMPLATES, 'index.html')
-    with open(os.path.join(TEMPLATES, 'miserables.json')) as fh:
+    index = TEMPLATES / 'index.html'
+    with open(TEMPLATES / 'miserables.json') as fh:
         data = json.load(fh)
-    with open(os.path.join(TEMPLATES, 'force-directed-layout.vg.json')) as fh:
+    with open(TEMPLATES / 'force-directed-layout.vg.json') as fh:
         spec = json.load(fh)
     spec["data"] = [
         {

@@ -1,17 +1,16 @@
 import qiime2.plugin.model as model
 from qiime2.plugin import ValidationError
-from scipy.io import mmread, mmwrite
+from scipy.io import mmread
 from scipy.sparse import coo_matrix
 
-from .plugin_setup import plugin
-
-Network = plugin.SemanticType('Network')
+import qiime2.plugin
 
 
-class NetworkFormat(model.BinaryFileFormat):
+class NetworkFormat(model.TextFileFormat):
     def _validate_(self, level):
         try:
-            matrix = mmread(str(self))
+            with open(str(self)) as fh:
+                matrix = mmread(fh)
             if len(matrix.shape) != 2 or matrix.shape[0] != matrix.shape[1]:
                 raise ValidationError("adjacency matrix is not square")
             if not isinstance(matrix, coo_matrix):
@@ -23,19 +22,4 @@ class NetworkFormat(model.BinaryFileFormat):
 NetworkDirectoryFormat = model.SingleFileDirectoryFormat(
     'NetworkDirectoryFormat', 'adjacency_matrix.mtx', NetworkFormat)
 
-
-@plugin.register_transformer
-def _1(matrix: coo_matrix) -> (NetworkFormat):
-    ff = NetworkFormat()
-    mmwrite(str(ff))
-    return ff
-
-
-@plugin.register_transformer
-def _2(ff: NetworkFormat) -> coo_matrix:
-    return mmread(str(ff))
-
-
-plugin.register_semantic_types(Network)
-plugin.register_formats(NetworkFormat)
-plugin.register_semantic_type_to_format(Network, artifact_format=NetworkFormat)
+Network = qiime2.plugin.SemanticType('Network')

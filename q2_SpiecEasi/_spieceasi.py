@@ -19,10 +19,10 @@ def run_commands(cmds, verbose=True):  # EEE need to credit the authors of this
         if verbose:
             print("\nCommand:", end=' ')
             print(" ".join(cmd), end='\n\n')
-        subprocess.run(cmd, check=True, shell=True)
+        subprocess.run(cmd, check=True)
 
 
-def _q2_SpiecEasi(
+def spiec_easi(
         table: pd.DataFrame,
         method: str = 'glasso',
         lambda_min_ratio: float = 1e-3,
@@ -52,5 +52,5 @@ def _q2_SpiecEasi(
                     f" in R (return code {e.returncode}), please inspect "
                     "stdout and stderr to learn more.")
 
-    # EEE would be better to figure out how to return this without reading it
-    return mmread(str(network_file))
+        # EEE would be better to return this without reading it
+        return mmread(str(network_file))
