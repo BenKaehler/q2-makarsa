@@ -2,8 +2,7 @@ import tempfile
 import subprocess
 from pathlib import Path
 
-from scipy.io import mmread
-from scipy.sparse import coo_matrix
+from networkx import read_graphml, Graph
 
 import pandas as pd
 
@@ -27,7 +26,7 @@ def spiec_easi(
         method: str = 'glasso',
         lambda_min_ratio: float = 1e-3,
         nlambda: int = 20,
-        rep_num: int = 20) -> coo_matrix:
+        rep_num: int = 20) -> Graph:
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
@@ -53,4 +52,4 @@ def spiec_easi(
                     "stdout and stderr to learn more.")
 
         # EEE would be better to return this without reading it
-        return mmread(str(network_file))
+        return read_graphml(str(network_file))
