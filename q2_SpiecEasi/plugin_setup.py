@@ -46,7 +46,7 @@ def _2(ff: NetworkFormat) -> Graph:
 
 plugin.visualizers.register_function(
     function=visualise_network,
-    inputs={},
+    inputs={'network': Network},
     parameters={},
     name='Visualize network',
     description='Create an interactive depiction of your network.'
