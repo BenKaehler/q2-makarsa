@@ -26,7 +26,12 @@ def spiec_easi(
         method: str = 'glasso',
         lambda_min_ratio: float = 1e-3,
         nlambda: int = 20,
-        rep_num: int = 20) -> Graph:
+        rep_num: int = 20,
+        verbose: bool=True,
+        sel.criterion: str ='stars',
+        pulsar.select: str=True,
+        nlambda.log: bool=True,
+        ncores: int=1) -> Graph:
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
@@ -41,7 +46,21 @@ def spiec_easi(
                '--method', method,
                '--lambda.min.ratio', str(lambda_min_ratio),
                '--nlambda', str(nlambda),
-               '--rep.num', str(rep_num)]
+               '--rep.num', str(rep_num),
+               '--ncores', str(ncores),
+               '--thresh', str(thresh),
+               '--subsample.ratio', str(subsample.ratio),
+               '--seed', str(seed),
+               '--wkdir', str(wkdir),
+               '--regdir', str(regdir),
+               '--init', str(init),
+               '--conffile', str(conffile),
+               '--job.res', str(job.res),
+               '--cleanup', str(cleanup),
+               '--sel.criterion', str(sel.criterion),
+               '--verbose', str(verbose),
+               '--pulsar.select', str(pulsar.select),
+               '--nlambda.log', str(nlambda.log)]
 
         try:
             run_commands([cmd])
