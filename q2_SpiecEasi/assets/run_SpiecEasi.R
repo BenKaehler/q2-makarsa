@@ -57,7 +57,7 @@ ncores <- if(opt$ncores=='NULL') NULL else as.integer(opt$ncores)
 if(dir.exists(inp.file)) {
   errQuit("Input is a directory.")
 } else {
-  plant.surf.c = read.table(inp.file,sep = '\t', header=T, row.names=1)
+  data = read.table(inp.file,sep = '\t', header=T, row.names=1)
   
 }
 
@@ -77,12 +77,13 @@ if(dir.exists(inp.file)) {
  ### LOAD LIBRARIES ###
 
 suppressWarnings(library(SpiecEasi))
+suppressWarnings(library(igraph))
 
 
-plant.surf.c = t(plant.surf.c)
-se.mb.ps.c = spiec.easi(plant.surf.c, method=method, lambda.min.ratio=lambda.min.ratio,
+data = t(data)
+se.out = spiec.easi(data, method=method, lambda.min.ratio=lambda.min.ratio,
                     nlambda=nlambda, pulsar.params=list(rep.num=rep.num))
 
-ig.mb.c = getRefit(se.mb.ps.c)
-writeMM(ig.mb.c,file=out.file)
-
+network = adj2igraph(getRefit(se.out))
+V(network)$name = colnames(data)
+write_graph(network, out.file, "graphml") 

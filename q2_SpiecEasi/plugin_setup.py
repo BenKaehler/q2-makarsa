@@ -1,5 +1,4 @@
-from scipy.io import mmread, mmwrite
-from scipy.sparse import coo_matrix
+from networkx import read_graphml, write_graphml, Graph
 
 import qiime2
 from qiime2.plugin import Plugin
@@ -34,22 +33,20 @@ plugin.register_semantic_type_to_format(
 
 
 @plugin.register_transformer
-def _1(matrix: coo_matrix) -> (NetworkFormat):
+def _1(network: Graph) -> NetworkFormat:
     ff = NetworkFormat()
-    with open(str(ff), 'wb') as fh:  # raises an error without the ugly 'wb'
-        mmwrite(fh, matrix)
+    write_graphml(network, str(ff))
     return ff
 
 
 @plugin.register_transformer
-def _2(ff: NetworkFormat) -> coo_matrix:
-    with open(str(ff)) as fh:
-        return mmread(fh)
+def _2(ff: NetworkFormat) -> Graph:
+    return read_graphml(str(ff))
 
 
 plugin.visualizers.register_function(
     function=visualise_network,
-    inputs={},
+    inputs={'network': Network},
     parameters={},
     name='Visualize network',
     description='Create an interactive depiction of your network.'
