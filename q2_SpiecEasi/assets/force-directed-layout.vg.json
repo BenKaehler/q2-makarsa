@@ -1,10 +1,10 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "A node-link diagram with force-directed layout, depicting character co-occurrence in the novel Les Misérables.",
+  "description": "A node-link diagram with force-directed layout.",
   "width": 700,
   "height": 500,
   "padding": 0,
-  "autosize": "none",
+  "autosize": {"type": "pad", "resize": true},
 
   "signals": [
     { "name": "cx", "update": "width / 2" },
@@ -51,6 +51,14 @@
       "name": "restart", "value": false,
       "on": [
         {"events": {"signal": "fix"}, "update": "fix && fix.length"}
+      ]
+    },
+    {
+      "description": "Flag for display node details",
+      "name": "active", "value": null,
+      "on": [
+        { "events": "symbol:mouseover", "update": "datum.index" },
+        { "events": "mouseover[!event.item]", "update": "null" }
       ]
     }
   ],
@@ -103,7 +111,9 @@
         },
         "update": {
           "size": {"signal": "2 * nodeRadius * nodeRadius"},
-          "cursor": {"value": "pointer"}
+          "cursor": {"value": "pointer"},
+          "fill": [{"test": "datum.index === active", "value": "red"},
+	           {"scale": "color", "field": "group"}]
         }
       },
 
