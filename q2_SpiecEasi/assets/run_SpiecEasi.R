@@ -53,7 +53,7 @@ option_list = list(
         help="Print extra output [default]"),
  make_option("--pulsar.select", action="store", default=TRUE, type='character', 
             help="Perform model selection. Choices are TRUE/FALSE/'batch'  "),
- make_option("--nlambda.log", action="store", default=TRUE, type='character', 
+ make_option("--lambda.log", action="store", default=TRUE, type='character', 
             help="lambda.log should values of lambda be distributed logarithmically (TRUE) or linearly (FALSE) between lamba.min and lambda.max ")
     
    )
@@ -87,7 +87,7 @@ cleanup<-opt$cleanup
 sel.criterion<-opt$sel.criterion
 verbose<-opt$verbose
 pulsar.select<-opt$pulsar.select
-nlambda.log<-opt$nlambda.log
+lambda.log<-opt$lambda.log
 
 
 

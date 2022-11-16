@@ -74,7 +74,7 @@ plugin.methods.register_function(
         'sel.criterion': qiime2.plugin.Str,
         'verbose': qiime2.plugin.bool,
         'pulsar.select': qiime2.plugin.Str,
-        'nlambda.log': qiime2.plugin.bool
+        'lambda.log': qiime2.plugin.bool
         },
     outputs=[('network', Network)],
     input_descriptions={
@@ -111,13 +111,13 @@ plugin.methods.register_function(
         
         'cleanup': 'Remove registry files, either TRUE or FALSE',
         
-        'sel.criterion': 'Specifying criterion/method for model selection, Accepts 'stars' [default], 'bstars' (Bounded StARS)',
+        'sel.criterion': "Specifying criterion/method for model selection, Accepts 'stars' [default], 'bstars' (Bounded StARS)",
         
         'verbose': 'Print extra output [default]',
         
         'pulsar.select': "Perform model selection. Choices are TRUE/FALSE/'batch' ",
         
-        'nlambda.log': 'lambda.log should values of lambda be distributed logarithmically (TRUE) or linearly (FALSE) between lamba.min and lambda.max'     
+        'lambda.log': 'lambda.log should values of lambda be distributed logarithmically (TRUE) or linearly (FALSE) between lamba.min and lambda.max'     
     },
     output_descriptions={
         'network': 'The inferred network'

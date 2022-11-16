@@ -28,9 +28,9 @@ def spiec_easi(
         nlambda: int = 20,
         rep_num: int = 20,
         verbose: bool=True,
-        sel.criterion: str ='stars',
-        pulsar.select: str=True,
-        nlambda.log: bool=True,
+        sel_criterion: str = 'stars',
+        pulsar_select: str=True,
+        lambda_log: bool=True,
         ncores: int=1) -> Graph:
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
@@ -57,10 +57,10 @@ def spiec_easi(
                '--conffile', str(conffile),
                '--job.res', str(job.res),
                '--cleanup', str(cleanup),
-               '--sel.criterion', str(sel.criterion),
+               '--sel.criterion', str(sel_criterion),
                '--verbose', str(verbose),
-               '--pulsar.select', str(pulsar.select),
-               '--nlambda.log', str(nlambda.log)]
+               '--pulsar.select', str(pulsar_select),
+               '--lambda.log', str(lambda_log)]
 
         try:
             run_commands([cmd])
