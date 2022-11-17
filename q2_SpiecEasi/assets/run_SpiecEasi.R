@@ -24,10 +24,37 @@ option_list = list(
  make_option(c("-d","--nlambda"), action="store", default='NULL', type='character',
             help="nlambda"),
  make_option(c("-r","--rep.num"), action="store", default='NULL', type='character',
-            help="pulsar.params"), 
+            help="pulsar.params"),   
+ make_option(c("-c","--ncores"), action="store", default=1, type='numeric',
+            help="pulsar.params"),
+ make_option(c("-t","--thresh"), action="store", default=0.05, type='numeric',
+            help="Threshold for StARS criterion"),   
+ make_option(c("-b","--subsample.ratio"), action="store", default=0.8, type='numeric',
+            help="Subsample size for StARS"),  
+ make_option(c("-s","--seed"), action="store", default='NULL', type='numeric',
+            help="Set the random seed for subsample set"),  
+ make_option("--wkdir", action="store_true", default='NULL', type='character',
+            help=" Current working directory for process running jobs"),   
+ make_option("--regdir", action="store", default='NULL', type='character',
+            help=" Directory for storing the registry files"),   
+ make_option("--init", action="store", default='init', type='character',
+            help=" String for differentiating the init registry for batch mode pulsar"),
+ make_option("--conffile", action="store", default='NULL', type='character',
+            help="Path to config file or string that identifies a default config file"),   
     
- make_option(c("-c","--ncores"), action="store", default='NULL', type='character',
-            help="pulsar.params")  
+ make_option("--job.res", action="store", default=list(), type='numeric',
+            help=" Named list to specify job resources for an hpc"),   
+ make_option("--cleanup", action="store", default=FALSE, 
+            help=" Remove registry files, either TRUE or FALSE"),    
+    
+ make_option("--sel.criterion", action="store", default='stars', type='character', 
+            help=" Specifying criterion/method for model selection, Accepts 'stars' [default], 'bstars' (Bounded StARS)"),     
+ make_option(c("-v", "--verbose"), action="store_true", default=TRUE, 
+        help="Print extra output [default]"),
+ make_option("--pulsar.select", action="store", default=TRUE, type='character', 
+            help="Perform model selection. Choices are TRUE/FALSE/'batch'  "),
+ make_option("--lambda.log", action="store", default=TRUE, type='character', 
+            help="lambda.log should values of lambda be distributed logarithmically (TRUE) or linearly (FALSE) between lamba.min and lambda.max ")
     
    )
  
@@ -47,7 +74,20 @@ nlambda <- if(opt$nlambda=='NULL') NULL else as.integer(opt$nlambda)
 rep.num <- if(opt$rep.num=='NULL') NULL else as.integer(opt$rep.num) 
     
 ncores <- if(opt$ncores=='NULL') NULL else as.integer(opt$ncores)
-
+    
+thresh<-opt$thresh
+subsample.ratio<-opt$subsample.ratio
+seed<-opt$seed
+wkdir=opt$wkdir=getwd()
+regdir<-opt$regdir
+init<-opt$init
+conffile<-opt$conffile
+job.res<-opt$job.res
+cleanup<-opt$cleanup
+sel.criterion<-opt$sel.criterion
+verbose<-opt$verbose
+pulsar.select<-opt$pulsar.select
+lambda.log<-opt$lambda.log
 
 
 
@@ -79,6 +119,8 @@ if(dir.exists(inp.file)) {
 suppressWarnings(library(SpiecEasi))
 suppressWarnings(library(igraph))
 
+#Printing current working directory
+cat("Current working directory:\n",wkdir,"\n")
 
 data = t(data)
 se.out = spiec.easi(data, method=method, lambda.min.ratio=lambda.min.ratio,
