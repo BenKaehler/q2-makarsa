@@ -27,11 +27,11 @@ def spiec_easi(
         lambda_min_ratio: float = 1e-3,
         nlambda: int = 20,
         rep_num: int = 20,
-        verbose: bool=True,
+        verbose: bool = True,
         sel_criterion: str = 'stars',
-        pulsar_select: str=True,
-        lambda_log: bool=True,
-        ncores: int=1) -> Graph:
+        pulsar_select: str = True,
+        lambda_log: bool = True,
+        ncores: int = 1) -> Graph:
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
