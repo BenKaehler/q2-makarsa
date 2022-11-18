@@ -5,7 +5,7 @@ import qiime2
 from qiime2.plugin.testing import TestPluginBase
 
 from q2_types.feature_table import FeatureTable, Frequency
-from ._network import Network, NetworkDirectoryFormat, NetworkFormat
+from q2_SpiecEasi._network import Network, NetworkDirectoryFormat, NetworkFormat
 
 import tempfile
 import subprocess
@@ -27,15 +27,16 @@ class testnetwork(TestPluginBase):
        
     def test_defaults(self):
         
-        
-
+        a=6
+        b=8
+        c=a+b
+        # self.assertEqual(table, exp_table) # assert
        
-
-
+    
+    
+    
+    
+    
+    
 if __name__ == '__main__':
     unittest.main()
-
-
-
-
-

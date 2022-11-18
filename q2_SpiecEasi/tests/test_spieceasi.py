@@ -7,7 +7,7 @@ from qiime2.plugin.testing import TestPluginBase
 
 from q2_types.feature_table import FeatureTable, Frequency
 
-from ._spieceasi import spiec_easi
+from q2_SpiecEasi._spieceasi import spiec_easi
 import tempfile
 import subprocess
 from pathlib import Path

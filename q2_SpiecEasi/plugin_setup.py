@@ -70,11 +70,11 @@ plugin.methods.register_function(
         'init': qiime2.plugin.Str,
         'conffile': qiime2.plugin.Str,
         'job.res': qiime2.plugin.Float,
-        'cleanup': qiime2.plugin.bool,
+        'cleanup': qiime2.plugin.Bool,
         'sel.criterion': qiime2.plugin.Str,
-        'verbose': qiime2.plugin.bool,
+        'verbose': qiime2.plugin.Bool,
         'pulsar.select': qiime2.plugin.Str,
-        'lambda.log': qiime2.plugin.bool
+        'lambda.log': qiime2.plugin.Bool
         },
     outputs=[('network', Network)],
     input_descriptions={
