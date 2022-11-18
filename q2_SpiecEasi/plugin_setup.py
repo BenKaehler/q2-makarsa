@@ -4,9 +4,9 @@ import qiime2
 from qiime2.plugin import Plugin
 from q2_types.feature_table import FeatureTable, Frequency
 
-from ._visualisation import visualise_network
-from ._spieceasi import spiec_easi
-from ._network import Network, NetworkDirectoryFormat, NetworkFormat
+from q2_SpiecEasi._visualisation import visualise_network
+from q2_SpiecEasi._spieceasi import spiec_easi
+from q2_SpiecEasi._network import Network, NetworkDirectoryFormat, NetworkFormat
 
 
 plugin = Plugin(
@@ -63,18 +63,18 @@ plugin.methods.register_function(
         'rep_num': qiime2.plugin.Int,
         'ncores': qiime2.plugin.Int,
         'thresh': qiime2.plugin.Float,
-        'subsample.ratio': qiime2.plugin.Float,
+        'subsample_ratio': qiime2.plugin.Float,
         'seed': qiime2.plugin.Float,
         'wkdir': qiime2.plugin.Str,
         'regdir': qiime2.plugin.Str,
         'init': qiime2.plugin.Str,
         'conffile': qiime2.plugin.Str,
-        'job.res': qiime2.plugin.Float,
+        'jobres': qiime2.plugin.Float,
         'cleanup': qiime2.plugin.Bool,
-        'sel.criterion': qiime2.plugin.Str,
+        'selcriterion': qiime2.plugin.Str,
         'verbose': qiime2.plugin.Bool,
-        'pulsar.select': qiime2.plugin.Str,
-        'lambda.log': qiime2.plugin.Bool
+        'pulsarselect': qiime2.plugin.Str,
+        'lambdalog': qiime2.plugin.Bool
         },
     outputs=[('network', Network)],
     input_descriptions={
@@ -95,7 +95,7 @@ plugin.methods.register_function(
         
         'thresh': 'Threshold for StARS criterion',
         
-        'subsample.ratio': 'Subsample size for StARS',
+        'subsample_ratio': 'Subsample size for StARS',
         
         'seed': 'Set the random seed for subsample set',
         
@@ -107,17 +107,19 @@ plugin.methods.register_function(
         
         'conffile': 'Path to config file or string that identifies a default config file',
         
-        'job.res': 'Named list to specify job resources for an hpc',
+        'jobres': 'Named list to specify job resources for an hpc',
         
         'cleanup': 'Remove registry files, either TRUE or FALSE',
         
-        'sel.criterion': "Specifying criterion/method for model selection, Accepts 'stars' [default], 'bstars' (Bounded StARS)",
+        'selcriterion': ("Specifying criterion/method for model selection, Accepts 'stars'"
+                          "[default], 'bstars' (Bounded StARS)"),
         
         'verbose': 'Print extra output [default]',
         
-        'pulsar.select': "Perform model selection. Choices are TRUE/FALSE/'batch' ",
+        'pulsarselect': "Perform model selection. Choices are TRUE/FALSE/'batch' ",
         
-        'lambda.log': 'lambda.log should values of lambda be distributed logarithmically (TRUE) or linearly (FALSE) between lamba.min and lambda.max'     
+        'lambdalog': ('lambda.log should values of lambda be distributed logarithmically (TRUE)'
+                       'or linearly (FALSE) between lamba.min and lambda.max' )    
     },
     output_descriptions={
         'network': 'The inferred network'
