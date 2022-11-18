@@ -1,7 +1,6 @@
 from networkx import read_graphml, write_graphml, Graph
 
-import qiime2
-from qiime2.plugin import Plugin
+from qiime2.plugin import Plugin, Int, Str, Bool, Float
 from q2_types.feature_table import FeatureTable, Frequency
 
 from ._visualisation import visualise_network
@@ -57,24 +56,20 @@ plugin.methods.register_function(
     function=spiec_easi,
     inputs={'table': FeatureTable[Frequency]},
     parameters={
-        'method': qiime2.plugin.Str,
-        'lambda_min_ratio': qiime2.plugin.Float,
-        'nlambda': qiime2.plugin.Int,
-        'rep_num': qiime2.plugin.Int,
-        'ncores': qiime2.plugin.Int,
-        'thresh': qiime2.plugin.Float,
-        'subsample.ratio': qiime2.plugin.Float,
-        'seed': qiime2.plugin.Float,
-        'wkdir': qiime2.plugin.Str,
-        'regdir': qiime2.plugin.Str,
-        'init': qiime2.plugin.Str,
-        'conffile': qiime2.plugin.Str,
-        'job.res': qiime2.plugin.Float,
-        'cleanup': qiime2.plugin.bool,
-        'sel.criterion': qiime2.plugin.Str,
-        'verbose': qiime2.plugin.bool,
-        'pulsar.select': qiime2.plugin.Str,
-        'lambda.log': qiime2.plugin.bool
+        'method': Str,
+        'lambda_min_ratio': Float,
+        'nlambda': Int,
+        'rep_num': Int,
+        'ncores': Int,
+        'thresh': Float,
+        'subsample_ratio': Float,
+        'seed': Float,
+        'sel_criterion': Str,
+        'verbose': Bool,
+        'pulsar_select': Bool,
+        'lambda_log': Bool,
+        'lambda_min': Float,
+        'lambda_max': Float
         },
     outputs=[('network', Network)],
     input_descriptions={
@@ -91,22 +86,13 @@ plugin.methods.register_function(
         'rep_num': 'Input parameter of spieceasi ',
         'ncores': 'Number of cores for parallel computation',
         'thresh': 'Threshold for StARS criterion',
-        'subsample.ratio': 'Subsample size for StARS',
+        'subsample_ratio': 'Subsample size for StARS',
         'seed': 'Set the random seed for subsample set',
-        'wkdir': 'Current working directory for process running jobs',
-        'regdir': 'Directory for storing the registry files',
-        'init': 'String for differentiating the init '
-                'registry for batch mode pulsar',
-        'conffile': 'Path to config file or string that identifies a '
-                    'default config file',
-        'job.res': 'Named list to specify job resources for an hpc',
-        'cleanup': 'Remove registry files, either TRUE or FALSE',
-        'sel.criterion': "Specifying criterion/method for model selection, "
+        'sel_criterion': "Specifying criterion/method for model selection, "
                          "Accepts 'stars' [default], 'bstars' (Bounded StARS)",
         'verbose': 'Print extra output [default]',
-        'pulsar.select': "Perform model selection. Choices are "
-                         "TRUE/FALSE/'batch' ",
-        'lambda.log': 'lambda.log should values of lambda be distributed '
+        'pulsar_select': "Perform model selection",
+        'lambda_log': 'lambda.log should values of lambda be distributed '
                       'logarithmically (TRUE) or linearly (FALSE) between '
                       'lamba.min and lambda.max'
     },
