@@ -18,6 +18,7 @@ TITLE = '{% block title %}q2-SpiecEasi : {{ title }}{% endblock %}\n'
 HEAD = '''
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<link rel="stylesheet" href="./assets/css/vega.css">
 {% endblock %}
 '''
 
@@ -106,6 +107,9 @@ def create_html_file(directory, source_file, title, content):
 def visualise_network(
         output_dir: str,
         network: nx.Graph) -> None:
+
+    q2templates.util.copy_assets(TEMPLATES / 'assets', Path(output_dir) / 'assets')
+
     with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
 

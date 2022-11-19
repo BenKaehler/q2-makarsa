@@ -1,0 +1,3 @@
+/* thank you so much https://stackoverflow.com/a/34482941 */
+#view { display: flex; justify-content: space-between }
+#view > div:nth-child(2) { flex: 1; }
