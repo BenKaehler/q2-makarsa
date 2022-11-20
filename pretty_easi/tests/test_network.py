@@ -9,7 +9,7 @@ import qiime2
 from q2_types.feature_table import FeatureTable, Frequency
 from qiime2.plugin.testing import TestPluginBase
 
-from q2_SpiecEasi._network import (Network, NetworkDirectoryFormat,
+from pretty_easi._network import (Network, NetworkDirectoryFormat,
                                    NetworkFormat)
 
 

@@ -11,7 +11,7 @@ import skbio
 from q2_types.feature_table import FeatureTable, Frequency
 from qiime2.plugin.testing import TestPluginBase
 
-from q2_SpiecEasi._spieceasi import spiec_easi
+from pretty_easi._spieceasi import spiec_easi
 
 
 class Testspieceasioutput(TestPluginBase):

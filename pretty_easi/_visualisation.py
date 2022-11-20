@@ -9,11 +9,11 @@ import pandas as pd
 
 import q2templates
 
-TEMPLATES = Path(pkg_resources.resource_filename('q2_SpiecEasi', 'assets'))
+TEMPLATES = Path(pkg_resources.resource_filename('pretty_easi', 'assets'))
 
 EXTENDS = "{% extends 'tabbed.html' %}\n"
 
-TITLE = '{% block title %}q2-SpiecEasi : {{ title }}{% endblock %}\n'
+TITLE = '{% block title %}pretty-easi : {{ title }}{% endblock %}\n'
 
 HEAD = '''
 {% block head %}
@@ -41,7 +41,7 @@ TABCONTENT = """
       });
       return view.runAsync();
     }
-    
+
     /* thanks https://stackoverflow.com/a/70395566 */
     function exportPNG(){
       view.toImageURL('png').then(function(url) {
@@ -121,7 +121,8 @@ def visualise_network(
         output_dir: str,
         network: nx.Graph) -> None:
 
-    q2templates.util.copy_assets(TEMPLATES / 'assets', Path(output_dir) / 'assets')
+    q2templates.util.copy_assets(
+            TEMPLATES / 'assets', Path(output_dir) / 'assets')
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
