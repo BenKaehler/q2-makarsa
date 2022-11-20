@@ -12,7 +12,7 @@ plugin = Plugin(
     name='pretty-easi',
     version='0.0.0-dev',
     website='https://github.com/BenKaehler/pretty-easi',
-    package='q2_SpiecEasi',
+    package='pretty_easi',
     description=('This QIIME 2 plugin wraps SpiecEasi '
                  'and will be useful to anybody who wants to infer '
                  'graphical models for all sorts of compositional '
