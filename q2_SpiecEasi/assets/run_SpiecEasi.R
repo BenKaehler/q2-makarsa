@@ -54,7 +54,7 @@ option_list = list(
  make_option("--pulsar.select", action="store", default=TRUE, type='character', 
             help="Perform model selection. Choices are TRUE/FALSE/'batch'  "),
  make_option("--lambda.log", action="store", default=TRUE, type='character', 
-            help=("lambda.log should values of lambda be distributed logarithmically (TRUE) or linearly (FALSE) " )
+            help="lambda.log should values of lambda be distributed logarithmically (TRUE) or linearly (FALSE) " )
     
    )
  
