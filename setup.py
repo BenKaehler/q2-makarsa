@@ -12,7 +12,7 @@ setup(
         'qiime2.plugins': ['q2-SpiecEasi=q2_SpiecEasi.plugin_setup:plugin']
     },
     scripts=['q2_SpiecEasi/assets/run_SpiecEasi.R'],
-    package_data={'q2_SpiecEasi': ['assets/*'],
+    package_data={'q2_SpiecEasi': ['assets/*', 'assets/assets/*/*'],
                   'q2_SpiecEasi.tests': ['data/*']},
     zip_safe=False,
 )
