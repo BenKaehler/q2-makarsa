@@ -1,6 +1,6 @@
 # q2-$PKGNAME
 
-A QIIME 2 plugin to expose some [SpiecEasi](https://github.com/zdk123/SpiecEasi) functionality.
+$PKGNAME is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
 
 ## What is it
 
@@ -12,7 +12,11 @@ A QIIME 2 plugin to expose some [SpiecEasi](https://github.com/zdk123/SpiecEasi)
 
 ### SpiecEasi
 
+SpiecEasi (Sparse InversE Covariance estimation for Ecological Association and Statistical Inference) is an [R based](https://www.r-project.org/) package which allows the user to infer microbial ecological networks from compositional datasets typically generated from 16S amplicon sequencing. 
+
 ### Plug-in Features
+
+$PKGNAME is at the $\alpha$ stage.
 
 ## Installation
 
