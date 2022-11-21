@@ -9,10 +9,10 @@ from ._network import Network, NetworkDirectoryFormat, NetworkFormat
 
 
 plugin = Plugin(
-    name='spieceasi',
+    name='pretty-easi',
     version='0.0.0-dev',
-    website='https://github.com/BenKaehler/q2-SpiecEasi/tree/main/q2_SpiecEasi',  # noqa
-    package='q2_SpiecEasi',
+    website='https://github.com/BenKaehler/pretty-easi',
+    package='pretty_easi',
     description=('This QIIME 2 plugin wraps SpiecEasi '
                  'and will be useful to anybody who wants to infer '
                  'graphical models for all sorts of compositional '

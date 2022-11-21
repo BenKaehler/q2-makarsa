@@ -1,18 +1,18 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="q2-SpiecEasi",
+    name="pretty-easi",
     version='0.0.0-dev',
     packages=find_packages(),
     author="Zakir Hossine, Isaac Towers, Ben Kaehler",
     description="Apply SpiecEasi to generate adjagency matrix.",
     license="BSD-3-Clause",
-    url="https://github.com/BenKaehler/q2-SpiecEasi",
+    url="https://github.com/BenKaehler/pretty-easi",
     entry_points={
-        'qiime2.plugins': ['q2-SpiecEasi=q2_SpiecEasi.plugin_setup:plugin']
+        'qiime2.plugins': ['pretty-easi=pretty_easi.plugin_setup:plugin']
     },
-    scripts=['q2_SpiecEasi/assets/run_SpiecEasi.R'],
-    package_data={'q2_SpiecEasi': ['assets/*', 'assets/assets/*/*'],
-                  'q2_SpiecEasi.tests': ['data/*']},
+    scripts=['pretty_easi/assets/run_SpiecEasi.R'],
+    package_data={'pretty_easi': ['assets/*', 'assets/assets/*/*'],
+                  'pretty_easi.tests': ['data/*']},
     zip_safe=False,
 )

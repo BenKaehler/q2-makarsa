@@ -9,11 +9,11 @@ import pandas as pd
 
 import q2templates
 
-TEMPLATES = Path(pkg_resources.resource_filename('q2_SpiecEasi', 'assets'))
+TEMPLATES = Path(pkg_resources.resource_filename('pretty_easi', 'assets'))
 
 EXTENDS = "{% extends 'tabbed.html' %}\n"
 
-TITLE = '{% block title %}q2-SpiecEasi : {{ title }}{% endblock %}\n'
+TITLE = '{% block title %}pretty-easi : {{ title }}{% endblock %}\n'
 
 HEAD = '''
 {% block head %}
@@ -25,6 +25,8 @@ HEAD = '''
 TABCONTENT = """
 {% block tabcontent %}
   <div id="view"></div>
+  <p></p>
+  <button onclick="exportPNG()">Download as PNG</button>
   <script type="text/javascript">
     var spec = {{ spec }};
     var view;
@@ -38,6 +40,17 @@ TABCONTENT = """
         hover:     true       // enable hover processing
       });
       return view.runAsync();
+    }
+
+    /* thanks https://stackoverflow.com/a/70395566 */
+    function exportPNG(){
+      view.toImageURL('png').then(function(url) {
+        var link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('download', 'network.png');
+        link.dispatchEvent(new MouseEvent('click'));
+      }).catch(err => console.error(err));
     }
   </script>
 {% endblock %}
@@ -108,7 +121,8 @@ def visualise_network(
         output_dir: str,
         network: nx.Graph) -> None:
 
-    q2templates.util.copy_assets(TEMPLATES / 'assets', Path(output_dir) / 'assets')
+    q2templates.util.copy_assets(
+            TEMPLATES / 'assets', Path(output_dir) / 'assets')
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
