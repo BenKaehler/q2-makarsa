@@ -24,9 +24,9 @@ PKGNAME is at the $\alpha$ stage.
 
 ## Installation
 
-PKGNAME requires a working QIIME 2 environment. The recommended way to [install](https://docs.qiime2.org/2022.8/install/native/) QIIME 2 is through [miniconda](https://docs.conda.io/en/latest/miniconda.html). Miniconda can conveniently installed using the native package managers of various Linux distributions.  See the instructions for RPM-based and Debian-based distributions [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html). Arch Linux users can find miniconda in the [AUR](https://aur.archlinux.org/packages/miniconda3).
+PKGNAME requires a working QIIME 2 environment. The recommended way to [install](https://docs.qiime2.org/2022.8/install/native/) QIIME 2 is through [miniconda](https://docs.conda.io/en/latest/miniconda.html). Miniconda can be conveniently installed using the native package managers of various Linux distributions.  See the instructions for RPM-based and Debian-based distributions [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html). Arch Linux users can find miniconda in the [AUR](https://aur.archlinux.org/packages/miniconda3).
 
-Once miniconda has been installed issue the following commands within the shell
+Once miniconda has been installed, issue the following commands within the shell
 ```
 conda update conda
 conda install wget
@@ -37,8 +37,11 @@ wget https://data.qiime2.org/distro/core/qiime2-2022.8-py38-linux-conda.yml
 conda env create -n qiime2-2022.8 --file qiime2-2022.8-py38-linux-conda.yml
 ```
 
-Test the installation with `qiime --help`. An error free result means success and QIIME 2 environment can be activated 
+Test the installation with `qiime --help`. An error free output means successful installation and the QIIME 2 environment can be activated. For example, 
 
-> conda activate qiime2-2022.8
+```conda activate qiime2-2022.8```
+
+Install 
+
 
 ## Usage Example
