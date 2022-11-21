@@ -4,7 +4,7 @@ setup(
     name="pretty-easi",
     version='0.0.0-dev',
     packages=find_packages(),
-    author="Zakir Hossine, Isaac Towers, Ben Kaehler",
+    author="Zakir Hossine, Ben Kaehler, Isaac Towers",
     description="Apply SpiecEasi to generate adjagency matrix.",
     license="BSD-3-Clause",
     url="https://github.com/BenKaehler/pretty-easi",
