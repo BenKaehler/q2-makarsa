@@ -41,7 +41,16 @@ Test the installation with `qiime --help`. An error free output means successful
 
 ```conda activate qiime2-2022.8```
 
-Install 
+Now install the SpiecEasi package
 
+```conda install -c conda-forge r-spieceasi```
+
+A conda package for PKGNAME is intended future development. To install the plugin
+1. Download the source files by either
+	(a) ```git clone https://github.com/BenKaehler/pretty-easi```
+	(b) or [clicking here](https://github.com/BenKaehler/pretty-easi/archive/refs/heads/main.zip) and extracting the zip file.
+2. Change your working folder within the conda enviroment to your local source folder.
+3. Issue the command ```pip install .``` or ```pip install setup.py```
+4. Test the installation with ``qiime spieceasi --help``` or ``qiime spieceasi --version```
 
 ## Usage Example
