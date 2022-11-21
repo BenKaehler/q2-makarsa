@@ -1,6 +1,6 @@
-# q2-$PKGNAME
+# q2-PKGNAME
 
-$PKGNAME is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
+PKGNAME is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
 
 ## What is it
 
@@ -16,7 +16,7 @@ SpiecEasi (Sparse InversE Covariance estimation for Ecological Association and S
 
 ### Plug-in Features
 
-$PKGNAME is at the $\alpha$ stage.
+PKGNAME is at the $\alpha$ stage.
 
 ## Installation
 
