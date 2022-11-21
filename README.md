@@ -39,18 +39,41 @@ conda env create -n qiime2-2022.8 --file qiime2-2022.8-py38-linux-conda.yml
 
 Test the installation with `qiime --help`. An error free output means successful installation and the QIIME 2 environment can be activated. For example, 
 
-```conda activate qiime2-2022.8```
+```
+conda activate qiime2-2022.8
+```
 
 Now install the SpiecEasi package
 
-```conda install -c conda-forge r-spieceasi```
+```
+conda install -c conda-forge r-spieceasi
+```
 
 A conda package for PKGNAME is intended future development. To install the plugin
 1. Download the source files by either
-- ```git clone https://github.com/BenKaehler/pretty-easi```
-- or [clicking here](https://github.com/BenKaehler/pretty-easi/archive/refs/heads/main.zip) and extracting the zip file.
+	- ```git clone https://github.com/BenKaehler/pretty-easi```
+	- or [clicking here](https://github.com/BenKaehler/pretty-easi/archive/refs/heads/main.zip) and extracting the zip file.
 2. Change your working folder within the conda enviroment to your local source folder.
 3. Issue the command ```pip install .``` or ```pip install setup.py```
 4. Test the installation with ```qiime spieceasi --help``` or ```qiime spieceasi --version```
 
 ## Usage Example
+
+### Sponge biome data
+
+<!-- Will need expansion -->
+
+```
+mkdir pluginExample
+cd pluginExample/
+wget https://github.com/ramellose/networktutorials/raw/master/Workshop%202021/sponges/Axinellida.biom
+qiime tools import --input-path Axinellida.biom --type 'FeatureTable[Frequency]' --input-format BIOMV210Format --output-path spongeFeatureTable
+#Imported Axinellida.biom as BIOMV210Format to spongeFeatureTable
+qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza --o-network spongeNet.qza
+# Saved Network to: spongeNet.qza
+qiime spieceasi visualise-network --i-network spongeNet.qza --o-visualization spongeNet.qzv
+#Saved Visualization to: spongeNet.qzv
+qiime tools view spongeNet.qzv
+```
+
+
