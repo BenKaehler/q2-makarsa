@@ -16,7 +16,7 @@ SpiecEasi (Sparse InversE Covariance estimation for Ecological Association and S
 
 ### Plug-in Features
 
-PKGNAME is at the $\alpha$ stage.
+PKGNAME is at the $\alpha$ stage. In addition to wrapping the SpiecEasi package it provides a visualisation for generated networks.
 
 <!-- Things not in the plugin / either no included or not completed -->
 <!-- qiime spieceasi --citations  -->
@@ -95,17 +95,18 @@ The data file is in [BIOM](https://biom-format.org/) format with the following a
 The next step is to import the BIOM file as a frequency [FeatureTable](https://docs.qiime2.org/2022.8/semantic-types/) within QIIME 2.
 
 ```
-qiime tools import --input-path Suberitida.biom \\ 
-		--type 'FeatureTable[Frequency]' \\
-		--input-format BIOMV210Format  	\\
-		--output-path spongeFeatureTable.qza
+qiime tools import --input-path Suberitida.biom \\
+--type 'FeatureTable[Frequency]' \\
+--input-format BIOMV210Format  	\\
+--output-path spongeFeatureTable.qza
 
 #Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
 ```
 The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working folder if this command was successful. Now, we are ready to use PKGNAME to access the SpiecEasi algorithms to infer the microbial network. The minimal command to generate the network is the name of artefact containing the FeatureTable and the name of the output artefact containing the inferred network. 
 
 ```
-qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza --o-network spongeNet.qza
+qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza \\
+--o-network spongeNet.qza
 # Saved Network to: spongeNet.qza
 ```
 
