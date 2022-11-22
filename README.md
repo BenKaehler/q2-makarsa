@@ -2,7 +2,7 @@
 
 PKGNAME is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
 
-## What is it
+## What is involved
 
 ### QIIME2
 
@@ -16,7 +16,7 @@ SpiecEasi (Sparse InversE Covariance estimation for Ecological Association and S
 
 ### Plug-in Features
 
-PKGNAME is at the $\alpha$ stage. In addition to wrapping the SpiecEasi package it provides a visualisation for generated networks.
+PKGNAME is at the $\alpha$ stage. In addition to wrapping the SpiecEasi package it provides a visualisation for generated networks. As development continues additional features will be listed here.
 
 <!-- Things not in the plugin / either no included or not completed -->
 <!-- qiime spieceasi --citations  -->
@@ -96,8 +96,8 @@ The next step is to import the BIOM file as a frequency [FeatureTable](https://d
 
 ```
 qiime tools import --input-path Suberitida.biom \\
-	--type 'FeatureTable[Frequency]'	\\
-	--input-format BIOMV210Format		\\
+	--type 'FeatureTable[Frequency]' \\
+	--input-format BIOMV210Format \\
 	--output-path spongeFeatureTable.qza
 
 #Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
@@ -118,11 +118,18 @@ qiime spieceasi visualise-network --i-network spongeNet.qza --o-visualization sp
 qiime tools view spongeNet.qzv
 ```
 
-The network images should open in your default browser. Alternatively, you can upload ```spongeNet.qva``` to [qiime2view](https://view.qiime2.org/).
+The network images should open in your default browser. Alternatively, you can upload ```spongeNet.qva``` to [qiime2view](https://view.qiime2.org/). The network containing the largest number of members is in the tab labelled _Group 1_ , next largest in the tab _Group 2_, and so on down. Trivial networks of two members and singletons are list by feature in the _Pairs_ and _Singles_ tab respectively. 
 
 ![largest network](images/Sponge_Suberitida_Group1.png)
 ![pairs](images/Sponge_Suberitida_Pairs.png)
 ![singletons](images/Sponge_Suberitida_Singletons.png)
 
 ### Options 
+
+Several parameter options exist for ```qiime spieceasi spiec-easi```. 
+
+The algorithm utilised to infer the network can be set with ```-p-method``` with the one of 3 choices
+1. ```glasso``` [Graphical LASSO](https://academic.oup.com/biostatistics/article/9/3/432/224260) (default)
+2. ``mb``  Neighbourhood selection or [Meinshausen and Bühlmann](https://projecteuclid.org/journals/annals-of-statistics/volume-34/issue-3/High-dimensional-graphs-and-variable-selection-with-the-Lasso/10.1214/009053606000000281.full) method
+3. ``slr`` Sparse and Low-Rank method
 
