@@ -57,20 +57,58 @@ A conda package for PKGNAME is intended future development. To install the plugi
 3. Issue the command ```pip install .``` or ```pip install setup.py```
 4. Test the installation with ```qiime spieceasi --help``` or ```qiime spieceasi --version```
 
-## Usage Example
+## Usage Examples
 
-### Sponge biome data
-
-<!-- Will need expansion -->
-
+From within the conda environment create a working folder and move into it
 ```
 mkdir pluginExample
 cd pluginExample/
-wget https://github.com/ramellose/networktutorials/raw/master/Workshop%202021/sponges/Axinellida.biom
-qiime tools import --input-path Axinellida.biom --type 'FeatureTable[Frequency]' --input-format BIOMV210Format --output-path spongeFeatureTable
-#Imported Axinellida.biom as BIOMV210Format to spongeFeatureTable
+```
+
+This folder will contain the QIIME 2 artefacts produced by PKGNAME at the completion of each example.
+
+### Sponge biome data 
+
+The sequencing data for this example is derived from the [Sponge Microbiome Project](https://doi.org/10.1093/gigascience/gix077). In particular, we will use [Suberitida] order of sponges. 
+
+Download the data
+
+```
+wget https://github.com/ramellose/networktutorials/raw/master/Workshop%202021/sponges/Suberitida.biom
+```
+
+The data file is in [BIOM](https://biom-format.org/) format with the following attributes
+
+| Attribute        | Value                        |
+|------------------|------------------------------|
+| "creation-date"  | "2021-01-12T11:53:25.574128" |
+| "format-url"     | "http://biom-format.org"     |
+| "format-version" | Int32[2, 1]                  |
+| "generated-by"   | "BIOM-Format 2.1.6"          |
+|                  |                              |
+| "id"             | "No Table ID"                |
+| "nnz"            | 2023                         |
+| "shape"          | Int32[62, 68]                |
+| "type"           | ""                           |
+
+
+The next step is to import the BIOM file as a frequency [FeatureTable](https://docs.qiime2.org/2022.8/semantic-types/) within QIIME 2.
+
+```
+qiime tools import --input-path Suberitida.biom --type 'FeatureTable[Frequency]' --input-format BIOMV210Format --output-path spongeFeatureTable.qza
+
+#Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
+```
+The QIIME 2 artefact ```spongeFeatureTable.qza``` should now exist in the working folder if this command was successful. Now, we are ready to use PKGNAME to access the SpiecEasi algorithms to infer the microbial network. The minimal command to generate the network is name of artefact containing the FeatureTable and the name of the output artefact containing the inferred network. 
+
+```
 qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza --o-network spongeNet.qza
 # Saved Network to: spongeNet.qza
+```
+
+
+
+```
 qiime spieceasi visualise-network --i-network spongeNet.qza --o-visualization spongeNet.qzv
 #Saved Visualization to: spongeNet.qzv
 qiime tools view spongeNet.qzv
