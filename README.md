@@ -67,7 +67,7 @@ cd pluginExample/
 
 This folder will contain the QIIME 2 artefacts produced by PKGNAME at the completion of each example.
 
-### Sponge biome data 
+### Basic work flow 
 
 The sequencing data for this example is derived from the [Sponge Microbiome Project](https://doi.org/10.1093/gigascience/gix077). In particular, we will use data for the [Suberitida](https://www.gbif.org/species/7682289) order of sponges. 
 
@@ -96,9 +96,9 @@ The next step is to import the BIOM file as a frequency [FeatureTable](https://d
 
 ```
 qiime tools import --input-path Suberitida.biom \\
---type 'FeatureTable[Frequency]' \\
---input-format BIOMV210Format  	\\
---output-path spongeFeatureTable.qza
+	--type 'FeatureTable[Frequency]'	\\
+	--input-format BIOMV210Format		\\
+	--output-path spongeFeatureTable.qza
 
 #Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
 ```
@@ -106,11 +106,11 @@ The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working fo
 
 ```
 qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza \\
---o-network spongeNet.qza
+	--o-network spongeNet.qza
 # Saved Network to: spongeNet.qza
 ```
 
-
+From the ```spongeNet.qza``` network artefact a visualisation can be created and then viewed
 
 ```
 qiime spieceasi visualise-network --i-network spongeNet.qza --o-visualization spongeNet.qzv
@@ -118,4 +118,11 @@ qiime spieceasi visualise-network --i-network spongeNet.qza --o-visualization sp
 qiime tools view spongeNet.qzv
 ```
 
+The network images should open in your default browser. Alternatively, you can upload ```spongeNet.qva``` to [qiime2view](https://view.qiime2.org/).
+
+![largest network](images/Sponge_Suberitida_Group1.png)
+![pairs](images/Sponge_Suberitida_Pairs.png)
+![singletons](images/Sponge_Suberitida_Singletons.png)
+
+### Options 
 
