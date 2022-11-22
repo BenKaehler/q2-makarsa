@@ -69,14 +69,14 @@ This folder will contain the QIIME 2 artefacts produced by PKGNAME at the comple
 
 ### Sponge biome data 
 
-The sequencing data for this example is derived from the [Sponge Microbiome Project](https://doi.org/10.1093/gigascience/gix077). In particular, we will use [Suberitida] order of sponges. 
+The sequencing data for this example is derived from the [Sponge Microbiome Project](https://doi.org/10.1093/gigascience/gix077). In particular, we will use data for the [Suberitida](https://www.gbif.org/species/7682289) order of sponges. 
 
 Download the data
 
 ```
 wget https://github.com/ramellose/networktutorials/raw/master/Workshop%202021/sponges/Suberitida.biom
 ```
-
+<details><summary>File details</summary>
 The data file is in [BIOM](https://biom-format.org/) format with the following attributes
 
 | Attribute        | Value                        |
@@ -90,16 +90,19 @@ The data file is in [BIOM](https://biom-format.org/) format with the following a
 | "nnz"            | 2023                         |
 | "shape"          | Int32[62, 68]                |
 | "type"           | ""                           |
-
+</details>
 
 The next step is to import the BIOM file as a frequency [FeatureTable](https://docs.qiime2.org/2022.8/semantic-types/) within QIIME 2.
 
 ```
-qiime tools import --input-path Suberitida.biom --type 'FeatureTable[Frequency]' --input-format BIOMV210Format --output-path spongeFeatureTable.qza
+qiime tools import --input-path Suberitida.biom \\ 
+		--type 'FeatureTable[Frequency]' \\
+		--input-format BIOMV210Format  	\\
+		--output-path spongeFeatureTable.qza
 
 #Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
 ```
-The QIIME 2 artefact ```spongeFeatureTable.qza``` should now exist in the working folder if this command was successful. Now, we are ready to use PKGNAME to access the SpiecEasi algorithms to infer the microbial network. The minimal command to generate the network is name of artefact containing the FeatureTable and the name of the output artefact containing the inferred network. 
+The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working folder if this command was successful. Now, we are ready to use PKGNAME to access the SpiecEasi algorithms to infer the microbial network. The minimal command to generate the network is the name of artefact containing the FeatureTable and the name of the output artefact containing the inferred network. 
 
 ```
 qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza --o-network spongeNet.qza
