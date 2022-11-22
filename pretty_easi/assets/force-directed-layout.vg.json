@@ -112,7 +112,7 @@
         "update": {
           "size": {"signal": "2 * nodeRadius * nodeRadius"},
           "cursor": {"value": "pointer"},
-          "fill": [{"test": "datum.index === active", "value": "red"},
+          "fill": [{"test": "datum.index === active", "value": "black"},
 	           {"scale": "color", "field": "group"}]
         }
       },
@@ -134,12 +134,34 @@
       ]
     },
     {
+      "comment": "thanks https://stackoverflow.com/a/66585590",
+      "type": "text",
+      "from": {"data": "nodes"},
+      "interactive": false,
+      "enter": {
+        "fill": {"value": "black"},
+        "fontSize": {"value": 10}
+      },
+      "encode": {
+        "update": {
+          "y": {"field": "y", "offset": {"signal": "nodeRadius * -0.9"}},
+          "x": {"field": "x"},
+          "text": {"field": "datum.name"},
+          "align": {"value": "center"},
+	  "opacity": [{"test": "datum.index === active", "value": 1},
+                      {"value": 0}]
+        }
+      }
+    },
+    {
       "type": "path",
       "from": {"data": "link-data"},
       "interactive": false,
       "encode": {
         "update": {
-          "stroke": {"value": "#ccc"},
+          "stroke": [{"test": "active != null && (datum.source.index == active || datum.target.index == active)",
+		      "value": "black"},
+		     {"value": "#ccc"}],
           "strokeWidth": {"value": 0.5}
         }
       },

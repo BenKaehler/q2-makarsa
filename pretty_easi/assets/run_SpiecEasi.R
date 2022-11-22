@@ -120,9 +120,8 @@ if (dir.exists(out.file)) {
 suppressWarnings(library(SpiecEasi))
 suppressWarnings(library(igraph))
 
-data <- t(data)
 se.out <- spiec.easi(
-  data,
+  as.matrix(data),
   method = method,
   lambda.min.ratio = lambda.min.ratio,
   nlambda = nlambda,
