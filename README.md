@@ -2,7 +2,9 @@
 
 PKGNAME is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
 
+<details><summary>
 ## What is it
+</summary>
 
 ### QIIME2
 
@@ -21,6 +23,7 @@ PKGNAME is at the $\alpha$ stage. In addition to wrapping the SpiecEasi package 
 <!-- Things not in the plugin / either no included or not completed -->
 <!-- qiime spieceasi --citations  -->
 <!-- qiime spieceasi --example-data  -->
+</details>
 
 ## Installation
 
