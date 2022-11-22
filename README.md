@@ -130,6 +130,27 @@ Several parameter options exist for ```qiime spieceasi spiec-easi```.
 
 The algorithm utilised to infer the network can be set with ```-p-method``` with the one of 3 choices
 1. ```glasso``` [Graphical LASSO](https://academic.oup.com/biostatistics/article/9/3/432/224260) (default)
-2. ``mb``  Neighbourhood selection or [Meinshausen and Bühlmann](https://projecteuclid.org/journals/annals-of-statistics/volume-34/issue-3/High-dimensional-graphs-and-variable-selection-with-the-Lasso/10.1214/009053606000000281.full) method
+2. ``mb``  Neighbourhood selection or [Meinshausen and Bühlmann](https://projecteuclid.org/journals/annals-of-statistics/volume-34/issue-3/High-dimensional-graphs-and-variable-selection-with-the-Lasso/10.1214/009053606000000281.full) method 
 3. ``slr`` Sparse and Low-Rank method
 
+For example to infer the network from the example data using the MB method
+```
+qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza \\
+	--o-network spongeNet.qza \\
+	--p-method mb
+```
+
+The remaining parameters relate to selection of the optimal penalty $\lambda$ in each method's [lasso](https://en.wikipedia.org/wiki/Lasso_(statistics)) like optimization problem. The network inference algorithms search for the optimal $\lambda$ penalty where the complete graph an empty graph are at the extremes of the search range. Essentially finding a balance between network sparsity and least-squares fit. 
+
+The range of $\lambda$ values tested is ```--p-lambda-min-ratio```$\times\lambda_{max}$ and $\lambda_{max}$, where $\lambda_{max}$ is the theoretical upper bound on $\lambda$. The upper bound is  $\max|S|$, the maximum absolute value in the data correlation matrix.
+
+The range for lambda is sample logarithmically ```--p-nlambda``` times.
+
+The number of subsamples used in the [StARS](https://arxiv.org/abs/1006.3316) model selection process can be changed by setting ```-p-rep-num```.
+
+
+| parameter           | type    | default |
+|---------------------|---------|---------|
+| -p-lambda-min-ratio | real    | 0.001   |
+| --p-nlambda         | integer | 20      |
+| --p-rep-num         | integer | 20      |
