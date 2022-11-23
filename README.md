@@ -1,6 +1,6 @@
-# q2-PKGNAME
+# pretty-easi
 
-PKGNAME is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
+pretty-easi is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
 
 ## What is involved
 
@@ -16,7 +16,7 @@ SpiecEasi (Sparse InversE Covariance estimation for Ecological Association and S
 
 ### Plug-in Features
 
-PKGNAME is at the $\alpha$ stage. In addition to wrapping the SpiecEasi package it provides a visualisation for generated networks. As development continues additional features will be listed here.
+pretty-easi is at the $\alpha$ stage. In addition to wrapping the SpiecEasi package it provides a visualisation for generated networks. As development continues additional features will be listed here.
 
 <!-- Things not in the plugin / either no included or not completed -->
 <!-- qiime spieceasi --citations  -->
@@ -24,7 +24,7 @@ PKGNAME is at the $\alpha$ stage. In addition to wrapping the SpiecEasi package 
 
 ## Installation
 
-PKGNAME requires a working QIIME 2 environment. The recommended way to [install](https://docs.qiime2.org/2022.8/install/native/) QIIME 2 is through [miniconda](https://docs.conda.io/en/latest/miniconda.html). Miniconda can be conveniently installed using the native package managers of various Linux distributions.  See the instructions for RPM-based and Debian-based distributions [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html). Arch Linux users can find miniconda in the [AUR](https://aur.archlinux.org/packages/miniconda3).
+pretty-easi requires a working QIIME 2 environment. The recommended way to [install](https://docs.qiime2.org/2022.8/install/native/) QIIME 2 is through [miniconda](https://docs.conda.io/en/latest/miniconda.html). Miniconda can be conveniently installed using the native package managers of various Linux distributions.  See the instructions for RPM-based and Debian-based distributions [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html). Arch Linux users can find miniconda in the [AUR](https://aur.archlinux.org/packages/miniconda3).
 
 Once miniconda has been installed, issue the following commands within the shell
 ```
@@ -49,7 +49,7 @@ Now install the SpiecEasi package
 conda install -c conda-forge r-spieceasi
 ```
 
-A conda package for PKGNAME is intended future development. To install the plugin
+A conda package for pretty-easi is intended future development. Currently, to install the plugin
 1. Download the source files by either
 	- ```git clone https://github.com/BenKaehler/pretty-easi```
 	- or [clicking here](https://github.com/BenKaehler/pretty-easi/archive/refs/heads/main.zip) and extracting the zip file.
@@ -65,7 +65,7 @@ mkdir pluginExample
 cd pluginExample/
 ```
 
-This folder will contain the QIIME 2 artefacts produced by PKGNAME at the completion of each example.
+This folder will contain the QIIME 2 artefacts produced by pretty-easi at the completion of each example.
 
 ### Basic work flow 
 
@@ -77,7 +77,7 @@ Download the data
 wget https://github.com/ramellose/networktutorials/raw/master/Workshop%202021/sponges/Suberitida.biom
 ```
 <details><summary>File details</summary>
-The data file is in [BIOM](https://biom-format.org/) format with the following attributes
+The data file is in BIOM format with the following attributes
 
 | Attribute        | Value                        |
 |------------------|------------------------------|
@@ -102,7 +102,7 @@ qiime tools import --input-path Suberitida.biom \\
 
 #Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
 ```
-The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working folder if this command was successful. Now, we are ready to use PKGNAME to access the SpiecEasi algorithms to infer the microbial network. The minimal command to generate the network is the name of artefact containing the FeatureTable and the name of the output artefact containing the inferred network. 
+The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working folder if this command was successful. Now, we are ready to use pretty-easi to access the SpiecEasi algorithms to infer the microbial network. The most minimal command to generate the network requires the name of artefact containing the FeatureTable and the name of the intended output artefact containing the inferred network. 
 
 ```
 qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza \\
@@ -118,7 +118,7 @@ qiime spieceasi visualise-network --i-network spongeNet.qza --o-visualization sp
 qiime tools view spongeNet.qzv
 ```
 
-The network images should open in your default browser. Alternatively, you can upload ```spongeNet.qva``` to [qiime2view](https://view.qiime2.org/). The network containing the largest number of members is in the tab labelled _Group 1_ , next largest in the tab _Group 2_, and so on down. Trivial networks of two members and singletons are list by feature in the _Pairs_ and _Singles_ tab respectively. 
+The network images should open in your default browser. Alternatively, you can upload ```spongeNet.qva``` to [qiime2view](https://view.qiime2.org/). The network containing the largest number of members is in the tab labelled _Group 1_ , next largest network in the tab _Group 2_, and so on down. Trivial networks of two members and singletons are listed by feature in the _Pairs_ and _Singles_ tab respectively. 
 
 ![largest network](images/Sponge_Suberitida_Group1.png)
 ![pairs](images/Sponge_Suberitida_Pairs.png)
@@ -128,23 +128,23 @@ The network images should open in your default browser. Alternatively, you can u
 
 Several parameter options exist for ```qiime spieceasi spiec-easi```. 
 
-The algorithm utilised to infer the network can be set with ```-p-method``` with the one of 3 choices
+The algorithm utilised to infer the network can be set with ```-p-method``` parameter switch and one of 3 keywords:
 1. ```glasso``` [Graphical LASSO](https://academic.oup.com/biostatistics/article/9/3/432/224260) (default)
 2. ``mb``  Neighbourhood selection or [Meinshausen and Bühlmann](https://projecteuclid.org/journals/annals-of-statistics/volume-34/issue-3/High-dimensional-graphs-and-variable-selection-with-the-Lasso/10.1214/009053606000000281.full) method 
 3. ``slr`` Sparse and Low-Rank method
 
-For example to infer the network from the example data using the MB method
+For example to infer the network from the example data using the MB method execute the command
 ```
 qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza \\
 	--o-network spongeNet.qza \\
 	--p-method mb
 ```
 
-The remaining parameters relate to selection of the optimal penalty $\lambda$ in each method's [lasso](https://en.wikipedia.org/wiki/Lasso_(statistics)) like optimization problem. The network inference algorithms search for the optimal $\lambda$ penalty where the complete graph an empty graph are at the extremes of the search range. Essentially finding a balance between network sparsity and least-squares fit. 
+The remaining parameters relate to selection of the optimal penalty $\lambda$ in each method's [lasso](https://en.wikipedia.org/wiki/Lasso_(statistics)) like optimization problem. The network inference algorithms search for the optimal $\lambda$ penalty where the complete graph and an empty graph are at the extremes of the search range. Essentially the process is finding a balance between network sparsity and least-squares fit. 
 
-The range of $\lambda$ values tested is ```--p-lambda-min-ratio```$\times\lambda_{max}$ and $\lambda_{max}$, where $\lambda_{max}$ is the theoretical upper bound on $\lambda$. The upper bound is  $\max|S|$, the maximum absolute value in the data correlation matrix.
+The range of $\lambda$ values tested is ```--p-lambda-min-ratio```$\times\lambda_{max}$ and $\lambda_{max}$, where $\lambda_{max}$ is the theoretical upper bound on $\lambda$. This upper bound is  $\max|S|$, the maximum absolute value in the data correlation matrix.
 
-The range for lambda is sample logarithmically ```--p-nlambda``` times.
+The range for lambda is sampled logarithmically ```--p-nlambda``` times.
 
 The number of subsamples used in the [StARS](https://arxiv.org/abs/1006.3316) model selection process can be changed by setting ```-p-rep-num```.
 
