@@ -47,17 +47,17 @@ class Testspieceasioutput(TestPluginBase):
         my_list = [(a,b) for (a,b) in expected_network.degree() for (c,d) in generated_network.degree() if ((a==c) and (b==d))]
         for i in generated_network.degree():
             if i in my_list:
-                 print("Match : ", i)
+                 print("Match node with degree: ", i)
             else:
-                 print("Mismatch : ", i)
+                 print("Mismatch node with degree : ", i)
         
         
         my_list_edges = [(a,b) for (a,b) in expected_network.edges() for (c,d) in generated_network.edges() if ((a==c) and (b==d))or((a==d) and (b==c))]
         for i in generated_network.edges():
             if i in my_list_edges:
-                 print("Match : ", i)
+                 print("Match edge : ", i)
             else:
-                 print("Mismatch : ", i) 
+                 print("Mismatch edge : ", i) 
         
        # self.assertEqual(generated_network.nodes(), expected_network.nodes()) 
         #self.assertEqual(generated_network.degree(), expected_network.degree())
