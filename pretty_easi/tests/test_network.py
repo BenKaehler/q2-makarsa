@@ -4,8 +4,10 @@ import unittest
 from pathlib import Path
 
 import networkx as nx
+from networkx import read_graphml
 import pandas as pd
 import qiime2
+from qiime2 import Artifact
 from q2_types.feature_table import FeatureTable, Frequency
 from qiime2.plugin.testing import TestPluginBase
 
@@ -14,13 +16,14 @@ from pretty_easi._network import (Network, NetworkDirectoryFormat,
 
 
 class testnetwork(TestPluginBase):
-    package = "q2_SpiecEasi.tests"
+    package = "pretty_easi.tests"
 
     def setUp(self):
         super().setUp()
-        network = self.get_data_path("network.graphml ")
-        self.network = Artifact.import_data("Network", network)
-        expected_network = self.network.view(nx.Graph())
+        self.network = self.get_data_path("network.graphml")
+       # self.network = Artifact.import_data("Network", self.network)
+        expected_network=read_graphml(self.network)
+        #expected_network = self.network.view(nx.Graph())
 
     def test_defaults(self):
 
