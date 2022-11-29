@@ -55,7 +55,7 @@ A conda package for pretty-easi is intended future development. Currently, to in
 	- or [clicking here](https://github.com/BenKaehler/pretty-easi/archive/refs/heads/main.zip) and extracting the zip file.
 2. Change your working folder within the conda enviroment to your local source folder.
 3. Issue the command ```pip install .``` or ```pip install setup.py```
-4. Test the installation with ```qiime spieceasi --help``` or ```qiime spieceasi --version```
+4. Test the installation with ```qiime pretty-easi --help``` or ```qiime pretty-easi --version```
 
 ## Usage Examples
 
@@ -105,7 +105,7 @@ qiime tools import --input-path Suberitida.biom \\
 The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working folder if this command was successful. Now, we are ready to use pretty-easi to access the SpiecEasi algorithms to infer the microbial network. The most minimal command to generate the network requires the name of artefact containing the FeatureTable and the name of the intended output artefact containing the inferred network. 
 
 ```
-qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza \\
+qiime pretty-easi spiec-easi --i-table spongeFeatureTable.qza \
 	--o-network spongeNet.qza
 # Saved Network to: spongeNet.qza
 ```
@@ -113,20 +113,19 @@ qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza \\
 From the ```spongeNet.qza``` network artefact a visualisation can be created and then viewed
 
 ```
-qiime spieceasi visualise-network --i-network spongeNet.qza --o-visualization spongeNet.qzv
+qiime pretty-easi visualise-network --i-network spongeNet.qza --o-visualization spongeNet.qzv
 #Saved Visualization to: spongeNet.qzv
 qiime tools view spongeNet.qzv
 ```
 
 The network images should open in your default browser. Alternatively, you can upload ```spongeNet.qva``` to [qiime2view](https://view.qiime2.org/). The network containing the largest number of members is in the tab labelled _Group 1_ , next largest network in the tab _Group 2_, and so on down. Trivial networks of two members and singletons are listed by feature in the _Pairs_ and _Singles_ tab respectively. 
 
-![largest network](images/Sponge_Suberitida_Group1.png)
-![pairs](images/Sponge_Suberitida_Pairs.png)
-![singletons](images/Sponge_Suberitida_Singletons.png)
+![largest network](images/Sponge_Suberitida_Group1_screen.png)
+![network](images/network.png)
 
 ### Options 
 
-Several parameter options exist for ```qiime spieceasi spiec-easi```. 
+Several parameter options exist for ```qiime pretty-easi spiec-easi``` . For a full list of parameters and the defaults execute ```qiime pretty-easi spiec-easi --help```. Some examples are below.
 
 The algorithm utilised to infer the network can be set with ```-p-method``` parameter switch and one of 3 keywords:
 1. ```glasso``` [Graphical LASSO](https://academic.oup.com/biostatistics/article/9/3/432/224260) (default)
@@ -135,22 +134,14 @@ The algorithm utilised to infer the network can be set with ```-p-method``` para
 
 For example to infer the network from the example data using the MB method execute the command
 ```
-qiime spieceasi spiec-easi --i-table spongeFeatureTable.qza \\
+qiime pretty-easi spiec-easi --i-table spongeFeatureTable.qza \\
 	--o-network spongeNet.qza \\
 	--p-method mb
 ```
 
 The remaining parameters relate to selection of the optimal penalty $\lambda$ in each method's [lasso](https://en.wikipedia.org/wiki/Lasso_(statistics)) like optimization problem. The network inference algorithms search for the optimal $\lambda$ penalty where the complete graph and an empty graph are at the extremes of the search range. Essentially the process is finding a balance between network sparsity and least-squares fit. 
 
-The range of $\lambda$ values tested is ```--p-lambda-min-ratio```$\times\lambda_{max}$ and $\lambda_{max}$, where $\lambda_{max}$ is the theoretical upper bound on $\lambda$. This upper bound is  $\max|S|$, the maximum absolute value in the data correlation matrix.
+The range of $\lambda$ values tested is between ```--p-lambda-min-ratio```$\times\lambda_{max}$ and $\lambda_{max}$, where $\lambda_{max}$ is the theoretical upper bound on $\lambda$. This upper bound is  $\max|S|$, the maximum absolute value in the data correlation matrix.
 
-The range for lambda is sampled logarithmically ```--p-nlambda``` times.
+The lambda range is sampled logarithmically ```--p-nlambda``` times.
 
-The number of subsamples used in the [StARS](https://arxiv.org/abs/1006.3316) model selection process can be changed by setting ```-p-rep-num```.
-
-
-| parameter           | type    | default |
-|---------------------|---------|---------|
-| -p-lambda-min-ratio | real    | 0.001   |
-| --p-nlambda         | integer | 20      |
-| --p-rep-num         | integer | 20      |
