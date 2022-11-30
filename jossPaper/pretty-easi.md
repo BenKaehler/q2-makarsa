@@ -25,20 +25,18 @@ bibliography: joss.bib
 
 # Summary
 
-
 **q2-prettyeasi** is a plugin for the QIIME 2 microbiome bioinformatics platform. The plugin allows the QIIME 2 community to infer microbial ecological networks from community composition data by which we can identify central species and their influence on the species who have interactions with that central species. 
 
 # Statement of need
 
 A microbiome is an inevitable part of life and it can have both positive and negative impacts on human health even though we ignore its presence [@berg2020microbiome]. Interaction of microbiome with itself and with its host may play a significance role in many areas; for example, food science [@singh2017microbiome; @torrazza2011developing], health science [@torrazza2011developing] and agricultural production. If it is possible to reveal the functions, interactions, temporal and spatial structures, and population dynamics of microbial communities, it will not only be a scientific discovery, but it will also contribute to human health, biotechnological development, agriculture, and environmental protection. Here we present a qiime2 plugin which will help to infer users infer microbial interactions by using network analysis.
 
-We describe q2-prettyeasi, a QIIME 2 plugin to perform network analysis of microbiome data. It infers ecological interactions between microbial populations, by 
+**q2-prettyeasi** performs network analysis of microbiome data. It infers ecological interactions between microbial populations, by 
 
 - taking advantage of the proportionality invariance of relative abundance data and 
 - making assumptions about the underlying network structure when the number of taxa in the dataset is larger than the number of sampled communities [@kurtz2015sparse].
 
-It provides several methods for neighborhood selection, for example mb, glasso, slr etc, and uses StARS for model selection.
-there are several other parameters that are also used in this plugin, for more details please visit [](https://github.com/zdk123/SpiecEasi). The visualizations generated provide portable, shareable reports, publication-ready figures, and integrated decentralized data provenance. in addition, integration as a QIIME 2 plugin streamlines data handling and supports the use of multiple user interfaces, including a prototype graphical user interface (q2studio), facilitating its use for non-expert users. The plugin is freely available under the [BSD-3-Clause license](https://github.com/qiime2/q2-sample-classifier).
+It provides several methods for neighbourhood selection, for example mb, glasso, slr etc, and uses StARS for model selection. There are several other parameters that are also used in this plugin, for more details please visit [](https://github.com/zdk123/SpiecEasi). The visualizations generated provide portable, shareable reports, publication-ready figures, and integrated decentralized data provenance. In addition, pretty-easy streamlines data handling and supports the use of multiple user interfaces, including a prototype graphical user interface (q2studio), facilitating its use for non-expert users. 
 
 The q2-prettyeasi plugin is written both in Python  and R, and employs pandas [@mckinney2011pandas] for data manipulation, networkx [@hagberg2020networkx] and igraph [@csardi2006igraph] for network generation and visualization. The plugin is compatible with macOS and Linux operating systems.
 
