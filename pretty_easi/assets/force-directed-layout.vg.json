@@ -56,11 +56,18 @@
       ]
     },
     {
-      "description": "Flag for display node details",
+      "description": "Flag to highlight node and links",
       "name": "active", "value": null,
       "on": [
         { "events": "symbol:mouseover", "update": "datum.index" },
         { "events": "mouseover[!event.item]", "update": "null" }
+      ]
+    },
+    {
+      "description": "Selection for node table",
+      "name": "nodeSelect", "value": null,
+      "on": [
+        { "events": "symbol:mousedown", "update": "item()" }
       ]
     }
   ],
@@ -135,26 +142,6 @@
           ]
         }
       ]
-    },
-    {
-      "comment": "thanks https://stackoverflow.com/a/66585590",
-      "type": "text",
-      "from": {"data": "nodes"},
-      "interactive": false,
-      "enter": {
-        "fill": {"value": "black"},
-        "fontSize": {"value": 10}
-      },
-      "encode": {
-        "update": {
-          "y": {"field": "y", "offset": {"signal": "nodeRadius * -0.9"}},
-          "x": {"field": "x"},
-          "text": {"field": "datum.name"},
-          "align": {"value": "center"},
-	  "opacity": [{"test": "datum.index === active", "value": 1},
-                      {"value": 0}]
-        }
-      }
     },
     {
       "type": "path",

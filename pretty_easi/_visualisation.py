@@ -24,6 +24,8 @@ HEAD = '''
 
 TABCONTENT = """
 {% block tabcontent %}
+
+  <div id="nodeTable"></div>
   <div id="view"></div>
   <p></p>
   <button onclick="exportPNG()">Download as PNG</button>
@@ -32,6 +34,38 @@ TABCONTENT = """
     var view;
 
     render(spec).catch(err => console.error(err));
+
+    var firstDatum = view.data('node-data')[0];
+    firstDatum = JSON.parse(JSON.stringify(firstDatum));
+    for (const key in firstDatum) {
+      firstDatum[key] = "&lt select a node to display &gt";
+    }
+    var firstNodeSelect = {"datum": firstDatum};
+    drawTable("", firstNodeSelect);
+    view.addSignalListener('nodeSelect', drawTable);
+
+    function drawTable(name, value) {
+      var table = document.createElement("TABLE");
+      table.classList.add("dataframe");
+      table.classList.add("table");
+      table.classList.add("table-striped");
+      table.classList.add("table-hover");
+
+      for (const key in value.datum) {
+        if (key == "index") {
+            continue;
+        }
+        row = table.insertRow(-1);
+        var cell = row.insertCell(-1)
+        cell.innerHTML = key
+        cell = row.insertCell(-1)
+        cell.innerHTML = value.datum[key]
+      }
+
+      var nodeTable = document.getElementById("nodeTable");
+      nodeTable.innerHTML = "";
+      nodeTable.appendChild(table);
+    }
 
     function render(spec) {
       view = new vega.View(vega.parse(spec), {
