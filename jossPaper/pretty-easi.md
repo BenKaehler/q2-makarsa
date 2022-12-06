@@ -5,7 +5,7 @@ tags:
   - Community structure
 authors:
   - name: Zakir Hossine
-    orcid: 
+    orcid: 0000-0001-6354-3166
     equal-contrib: true
     affiliation: 1
   - name: Ben Kaehler
