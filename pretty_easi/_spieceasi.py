@@ -89,29 +89,21 @@ def spiec_easi(
     
 
 
-def statistic_of_network(network):
+def network_with_attribute(network):
+    dd=nx.degree_centrality(network)
+    nx.set_node_attributes(network, dd, "degree_centrality")
     
-    with tempfile.TemporaryDirectory() as temp_dir_name:
-        temp_dir = Path(temp_dir_name)
-        tmp_sorted_degree_centrality = os.path.join(temp_dir, 'sorted_degree_centrality')
-        tmp_sorted_betweenness_centrality = os.path.join(temp_dir, 'sorted_betweenness_centrality')
-        tmp_sorted_closeness_centrality = os.path.join(temp_dir, 'sorted_closeness_centrality')
-        tmp_sorted_eigenvector_centrality = os.path.join(temp_dir, 'sorted_eigenvector_centrality')
-        tmp_sorted_associativity = os.path.join(temp_dir, 'sorted_associativity')
-
-        sorted_degree_centrality=sorted(nx.degree_centrality(net).items(),key=itemgetter(1), reverse=True)
-        pickle.dump(sorted_degree_centrality,open('tmp_sorted_degree_centrality','wb'))
-        sorted_betweenness_centrality=sorted(nx.betweenness_centrality(net).items(),key=itemgetter(1),reverse=True)
-        pickle.dump(sorted_betweenness_centrality,open('tmp_sorted_betweenness_centrality','wb'))
-        sorted_closeness_centrality=sorted(nx.closeness_centrality(net).items(),key=itemgetter(1),reverse=True)
-        pickle.dump(sorted_closeness_centrality,open('tmp_sorted_closeness_centrality','wb'))
-        sorted_eigenvector_centrality=sorted(nx.eigenvector_centrality(net).items(),key=itemgetter(1),reverse=True)
-        pickle.dump(sorted_eigenvector_centrality,open('tmp_sorted_eigenvector_centrality','wb'))
-        sorted_associativity=sorted(nx.assortativity.average_neighbor_degree(net).items(),key=lambda e: e[1], reverse=True)
-        pickle.dump(sorted_associativity,open('tmp_sorted_associativity','wb'))
-        
-        #nx. assortativity.average_neighbor_degree(),calculates, for each node, an average of its neighbor’s degrees.
-        return(tmp_sorted_degree_centrality,tmp_sorted_betweenness_centrality,tmp_sorted_closeness_centrality,tmp_sorted_eigenvector_centrality,tmp_sorted_associativity)
+    bb=nx.betweenness_centrality(network)
+    nx.set_node_attributes(network, bb, "betweenness_centrality")
+    cc=nx.closeness_centrality(network)
+    nx.set_node_attributes(network, cc, "closeness_centrality")
+    ee=nx.eigenvector_centrality(network)
+    nx.set_node_attributes(network, ee, "eigenvector_centrality")
+    aa=nx.assortativity.average_neighbor_degree(network)
+    nx.set_node_attributes(network, ee, "associativity")
+      
+    #nx. assortativity.average_neighbor_degree(),calculates, for each node, an average of its neighbor’s degrees.
+    return network
 
 
 

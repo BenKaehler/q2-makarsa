@@ -4,7 +4,7 @@ from qiime2.plugin import Plugin, Int, Str, Bool, Float
 from q2_types.feature_table import FeatureTable, Frequency
 
 from ._visualisation import visualise_network
-from ._spieceasi import spiec_easi
+from ._spieceasi import spiec_easi, network_with_attribute
 from ._network import Network, NetworkDirectoryFormat, NetworkFormat
 
 
@@ -103,3 +103,26 @@ plugin.methods.register_function(
     description=('This method generates the sparse matrix of network of input '
                  'data')
 )
+
+plugin.methods.register_function(
+    function=network_with_attribute,
+    inputs={'network': Network},
+    parameters={},
+    outputs=[('network', Network)],
+    input_descriptions={
+        'network': 'The inferred network from SpiecEasi.'
+    },
+    output_descriptions={
+        'network': 'Network with node attributes. Here we assign each node with their'
+                    'degree centrality, betweenness centrality, closeness centrality,'
+                     'eigenvector centrality and associativity as attribute.'
+    },
+    name='network with attribute',
+    description='Update the network with different centrality as node attribute.'
+)
+
+
+
+
+
+
