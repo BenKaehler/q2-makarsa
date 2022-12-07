@@ -19,7 +19,7 @@ authors:
 affiliations:
   - name: School of Science, UNSW Canberra, Australia
     index: 1
-date: November 2022
+date: December 2022
 bibliography: joss.bib
 ---
 
@@ -38,11 +38,11 @@ A microbiome is an inevitable part of life and it can have both positive and neg
 
 It provides several methods for neighbourhood selection, for example mb, glasso, slr etc, and uses StARS for model selection. There are several other parameters that are also used in this plugin, for more details please visit [](https://github.com/zdk123/SpiecEasi). The visualizations generated provide portable, shareable reports, publication-ready figures, and integrated decentralized data provenance. In addition, pretty-easy streamlines data handling and supports the use of multiple user interfaces, including a prototype graphical user interface (q2studio), facilitating its use for non-expert users. 
 
-The q2-prettyeasi plugin is written both in Python  and R, and employs pandas [@mckinney2011pandas] for data manipulation, networkx [@hagberg2020networkx] and igraph [@csardi2006igraph] for network generation and visualization. The plugin is compatible with macOS and Linux operating systems.
+The q2-prettyeasi plugin is written both in Python  and R, and employs pandas [@mckinney2011pandas] for data manipulation, networkx [@hagberg2020networkx] and igraph [@csardi2006igraph] for network generation and visualization. we also used html and javaScript in some parts of our programming. The plugin is compatible with macOS and Linux operating systems.
 
-![SpiecEasi pipeline.\label{fig:grl}](spieceasi.png){width=50%}
+![SpiecEasi pipeline.\label{fig:grl}](spieceasi.png){width=30%}
 
-The standard workflow for q2-prettyeasi is shown in \autoref{fig:grl} [@kurtz2015sparse]. q2-prettyeasi action accept a input-file (i.e., matrix of feature counts per sample), method, lambda.min.ratio, nlambda, rep.num, ncores,  thresh, subsample.ratio, seed, sel.criterion, verbose, pulsar.select, lambda.log, lambda.min and lambda.max as input. All of the input parameter has default values except input-file.
+The standard workflow for q2-prettyeasi is shown in \autoref{fig:grl} [@kurtz2015sparse]. q2-prettyeasi action accept a input-file (i.e., matrix of feature counts per sample), method, lambda.min.ratio, nlambda, rep.num, ncores,  thresh, subsample.ratio, seed, sel.criterion, verbose, pulsar.select, lambda.log, lambda.min and lambda.max as input. All of the input parameter has default values except input-file. It has two methods, one for generating network for input data and another one is for updating the generated network with some statistical attributes. Here, we have used degree centrality, betweenness centrality, closeness centrality, eigenvector centrality and associativity as nodes attributes. we also used weight to edges, although weighted network only available for mb and glasso methods.
 
 # Acknowledgements
 
