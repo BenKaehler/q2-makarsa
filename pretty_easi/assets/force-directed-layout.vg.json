@@ -18,7 +18,7 @@
     { "name": "linkStrength", "value": 0,
       "bind": {"input": "range", "min": 0, "max": 2, "step": 0.1, "name": "link strength"} },
     { "name": "static", "value": true,
-      "bind": {"input": "checkbox"} },
+      "bind": {"input": "checkbox", "name": "static "} },
     {
       "description": "State variable for active node fix status.",
       "name": "fix", "value": false,
@@ -75,12 +75,10 @@
   "data": [
     {
       "name": "node-data",
-      "url": "miserables.json",
       "format": {"type": "json", "property": "nodes"}
     },
     {
       "name": "link-data",
-      "url": "miserables.json",
       "format": {"type": "json", "property": "links"}
     }
   ],
@@ -89,7 +87,7 @@
     {
       "name": "color",
       "type": "ordinal",
-      "domain": {"data": "node-data", "field": "group"},
+      "domain": {"data": "node-data", "field": {"signal": "colorSelect"}},
       "range": {"scheme": "category20c"}
     }
   ],
@@ -115,14 +113,14 @@
 
       "encode": {
         "enter": {
-          "fill": {"scale": "color", "field": "group"},
+          "fill": {"scale": "color", "field": {"signal": "colorSelect"}},
           "stroke": {"value": "white"}
         },
         "update": {
           "size": {"signal": "2 * nodeRadius * nodeRadius"},
           "cursor": {"value": "pointer"},
           "fill": [{"test": "datum.index === active", "value": "black"},
-	           {"scale": "color", "field": "group"}]
+	           {"scale": "color", "field": {"signal": "colorSelect"}}]
         }
       },
 

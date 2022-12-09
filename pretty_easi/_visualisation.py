@@ -100,6 +100,24 @@ TABLECONTENT = """
 def graph_to_spec(network):
     with open(TEMPLATES / 'force-directed-layout.vg.json') as fh:
         spec = json.load(fh)
+
+    attributes = pd.DataFrame([r for _, r in network.nodes(data=True)])
+    selector = {
+        "name": "colorSelect", "value": "None",
+        "bind": {"input": "select", "name": "color ", "options": []}
+    }
+    options = ['None']
+    for key in attributes.columns:
+        try:
+            attributes[key].astype(float)
+            continue
+        except (ValueError, TypeError):
+            pass
+        if key != 'Feature':
+            options.append(key)
+    selector['bind']['options'] = options
+    spec['signals'].insert(0, selector)
+
     nodes = nx.nodes(network)
     idx = {nid: i for i, nid in enumerate(nodes)}
     nodes = [{'index': idx[nid], **nodes[nid]} for nid in nodes]
