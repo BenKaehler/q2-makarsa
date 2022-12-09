@@ -46,7 +46,7 @@ conda activate qiime2-2022.8
 Now install the SpiecEasi package
 
 ```
-conda install -c conda-forge r-spieceasi
+conda install -c bioconda -c conda-forge r-spieceasi
 ```
 
 A conda package for pretty-easi is intended future development. Currently, to install the plugin
