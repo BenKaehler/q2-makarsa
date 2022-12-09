@@ -131,9 +131,9 @@ def get_connected_components(network):
         order = subgraph.order()
         if order == 1:
             for nid, attr in subgraph.nodes(data=True):
-                singles.append(attr['name'])
+                singles.append(attr['Feature'])
         elif order == 2:
-            pair = [a['name'] for _, a in subgraph.nodes(data=True)]
+            pair = [a['Feature'] for _, a in subgraph.nodes(data=True)]
             pairs.append(pair)
         else:
             groups[order].append(subgraph)
@@ -159,13 +159,13 @@ def visualise_network(
     metadata = metadata.to_dataframe()
     attributes = {}
     for nid, attr in network.nodes(data=True):
-        name = attr['name']
+        name = attr['Feature']
         if name in metadata.index:  # fail silently if not present
             attributes[nid] = metadata.loc[name]
         # SpiecEasi prepends 'X' to names starting with numbers
         elif (len(name) > 1 and name[0] == 'X' and name[1] in '0123456789' and
                 name[1:] in metadata.index):
-            attributes[nid] = {'name': name[1:], **metadata.loc[name[1:]]}
+            attributes[nid] = {'Feature': name[1:], **metadata.loc[name[1:]]}
     nx.set_node_attributes(network, attributes)
 
     q2templates.util.copy_assets(

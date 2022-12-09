@@ -136,5 +136,6 @@ se.out <- spiec.easi(
 )
 
 network <- adj2igraph(getRefit(se.out))
-V(network)$name <- colnames(data)
+V(network)$Feature <- colnames(data)
+network <- delete_vertex_attr(network, "name")
 write_graph(network, out.file, "graphml")
