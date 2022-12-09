@@ -6,7 +6,7 @@ from pathlib import Path
 
 import networkx as nx
 import pandas as pd
-
+import qiime2
 import q2templates
 
 TEMPLATES = Path(pkg_resources.resource_filename('pretty_easi', 'assets'))
@@ -153,7 +153,20 @@ def create_html_file(directory, source_file, title, content):
 
 def visualise_network(
         output_dir: str,
-        network: nx.Graph) -> None:
+        network: nx.Graph,
+        metadata: qiime2.Metadata = None) -> None:
+
+    metadata = metadata.to_dataframe()
+    attributes = {}
+    for nid, attr in network.nodes(data=True):
+        name = attr['name']
+        if name in metadata.index:  # fail silently if not present
+            attributes[nid] = metadata.loc[name]
+        # SpiecEasi prepends 'X' to names starting with numbers
+        elif (len(name) > 1 and name[0] == 'X' and name[1] in '0123456789' and
+                name[1:] in metadata.index):
+            attributes[nid] = {'name': name[1:], **metadata.loc[name[1:]]}
+    nx.set_node_attributes(network, attributes)
 
     q2templates.util.copy_assets(
             TEMPLATES / 'assets', Path(output_dir) / 'assets')
