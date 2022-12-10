@@ -52,7 +52,7 @@ TABCONTENT = """
       table.classList.add("table-hover");
 
       for (const key in value.datum) {
-        if (key == "index") {
+        if (key == "index" || key.startsWith('Taxon Level')) {
             continue;
         }
         row = table.insertRow(-1);
@@ -169,12 +169,22 @@ def create_html_file(directory, source_file, title, content):
     return path, tab
 
 
+def add_taxonomy_levels(row):
+    taxonomy = []
+    for level, label in enumerate(row['Taxon'].split(';'), 1):
+        taxonomy.append(label)
+        row[f'Taxon Level {level}'] = ';'.join(taxonomy)
+    return row
+
+
 def visualise_network(
         output_dir: str,
         network: nx.Graph,
         metadata: qiime2.Metadata = None) -> None:
 
     metadata = metadata.to_dataframe()
+    if 'Taxon' in metadata.columns:
+        metadata = metadata.apply(add_taxonomy_levels, axis=1)
     attributes = {}
     for nid, attr in network.nodes(data=True):
         name = attr['Feature']

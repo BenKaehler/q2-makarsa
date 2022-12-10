@@ -92,6 +92,26 @@
     }
   ],
 
+"legends": [
+  {
+    "fill": "color",
+    "labelFontSize": {"value": 12},
+    "labelLimit": {"value": 0},
+    "encode": {
+      "labels": {
+        "update": {
+	  "opacity": [{"test": "colorSelect === 'None'", "value": 0}, {"value": 1}]
+	}
+      },
+      "symbols": {
+        "update": {
+	  "opacity": [{"test": "colorSelect === 'None'", "value": 0}, {"value": 1}]
+	}
+      }
+    }
+  }
+],
+
   "marks": [
     {
       "name": "nodes",
