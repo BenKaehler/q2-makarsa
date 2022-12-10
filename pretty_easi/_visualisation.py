@@ -185,6 +185,7 @@ def visualise_network(
     metadata = metadata.to_dataframe()
     if 'Taxon' in metadata.columns:
         metadata = metadata.apply(add_taxonomy_levels, axis=1)
+        metadata = metadata.transpose().fillna(method='pad').transpose()
     attributes = {}
     for nid, attr in network.nodes(data=True):
         name = attr['Feature']
