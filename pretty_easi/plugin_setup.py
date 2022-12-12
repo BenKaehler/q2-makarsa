@@ -1,6 +1,6 @@
 from networkx import read_graphml, write_graphml, Graph
 
-from qiime2.plugin import Plugin, Int, Str, Bool, Float
+from qiime2.plugin import Plugin, Int, Str, Bool, Float, Metadata
 from q2_types.feature_table import FeatureTable, Frequency
 
 from ._visualisation import visualise_network
@@ -46,7 +46,7 @@ def _2(ff: NetworkFormat) -> Graph:
 plugin.visualizers.register_function(
     function=visualise_network,
     inputs={'network': Network},
-    parameters={},
+    parameters={'metadata': Metadata},
     name='Visualize network',
     description='Create an interactive depiction of your network.'
 )

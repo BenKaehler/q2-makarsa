@@ -135,22 +135,20 @@ se.out <- spiec.easi(
   )
 )
 
-#network <- adj2igraph(getRefit(se.out))
-#V(network)$name <- colnames(data)
 if (method=='mb') {
 bm <- symBeta(getOptBeta(se.out), mode="maxabs")
 diag(bm) <- 0
 weights <- Matrix::summary(t(bm))[,3]
 network <- adj2igraph(Matrix::drop0(getRefit(se.out)),
                    edge.attr=list(weight=weights),
-                  vertex.attr = list(name=colnames(data)))
+                  vertex.attr = list(Feature=colnames(data)))
 } else if (method=='glasso') {
 secor  <- cov2cor(getOptCov(se.out))
 bm     <- summary(triu(secor*getRefit(se.out), k=1)) 
-network <- adj2igraph(getRefit(se.out),edge.attr=list(weight=bm[,3]),vertex.attr = list(name=colnames(data)))
+network <- adj2igraph(getRefit(se.out),edge.attr=list(weight=bm[,3]),vertex.attr = list(Feature=colnames(data)))
 }else{
     print("Weighted graph only available for mb and glasso method")
-    network <- adj2igraph(getRefit(se.out),vertex.attr = list(name=colnames(data)))
+    network <- adj2igraph(getRefit(se.out),vertex.attr = list(Feature=colnames(data)))
 }
 
 write_graph(network, out.file, "graphml")
