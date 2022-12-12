@@ -2,9 +2,10 @@ import unittest
 
 import pandas as pd
 from networkx import read_graphml
-from pretty_easi._spieceasi import spiec_easi
 from qiime2 import Artifact
 from qiime2.plugin.testing import TestPluginBase
+
+from pretty_easi._spieceasi import spiec_easi
 
 
 class Testspieceasioutput(TestPluginBase):
@@ -43,7 +44,6 @@ class Testspieceasioutput(TestPluginBase):
             else:
                 self.assertTrue(False)
 
-
         my_list_edges = [
             (a, b)
             for (a, b) in self.expected_network.edges()
@@ -56,8 +56,6 @@ class Testspieceasioutput(TestPluginBase):
                 self.assertTrue(True)
             else:
                 self.assertTrue(False)
-
-
 
 
 if __name__ == "__main__":
