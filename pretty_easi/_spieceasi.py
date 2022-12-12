@@ -1,10 +1,12 @@
 import tempfile
 import subprocess
 from pathlib import Path
-
 from networkx import read_graphml, Graph
-
 import pandas as pd
+import networkx as nx
+from operator import itemgetter
+import pickle
+import os
 
 
 def run_commands(cmds, verbose=True):  # EEE need to credit the authors of this
@@ -83,3 +85,25 @@ def spiec_easi(
 
         # EEE would be better to return this without reading it
         return read_graphml(str(network_file))
+    
+    
+
+
+def network_with_attribute(network):
+    dd=nx.degree_centrality(network)
+    nx.set_node_attributes(network, dd, "degree_centrality")
+    
+    bb=nx.betweenness_centrality(network)
+    nx.set_node_attributes(network, bb, "betweenness_centrality")
+    cc=nx.closeness_centrality(network)
+    nx.set_node_attributes(network, cc, "closeness_centrality")
+    ee=nx.eigenvector_centrality(network)
+    nx.set_node_attributes(network, ee, "eigenvector_centrality")
+    aa=nx.assortativity.average_neighbor_degree(network)
+    nx.set_node_attributes(network, ee, "associativity")
+      
+    #nx. assortativity.average_neighbor_degree(),calculates, for each node, an average of its neighbor’s degrees.
+    return network
+
+
+

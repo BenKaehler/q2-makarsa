@@ -36,11 +36,13 @@ class Testspieceasioutput(TestPluginBase):
             for (c, d) in self.generated_network.degree()
             if ((a == c) and (b == d))
         ]
+
         for i in self.generated_network.degree():
             if i in my_list:
                 self.assertTrue(True)
             else:
                 self.assertTrue(False)
+
 
         my_list_edges = [
             (a, b)
@@ -48,11 +50,14 @@ class Testspieceasioutput(TestPluginBase):
             for (c, d) in self.generated_network.edges()
             if ((a == c) and (b == d)) or ((a == d) and (b == c))
         ]
+
         for i in self.generated_network.edges():
             if i in my_list_edges:
                 self.assertTrue(True)
             else:
                 self.assertTrue(False)
+
+
 
 
 if __name__ == "__main__":

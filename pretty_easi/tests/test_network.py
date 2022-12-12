@@ -1,9 +1,7 @@
 import unittest
-
 from networkx import Graph, read_graphml
 from qiime2 import Artifact
 from qiime2.plugin.testing import TestPluginBase
-
 
 class testnetwork(TestPluginBase):
     package = "pretty_easi.tests"

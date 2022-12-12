@@ -1,10 +1,10 @@
 import tempfile
 import unittest
-
 from networkx import Graph, read_graphml
 from pretty_easi._visualisation import get_connected_components, graph_to_spec
 from qiime2 import Artifact
 from qiime2.plugin.testing import TestPluginBase
+
 
 
 class testnetwork(TestPluginBase):
@@ -47,3 +47,4 @@ class testnetwork(TestPluginBase):
 
 if __name__ == "__main__":
     unittest.main()
+
