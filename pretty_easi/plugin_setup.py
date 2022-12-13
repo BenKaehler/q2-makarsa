@@ -1,26 +1,32 @@
-from networkx import read_graphml, write_graphml, Graph
-
-from qiime2.plugin import Plugin, Int, Str, Bool, Float
+from networkx import Graph, read_graphml, write_graphml
 from q2_types.feature_table import FeatureTable, Frequency
+from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str
 
+<<<<<<< HEAD
 from ._visualisation import visualise_network
 from ._spieceasi import spiec_easi, network_with_attribute
+=======
+>>>>>>> 0a69a1d0ed61b8b7e16041bd87601e0fd463f925
 from ._network import Network, NetworkDirectoryFormat, NetworkFormat
-
+from ._spieceasi import spiec_easi
+from ._stats import annotate_node_stats
+from ._visualisation import visualise_network
 
 plugin = Plugin(
-    name='pretty-easi',
-    version='0.0.0-dev',
-    website='https://github.com/BenKaehler/pretty-easi',
-    package='pretty_easi',
-    description=('This QIIME 2 plugin wraps SpiecEasi '
-                 'and will be useful to anybody who wants to infer '
-                 'graphical models for all sorts of compositional '
-                 'data, though primarily intended for microbiome '
-                 'relative abundance data (generated from 16S '
-                 'amplicon sequence data).'),
-    short_description='A QIIME 2 plugin to expose some SpiecEasi '
-                      'functionality.',
+    name="pretty-easi",
+    version="0.0.0-dev",
+    website="https://github.com/BenKaehler/pretty-easi",
+    package="pretty_easi",
+    description=(
+        "This QIIME 2 plugin wraps SpiecEasi "
+        "and will be useful to anybody who wants to infer "
+        "graphical models for all sorts of compositional "
+        "data, though primarily intended for microbiome "
+        "relative abundance data (generated from 16S "
+        "amplicon sequence data)."
+    ),
+    short_description="A QIIME 2 plugin to expose some SpiecEasi "
+    "functionality.",
     # citations=qiime2.plugin.Citations.load(
     #    'citations.bib', package='q2_dada2'
 )
@@ -28,7 +34,8 @@ plugin = Plugin(
 plugin.register_semantic_types(Network)
 plugin.register_formats(NetworkDirectoryFormat, NetworkFormat)
 plugin.register_semantic_type_to_format(
-        Network, artifact_format=NetworkDirectoryFormat)
+    Network, artifact_format=NetworkDirectoryFormat
+)
 
 
 @plugin.register_transformer
@@ -45,63 +52,83 @@ def _2(ff: NetworkFormat) -> Graph:
 
 plugin.visualizers.register_function(
     function=visualise_network,
-    inputs={'network': Network},
-    parameters={},
-    name='Visualize network',
-    description='Create an interactive depiction of your network.'
+    inputs={"network": Network},
+    parameters={"metadata": Metadata},
+    name="Visualize network",
+    description="Create an interactive depiction of your network.",
 )
 
 
 plugin.methods.register_function(
     function=spiec_easi,
-    inputs={'table': FeatureTable[Frequency]},
+    inputs={"table": FeatureTable[Frequency]},
     parameters={
-        'method': Str,
-        'lambda_min_ratio': Float,
-        'nlambda': Int,
-        'rep_num': Int,
-        'ncores': Int,
-        'thresh': Float,
-        'subsample_ratio': Float,
-        'seed': Float,
-        'sel_criterion': Str,
-        'verbose': Bool,
-        'pulsar_select': Bool,
-        'lambda_log': Bool,
-        'lambda_min': Float,
-        'lambda_max': Float
-        },
-    outputs=[('network', Network)],
+        "method": Str,
+        "lambda_min_ratio": Float,
+        "nlambda": Int,
+        "rep_num": Int,
+        "ncores": Int,
+        "thresh": Float,
+        "subsample_ratio": Float,
+        "seed": Float,
+        "sel_criterion": Str,
+        "verbose": Bool,
+        "pulsar_select": Bool,
+        "lambda_log": Bool,
+        "lambda_min": Float,
+        "lambda_max": Float,
+    },
+    outputs=[("network", Network)],
     input_descriptions={
-        'table': ('All sorts of compositional data though primarily intended '
-                  'for microbiome relative abundance data '
-                  '(generated from 16S amplicon sequence data)')
+        "table": (
+            "All sorts of compositional data though primarily intended "
+            "for microbiome relative abundance data "
+            "(generated from 16S amplicon sequence data)"
+        )
     },
     parameter_descriptions={
-        'method': 'Methods available for spieceasi,for example mb,glasso,slr',
-        'lambda_min_ratio': ('Input parameter of spieceasi which represents '
-                             'the scaling factor that determines the minimum '
-                             'sparsity/lambda parameter'),
-        'nlambda': 'Input parameter of spieceasi ',
-        'rep_num': 'Input parameter of spieceasi ',
-        'ncores': 'Number of cores for parallel computation',
-        'thresh': 'Threshold for StARS criterion',
-        'subsample_ratio': 'Subsample size for StARS',
-        'seed': 'Set the random seed for subsample set',
-        'sel_criterion': "Specifying criterion/method for model selection, "
-                         "Accepts 'stars' [default], 'bstars' (Bounded StARS)",
-        'verbose': 'Print extra output [default]',
-        'pulsar_select': "Perform model selection",
-        'lambda_log': 'lambda.log should values of lambda be distributed '
-                      'logarithmically (TRUE) or linearly (FALSE) between '
-                      'lamba.min and lambda.max'
+        "method": "Methods available for spieceasi,for example mb,glasso,slr",
+        "lambda_min_ratio": (
+            "Input parameter of spieceasi which represents "
+            "the scaling factor that determines the minimum "
+            "sparsity/lambda parameter"
+        ),
+        "nlambda": "Input parameter of spieceasi ",
+        "rep_num": "Input parameter of spieceasi ",
+        "ncores": "Number of cores for parallel computation",
+        "thresh": "Threshold for StARS criterion",
+        "subsample_ratio": "Subsample size for StARS",
+        "seed": "Set the random seed for subsample set",
+        "sel_criterion": "Specifying criterion/method for model selection, "
+        "Accepts 'stars' [default], 'bstars' (Bounded StARS)",
+        "verbose": "Print extra output [default]",
+        "pulsar_select": "Perform model selection",
+        "lambda_log": "lambda.log should values of lambda be distributed "
+        "logarithmically (TRUE) or linearly (FALSE) between "
+        "lamba.min and lambda.max",
     },
+    output_descriptions={"network": "The inferred network"},
+    name="SpiecEasi",
+    description=(
+        "This method generates the sparse matrix of network of input " "data"
+    ),
+)
+
+plugin.methods.register_function(
+    function=annotate_node_stats,
+    inputs={"network": Network},
+    parameters={},
+    outputs=[("network", Network)],
+    input_descriptions={"network": "The inferred network from SpiecEasi."},
     output_descriptions={
-        'network': 'The inferred network'
+        "network": "Network with node attributes. Here we assign each node "
+        "with their degree centrality, betweenness centrality, closeness "
+        "centrality, eigenvector centrality and associativity as attribute."
     },
-    name='SpiecEasi',
-    description=('This method generates the sparse matrix of network of input '
-                 'data')
+    name="network with attribute",
+    description=(
+        "Update the network with different centrality as node attribute."
+    ),
 )
 
 plugin.methods.register_function(
