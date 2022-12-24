@@ -89,28 +89,34 @@
       "type": "ordinal",
       "domain": {"data": "node-data", "field": {"signal": "colorSelect"}},
       "range": {"scheme": "category20c"}
+    },
+    {
+      "name": "weight",
+      "type": "linear",
+      "domain": {"data": "link-data", "field": "weight"},
+      "range": [0, 5]
     }
   ],
 
-"legends": [
-  {
-    "fill": "color",
-    "labelFontSize": {"value": 12},
-    "labelLimit": {"value": 0},
-    "encode": {
-      "labels": {
-        "update": {
-	  "opacity": [{"test": "colorSelect === 'None'", "value": 0}, {"value": 1}]
-	}
-      },
-      "symbols": {
-        "update": {
-	  "opacity": [{"test": "colorSelect === 'None'", "value": 0}, {"value": 1}]
-	}
+  "legends": [
+    {
+      "fill": "color",
+      "labelFontSize": {"value": 12},
+      "labelLimit": {"value": 0},
+      "encode": {
+        "labels": {
+          "update": {
+  	  "opacity": [{"test": "colorSelect === 'None'", "value": 0}, {"value": 1}]
+  	}
+        },
+        "symbols": {
+          "update": {
+  	  "opacity": [{"test": "colorSelect === 'None'", "value": 0}, {"value": 1}]
+  	}
+        }
       }
     }
-  }
-],
+  ],
 
   "marks": [
     {
@@ -170,7 +176,7 @@
           "stroke": [{"test": "active != null && (datum.source.index == active || datum.target.index == active)",
 		      "value": "black"},
 		     {"value": "#ccc"}],
-          "strokeWidth": {"value": 0.5}
+          "strokeWidth": {"scale": "weight", "field": "weight"}
         }
       },
       "transform": [

@@ -1,7 +1,6 @@
 #!/usr/bin/env Rscript
 
 library("optparse")
-library("Matrix")
 
 errQuit <- function(mesg, status = 1) {
   message("Error: ", mesg)
@@ -119,6 +118,7 @@ if (dir.exists(out.file)) {
 
 suppressWarnings(library(SpiecEasi))
 suppressWarnings(library(igraph))
+suppressWarnings(library(Matrix))
 
 se.out <- spiec.easi(
   as.matrix(data),
