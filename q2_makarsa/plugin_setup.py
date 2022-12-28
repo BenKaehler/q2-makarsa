@@ -8,13 +8,13 @@ from ._stats import annotate_node_stats
 from ._visualisation import visualise_network
 
 plugin = Plugin(
-    name="pretty-easi",
+    name="makarsa",
     version="0.0.0-dev",
-    website="https://github.com/BenKaehler/pretty-easi",
-    package="pretty_easi",
+    website="https://github.com/BenKaehler/q2-makarsa",
+    package="q2_makarsa",
     description=(
-        "This QIIME 2 plugin wraps SpiecEasi "
-        "and will be useful to anybody who wants to infer "
+        "This QIIME 2 plug-in provides biological network analysis and "
+        "visualisation and may be useful to anybody who wants to infer "
         "graphical models for all sorts of compositional "
         "data, though primarily intended for microbiome "
         "relative abundance data (generated from 16S "

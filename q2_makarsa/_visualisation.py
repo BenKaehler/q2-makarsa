@@ -9,11 +9,11 @@ import pkg_resources
 import q2templates
 import qiime2
 
-TEMPLATES = Path(pkg_resources.resource_filename("pretty_easi", "assets"))
+TEMPLATES = Path(pkg_resources.resource_filename("q2_makarsa", "assets"))
 
 EXTENDS = "{% extends 'tabbed.html' %}\n"
 
-TITLE = "{% block title %}pretty-easi : {{ title }}{% endblock %}\n"
+TITLE = "{% block title %}q2-makarsa : {{ title }}{% endblock %}\n"
 
 HEAD = """
 {% block head %}

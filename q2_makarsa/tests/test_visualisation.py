@@ -5,16 +5,16 @@ from networkx import Graph, read_graphml
 from qiime2 import Artifact
 from qiime2.plugin.testing import TestPluginBase
 
-from pretty_easi._visualisation import get_connected_components, graph_to_spec
+from q2_makarsa._visualisation import get_connected_components, graph_to_spec
 
 
 class testnetwork(TestPluginBase):
-    package = "pretty_easi.tests"
+    package = "q2_makarsa.tests"
 
     def setUp(self):
         super().setUp()
         self.temp_dir = tempfile.TemporaryDirectory(
-            prefix="q2-pretty_easi-test-temp-"
+            prefix="q2-makarsa-test-temp-"
         )
         self.network = self.get_data_path("network.graphml")
         self.expected_network = read_graphml(self.network)

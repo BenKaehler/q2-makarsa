@@ -5,11 +5,11 @@ from networkx import read_graphml
 from qiime2 import Artifact
 from qiime2.plugin.testing import TestPluginBase
 
-from pretty_easi._spieceasi import spiec_easi
+from q2_makarsa._spieceasi import spiec_easi
 
 
 class Testspieceasioutput(TestPluginBase):
-    package = "pretty_easi.tests"
+    package = "q2_makarsa.tests"
 
     def setUp(self):
         super().setUp()

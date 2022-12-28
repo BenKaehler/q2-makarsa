@@ -6,7 +6,7 @@ from qiime2.plugin.testing import TestPluginBase
 
 
 class testnetwork(TestPluginBase):
-    package = "pretty_easi.tests"
+    package = "q2_makarsa.tests"
 
     def setUp(self):
         super().setUp()

@@ -1,6 +1,6 @@
-# pretty-easi
+# q2-makarsa
 
-pretty-easi is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
+q2-makarsa is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
 
 ## What is involved
 
@@ -16,15 +16,15 @@ SpiecEasi (Sparse InversE Covariance estimation for Ecological Association and S
 
 ### Plug-in Features
 
-pretty-easi is at the $\alpha$ stage. In addition to wrapping the SpiecEasi package it provides a visualisation for generated networks. As development continues additional features will be listed here.
+q2-makarsa is at the $\alpha$ stage. In addition to wrapping the SpiecEasi package it provides a visualisation for generated networks. As development continues additional features will be listed here.
 
 <!-- Things not in the plugin / either no included or not completed -->
-<!-- qiime spieceasi --citations  -->
-<!-- qiime spieceasi --example-data  -->
+<!-- qiime makarsa --citations  -->
+<!-- qiime makarsa --example-data  -->
 
 ## Installation
 
-pretty-easi requires a working QIIME 2 environment. The recommended way to [install](https://docs.qiime2.org/2022.8/install/native/) QIIME 2 is through [miniconda](https://docs.conda.io/en/latest/miniconda.html). Miniconda can be conveniently installed using the native package managers of various Linux distributions.  See the instructions for RPM-based and Debian-based distributions [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html). Arch Linux users can find miniconda in the [AUR](https://aur.archlinux.org/packages/miniconda3).
+q2-makarsa requires a working QIIME 2 environment. The recommended way to [install](https://docs.qiime2.org/2022.8/install/native/) QIIME 2 is through [miniconda](https://docs.conda.io/en/latest/miniconda.html). Miniconda can be conveniently installed using the native package managers of various Linux distributions.  See the instructions for RPM-based and Debian-based distributions [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html). Arch Linux users can find miniconda in the [AUR](https://aur.archlinux.org/packages/miniconda3).
 
 Once miniconda has been installed, issue the following commands within the shell
 ```
@@ -49,13 +49,13 @@ Now install the SpiecEasi package
 conda install -c bioconda -c conda-forge r-spieceasi
 ```
 
-A conda package for pretty-easi is intended future development. Currently, to install the plugin
+A conda package for q2-makarsa is intended future development. Currently, to install the plugin
 1. Download the source files by either
-	- ```git clone https://github.com/BenKaehler/pretty-easi```
-	- or [clicking here](https://github.com/BenKaehler/pretty-easi/archive/refs/heads/main.zip) and extracting the zip file.
+	- ```git clone https://github.com/BenKaehler/q2-makarsa```
+	- or [clicking here](https://github.com/BenKaehler/q2-makarsa/archive/refs/heads/main.zip) and extracting the zip file.
 2. Change your working folder within the conda enviroment to your local source folder.
 3. Issue the command ```pip install .``` or ```pip install setup.py```
-4. Test the installation with ```qiime pretty-easi --help``` or ```qiime pretty-easi --version```
+4. Test the installation with ```qiime makarsa --help``` or ```qiime makarsa --version```
 
 ## Usage Examples
 
@@ -65,7 +65,7 @@ mkdir pluginExample
 cd pluginExample/
 ```
 
-This folder will contain the QIIME 2 artefacts produced by pretty-easi at the completion of each example.
+This folder will contain the QIIME 2 artefacts produced by q2-makarsa at the completion of each example.
 
 ### Basic work flow 
 
@@ -102,10 +102,10 @@ qiime tools import --input-path Suberitida.biom \\
 
 #Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
 ```
-The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working folder if this command was successful. Now, we are ready to use pretty-easi to access the SpiecEasi algorithms to infer the microbial network. The most minimal command to generate the network requires the name of artefact containing the FeatureTable and the name of the intended output artefact containing the inferred network. 
+The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working folder if this command was successful. Now, we are ready to use q2-makarsa to access the SpiecEasi algorithms to infer the microbial network. The most minimal command to generate the network requires the name of artefact containing the FeatureTable and the name of the intended output artefact containing the inferred network. 
 
 ```
-qiime pretty-easi spiec-easi --i-table spongeFeatureTable.qza \
+qiime makarsa spiec-easi --i-table spongeFeatureTable.qza \
 	--o-network spongeNet.qza
 # Saved Network to: spongeNet.qza
 ```
@@ -113,7 +113,7 @@ qiime pretty-easi spiec-easi --i-table spongeFeatureTable.qza \
 From the ```spongeNet.qza``` network artefact a visualisation can be created and then viewed
 
 ```
-qiime pretty-easi visualise-network --i-network spongeNet.qza --o-visualization spongeNet.qzv
+qiime makarsa visualise-network --i-network spongeNet.qza --o-visualization spongeNet.qzv
 #Saved Visualization to: spongeNet.qzv
 qiime tools view spongeNet.qzv
 ```
@@ -125,7 +125,7 @@ The network images should open in your default browser. Alternatively, you can u
 
 ### Options 
 
-Several parameter options exist for ```qiime pretty-easi spiec-easi``` . For a full list of parameters and the defaults execute ```qiime pretty-easi spiec-easi --help```. Some examples are below.
+Several parameter options exist for ```qiime makarsa spiec-easi``` . For a full list of parameters and the defaults execute ```qiime makarsa spiec-easi --help```. Some examples are below.
 
 The algorithm utilised to infer the network can be set with ```-p-method``` parameter switch and one of 3 keywords:
 1. ```glasso``` [Graphical LASSO](https://academic.oup.com/biostatistics/article/9/3/432/224260) (default)
@@ -134,7 +134,7 @@ The algorithm utilised to infer the network can be set with ```-p-method``` para
 
 For example to infer the network from the example data using the MB method execute the command
 ```
-qiime pretty-easi spiec-easi --i-table spongeFeatureTable.qza \\
+qiime makarsa spiec-easi --i-table spongeFeatureTable.qza \\
 	--o-network spongeNet.qza \\
 	--p-method mb
 ```
