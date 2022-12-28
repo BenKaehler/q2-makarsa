@@ -87,7 +87,7 @@
     {
       "name": "color",
       "type": "ordinal",
-      "domain": {"data": "node-data", "field": {"signal": "colorSelect"}},
+      "domain": {"data": "node-data", "field": {"signal": "colorSelect"}, "sort": true},
       "range": {"scheme": "category20c"}
     },
     {
