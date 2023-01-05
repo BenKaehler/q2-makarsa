@@ -1,18 +1,20 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
-    name="pretty-easi",
-    version='0.0.0-dev',
+    name="q2-makarsa",
+    version="0.0.0-dev",
     packages=find_packages(),
-    author="Zakir Hossine, Ben Kaehler, Isaac Towers",
-    description="Apply SpiecEasi to generate adjagency matrix.",
+    author="Zakir Hossine, Isaac Towers, Ben Kaehler",
+    description="Build webs, maybe understand microbiomes.",
     license="BSD-3-Clause",
-    url="https://github.com/BenKaehler/pretty-easi",
+    url="https://github.com/BenKaehler/q2-makarsa",
     entry_points={
-        'qiime2.plugins': ['pretty-easi=pretty_easi.plugin_setup:plugin']
+        "qiime2.plugins": ["q2-makarsa=q2_makarsa.plugin_setup:plugin"]
     },
-    scripts=['pretty_easi/assets/run_SpiecEasi.R'],
-    package_data={'pretty_easi': ['assets/*', 'assets/assets/*/*'],
-                  'pretty_easi.tests': ['data/*']},
+    scripts=["q2_makarsa/assets/run_SpiecEasi.R"],
+    package_data={
+        "q2_makarsa": ["assets/*", "assets/assets/*/*"],
+        "q2_makarsa.tests": ["data/*"],
+    },
     zip_safe=False,
 )
