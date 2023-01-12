@@ -1,5 +1,5 @@
 ---
-title: 'q2-pretty-easi : A qiime2 plugin for network analysis of microbial data'
+title: 'q2-makarsa : A qiime2 plugin for network analysis of microbial data'
 tags:
   - Network analysis
   - Community structure
