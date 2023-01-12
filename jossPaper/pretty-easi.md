@@ -47,5 +47,5 @@ The standard workflow for SpiecEasi, which is called in q2-makarsa for network g
 
 # Acknowledgements
 
-The authors acknowledge support from University of Dhaka, Bangladesh and UNSW Canberra, Australia. This work is a partial fullfilment of PhD research at UNSW Canberra.
+The authors acknowledge support from University of Dhaka, Bangladesh and UNSW Canberra, Australia. This work is a partial fullfillment of PhD research at UNSW Canberra.
 # References
