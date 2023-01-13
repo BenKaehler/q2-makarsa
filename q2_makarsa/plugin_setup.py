@@ -4,7 +4,6 @@ from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str
 
 from ._network import Network, NetworkDirectoryFormat, NetworkFormat
 from ._spieceasi import spiec_easi
-from ._stats import annotate_node_stats
 from ._visualisation import visualise_network
 
 plugin = Plugin(
