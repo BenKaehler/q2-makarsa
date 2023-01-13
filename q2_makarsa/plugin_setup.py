@@ -108,20 +108,3 @@ plugin.methods.register_function(
         "This method generates the sparse matrix of network of input " "data"
     ),
 )
-
-plugin.methods.register_function(
-    function=annotate_node_stats,
-    inputs={"network": Network},
-    parameters={},
-    outputs=[("network", Network)],
-    input_descriptions={"network": "The inferred network from SpiecEasi."},
-    output_descriptions={
-        "network": "Network with node attributes. Here we assign each node "
-        "with their degree centrality, betweenness centrality, closeness "
-        "centrality, eigenvector centrality and associativity as attribute."
-    },
-    name="network with attribute",
-    description=(
-        "Update the network with different centrality as node attribute."
-    ),
-)

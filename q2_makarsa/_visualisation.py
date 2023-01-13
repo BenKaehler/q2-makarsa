@@ -102,22 +102,33 @@ def graph_to_spec(network):
         spec = json.load(fh)
 
     attributes = pd.DataFrame([r for _, r in network.nodes(data=True)])
-    selector = {
-        "name": "colorSelect",
-        "value": "None",
-        "bind": {"input": "select", "name": "color ", "options": []},
-    }
-    options = ["None"]
+    colour_options = ["None"]
+    size_options = ["None"]
     for key in attributes.columns:
         try:
             attributes[key].astype(float)
+            size_options.append(key)
             continue
         except (ValueError, TypeError):
             pass
         if key != "Feature":
-            options.append(key)
-    selector["bind"]["options"] = options
-    spec["signals"].insert(0, selector)
+            colour_options.append(key)
+
+    size_selector = {
+        "name": "sizeSelect",
+        "value": "None",
+        "bind": {"input": "select", "name": "size ", "options": []},
+    }
+    size_selector["bind"]["options"] = size_options
+    spec["signals"].insert(0, size_selector)
+
+    colour_selector = {
+        "name": "colorSelect",
+        "value": "None",
+        "bind": {"input": "select", "name": "color ", "options": []},
+    }
+    colour_selector["bind"]["options"] = colour_options
+    spec["signals"].insert(0, colour_selector)
 
     nodes = nx.nodes(network)
     idx = {nid: i for i, nid in enumerate(nodes)}
@@ -175,10 +186,7 @@ def add_taxonomy_levels(row):
     return row
 
 
-def visualise_network(
-    output_dir: str, network: nx.Graph, metadata: qiime2.Metadata = None
-) -> None:
-
+def annotate_with_metadata(network, metadata):
     metadata = metadata.to_dataframe()
     if "Taxon" in metadata.columns:
         metadata = metadata.apply(add_taxonomy_levels, axis=1)
@@ -197,6 +205,29 @@ def visualise_network(
         ):
             attributes[nid] = {"Feature": name[1:], **metadata.loc[name[1:]]}
     nx.set_node_attributes(network, attributes)
+
+
+def annotate_node_stats(network):
+    dd = nx.degree_centrality(network)
+    nx.set_node_attributes(network, dd, "Degree Centrality")
+    bb = nx.betweenness_centrality(network)
+    nx.set_node_attributes(network, bb, "Betweenness Centrality")
+    cc = nx.closeness_centrality(network)
+    nx.set_node_attributes(network, cc, "Closeness Centrality")
+    ee = nx.eigenvector_centrality(network)
+    nx.set_node_attributes(network, ee, "Eigenvector Centrality")
+    ee = nx.assortativity.average_neighbor_degree(network)
+    nx.set_node_attributes(network, ee, "Associativity")
+
+
+def visualise_network(
+    output_dir: str, network: nx.Graph, metadata: qiime2.Metadata = None
+) -> None:
+
+    if metadata:
+        annotate_with_metadata(network, metadata)
+
+    annotate_node_stats(network)
 
     q2templates.util.copy_assets(
         TEMPLATES / "assets", Path(output_dir) / "assets"
