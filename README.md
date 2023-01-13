@@ -24,38 +24,19 @@ q2-makarsa is at the $\alpha$ stage. In addition to wrapping the SpiecEasi packa
 
 ## Installation
 
-q2-makarsa requires a working QIIME 2 environment. The recommended way to [install](https://docs.qiime2.org/2022.8/install/native/) QIIME 2 is through [miniconda](https://docs.conda.io/en/latest/miniconda.html). Miniconda can be conveniently installed using the native package managers of various Linux distributions.  See the instructions for RPM-based and Debian-based distributions [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/rpm-debian.html). Arch Linux users can find miniconda in the [AUR](https://aur.archlinux.org/packages/miniconda3).
+q2-makarsa requires a working QIIME 2 environment, installed using conda. Please follow the "Natively installing QIIME 2" [instructions](https://docs.qiime2.org/2022.11/install/native/). (If that link is outdated, please navigate there in the latest QIIME 2 [docs](https://docs.qiime2.org/).)
 
-Once miniconda has been installed, issue the following commands within the shell
-```
-conda update conda
-conda install wget
-```
-and install QIIME 2
-```
-wget https://data.qiime2.org/distro/core/qiime2-2022.8-py38-linux-conda.yml
-conda env create -n qiime2-2022.8 --file qiime2-2022.8-py38-linux-conda.yml
-```
-
-Test the installation with `qiime --help`. An error free output means successful installation and the QIIME 2 environment can be activated. For example, 
-
-```
-conda activate qiime2-2022.8
-```
-
-Now install the SpiecEasi package
+Make sure your conda environment is activated (as described in the QIIME 2 installation instructions), then install the dependencies:
 
 ```
 conda install -c bioconda -c conda-forge r-spieceasi
 ```
 
-A conda package for q2-makarsa is intended future development. Currently, to install the plugin
-1. Download the source files by either
-	- ```git clone https://github.com/BenKaehler/q2-makarsa```
-	- or [clicking here](https://github.com/BenKaehler/q2-makarsa/archive/refs/heads/main.zip) and extracting the zip file.
-2. Change your working folder within the conda enviroment to your local source folder.
-3. Issue the command ```pip install .``` or ```pip install setup.py```
-4. Test the installation with ```qiime makarsa --help``` or ```qiime makarsa --version```
+In the same conda environment pip install from the q2-makarsa github repo:
+
+```
+pip install git+https://github.com/BenKaehler/q2-makarsa.git
+```
 
 ## Usage Examples
 
