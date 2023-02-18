@@ -12,7 +12,8 @@ import qiime2
 TEMPLATES = Path(pkg_resources.resource_filename("q2_makarsa", "assets"))
 
 TABBUTTON = """
-<button class="tablinks" onclick="openTab(event, '{{ tabtitle }}')">{{ tabtitle }}</button>
+<button class="tablinks" onclick="openTab(event, '{{ tabtitle }}')">
+{{ tabtitle }}</button>
 """
 
 INDEX = """
@@ -56,7 +57,8 @@ function openTab(evt, tabName) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
 
-  // Show the current tab, and add an "active" class to the button that opened the tab
+  // Show the current tab, and add an "active" class to the
+  // button that opened the tab
   var splitTabName = tabName.split(" ");
   if (splitTabName.length > 1)
   {
