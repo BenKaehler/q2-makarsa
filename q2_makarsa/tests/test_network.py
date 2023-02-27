@@ -1,47 +1,22 @@
-import unittest
+import tempfile
+from pathlib import Path
 
 from networkx import Graph, read_graphml
+import networkx.algorithms.isomorphism as iso
 from qiime2 import Artifact
 from qiime2.plugin.testing import TestPluginBase
 
 
-class testnetwork(TestPluginBase):
+class TestNetwork(TestPluginBase):
     package = "q2_makarsa.tests"
 
-    def setUp(self):
-        super().setUp()
-        self.network = self.get_data_path("network.graphml")
-        self.expected_network = read_graphml(self.network)
-        self.imported_network = Artifact.import_data(
-            "Network", self.expected_network
-        )
-        self.qiime_network = self.imported_network.view(Graph)
-
-    def test_defaults(self):
-        my_list = [
-            (a, b)
-            for (a, b) in self.expected_network.degree()
-            for (c, d) in self.qiime_network.degree()
-            if ((a == c) and (b == d))
-        ]
-        for i in self.qiime_network.degree():
-            if i in my_list:
-                self.assertTrue(True)
-            else:
-                self.assertTrue(False)
-
-        my_list_edges = [
-            (a, b)
-            for (a, b) in self.expected_network.edges()
-            for (c, d) in self.qiime_network.edges()
-            if ((a == c) and (b == d)) or ((a == d) and (b == c))
-        ]
-        for i in self.qiime_network.edges():
-            if i in my_list_edges:
-                self.assertTrue(True)
-            else:
-                self.assertTrue(False)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_network(self):
+        network_filename = self.get_data_path("network.graphml")
+        before = read_graphml(network_filename)
+        before_artifact = Artifact.import_data("Network", before)
+        with tempfile.TemporaryDirectory() as temp_dir_name:
+            artifact_filename = str(Path(temp_dir_name) / "test.qza")
+            before_artifact.save(artifact_filename)
+            after_artifact = Artifact.load(artifact_filename)
+            after = after_artifact.view(Graph)
+        self.assertTrue(iso.is_isomorphic(before, after))

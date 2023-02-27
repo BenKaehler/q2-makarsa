@@ -1,0 +1,1091 @@
+{
+ "$schema": "https://vega.github.io/schema/vega/v5.json",
+ "description": "A node-link diagram with force-directed layout.",
+ "width": 700,
+ "height": 500,
+ "padding": 0,
+ "autosize": {
+  "type": "pad",
+  "resize": true
+ },
+ "signals": [
+  {
+   "name": "colorSelect",
+   "value": "None",
+   "bind": {
+    "input": "select",
+    "name": "color ",
+    "options": [
+     "None"
+    ]
+   }
+  },
+  {
+   "name": "sizeSelect",
+   "value": "None",
+   "bind": {
+    "input": "select",
+    "name": "size ",
+    "options": [
+     "None"
+    ]
+   }
+  },
+  {
+   "name": "cx",
+   "update": "width / 2"
+  },
+  {
+   "name": "cy",
+   "update": "height / 2"
+  },
+  {
+   "name": "nodeRadius",
+   "value": 8,
+   "bind": {
+    "input": "range",
+    "min": 1,
+    "max": 30,
+    "step": 1,
+    "name": "node scale"
+   }
+  },
+  {
+   "name": "linkWidth",
+   "value": 5,
+   "bind": {
+    "input": "range",
+    "min": 0.5,
+    "max": 10,
+    "step": 0.25,
+    "name": "link scale"
+   }
+  },
+  {
+   "name": "nodeCharge",
+   "value": -30,
+   "bind": {
+    "input": "range",
+    "min": -60,
+    "max": 10,
+    "step": 1,
+    "name": "node charge"
+   }
+  },
+  {
+   "name": "linkDistance",
+   "value": 30,
+   "bind": {
+    "input": "range",
+    "min": 5,
+    "max": 100,
+    "step": 1,
+    "name": "link distance"
+   }
+  },
+  {
+   "name": "linkStrength",
+   "value": 0,
+   "bind": {
+    "input": "range",
+    "min": 0,
+    "max": 2,
+    "step": 0.1,
+    "name": "link strength"
+   }
+  },
+  {
+   "name": "static",
+   "value": true,
+   "bind": {
+    "input": "checkbox",
+    "name": "static "
+   }
+  },
+  {
+   "description": "State variable for active node fix status.",
+   "name": "fix",
+   "value": false,
+   "on": [
+    {
+     "events": "symbol:mouseout[!event.buttons], window:mouseup",
+     "update": "false"
+    },
+    {
+     "events": "symbol:mouseover",
+     "update": "fix || true"
+    },
+    {
+     "events": "[symbol:mousedown, window:mouseup] > window:mousemove!",
+     "update": "xy()",
+     "force": true
+    }
+   ]
+  },
+  {
+   "description": "Graph node most recently interacted with.",
+   "name": "node",
+   "value": null,
+   "on": [
+    {
+     "events": "symbol:mouseover",
+     "update": "fix === true ? item() : node"
+    }
+   ]
+  },
+  {
+   "description": "Flag to restart Force simulation upon data changes.",
+   "name": "restart",
+   "value": false,
+   "on": [
+    {
+     "events": {
+      "signal": "fix"
+     },
+     "update": "fix && fix.length"
+    }
+   ]
+  },
+  {
+   "description": "Flag to highlight node and links",
+   "name": "active",
+   "value": null,
+   "on": [
+    {
+     "events": "symbol:mouseover",
+     "update": "datum.index"
+    },
+    {
+     "events": "mouseover[!event.item]",
+     "update": "null"
+    }
+   ]
+  },
+  {
+   "description": "Selection for node table",
+   "name": "nodeSelect",
+   "value": null,
+   "on": [
+    {
+     "events": "symbol:mousedown",
+     "update": "item()"
+    }
+   ]
+  }
+ ],
+ "data": [
+  {
+   "name": "node-data",
+   "values": [
+    {
+     "index": 0,
+     "Feature": "HKcs0"
+    },
+    {
+     "index": 1,
+     "Feature": "bPSEb"
+    },
+    {
+     "index": 2,
+     "Feature": "X3KD3L"
+    },
+    {
+     "index": 3,
+     "Feature": "i0tPB"
+    },
+    {
+     "index": 4,
+     "Feature": "X4K3Hh"
+    },
+    {
+     "index": 5,
+     "Feature": "FPTtD"
+    },
+    {
+     "index": 6,
+     "Feature": "X7H3D"
+    },
+    {
+     "index": 7,
+     "Feature": "Xnu7S"
+    },
+    {
+     "index": 8,
+     "Feature": "h9FbM"
+    },
+    {
+     "index": 9,
+     "Feature": "rbpyb"
+    },
+    {
+     "index": 10,
+     "Feature": "X0XOLj"
+    },
+    {
+     "index": 11,
+     "Feature": "pVaq5"
+    },
+    {
+     "index": 12,
+     "Feature": "gc64H"
+    },
+    {
+     "index": 13,
+     "Feature": "X8Hlao"
+    },
+    {
+     "index": 14,
+     "Feature": "kga4g"
+    },
+    {
+     "index": 15,
+     "Feature": "aITW7"
+    },
+    {
+     "index": 16,
+     "Feature": "NmKte"
+    },
+    {
+     "index": 17,
+     "Feature": "aCVgY"
+    },
+    {
+     "index": 18,
+     "Feature": "bO0ui"
+    },
+    {
+     "index": 19,
+     "Feature": "OzQnk"
+    },
+    {
+     "index": 20,
+     "Feature": "X871v"
+    },
+    {
+     "index": 21,
+     "Feature": "TYAZm"
+    },
+    {
+     "index": 22,
+     "Feature": "CTvJP"
+    },
+    {
+     "index": 23,
+     "Feature": "FCfLi"
+    },
+    {
+     "index": 24,
+     "Feature": "xBo9q"
+    },
+    {
+     "index": 25,
+     "Feature": "X6nItH"
+    },
+    {
+     "index": 26,
+     "Feature": "BDqLV"
+    },
+    {
+     "index": 27,
+     "Feature": "BfyaV"
+    },
+    {
+     "index": 28,
+     "Feature": "X0aHk0"
+    },
+    {
+     "index": 29,
+     "Feature": "psRbW"
+    },
+    {
+     "index": 30,
+     "Feature": "pOqLH"
+    },
+    {
+     "index": 31,
+     "Feature": "CKMC2"
+    },
+    {
+     "index": 32,
+     "Feature": "N0gX0"
+    },
+    {
+     "index": 33,
+     "Feature": "xIkpV"
+    },
+    {
+     "index": 34,
+     "Feature": "CKzvN"
+    }
+   ]
+  },
+  {
+   "name": "link-data",
+   "values": [
+    {
+     "source": 0,
+     "target": 8,
+     "weight": 0.112930511027876,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 1,
+     "target": 15,
+     "weight": 0.117878294069387,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 1,
+     "target": 27,
+     "weight": 0.0333901614392404,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 1,
+     "target": 32,
+     "weight": 0.0653051901907178,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 2,
+     "target": 27,
+     "weight": 0.0524897627900579,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 3,
+     "target": 9,
+     "weight": 0.0968280795126354,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 3,
+     "target": 17,
+     "weight": 0.0606860757885976,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 3,
+     "target": 32,
+     "weight": 0.0750580108279999,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 4,
+     "target": 9,
+     "weight": 0.0201288984160626,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 4,
+     "target": 12,
+     "weight": 0.0320454579175685,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 4,
+     "target": 24,
+     "weight": 0.0771171687287052,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 4,
+     "target": 25,
+     "weight": 0.077539576377785,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 4,
+     "target": 26,
+     "weight": 0.131967248453229,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 4,
+     "target": 32,
+     "weight": 0.243311734809531,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 5,
+     "target": 15,
+     "weight": 0.0811011410617409,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 5,
+     "target": 28,
+     "weight": 0.102056642268926,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 6,
+     "target": 11,
+     "weight": 0.105445080036566,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 6,
+     "target": 16,
+     "weight": 0.150468907124552,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 6,
+     "target": 22,
+     "weight": 0.0366471447599348,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 6,
+     "target": 26,
+     "weight": 0.0475097330989611,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 6,
+     "target": 30,
+     "weight": 0.112660974477816,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 7,
+     "target": 10,
+     "weight": 0.0837542689877902,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 7,
+     "target": 24,
+     "weight": 0.0171314640358089,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 8,
+     "target": 18,
+     "weight": 0.127519112314672,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 8,
+     "target": 29,
+     "weight": 0.195061373297482,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 8,
+     "target": 31,
+     "weight": 0.220626512300541,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 9,
+     "target": 12,
+     "weight": 0.157175005292387,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 9,
+     "target": 20,
+     "weight": 0.128295555295925,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 9,
+     "target": 21,
+     "weight": 0.152439276133693,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 9,
+     "target": 22,
+     "weight": 0.112638376699115,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 9,
+     "target": 24,
+     "weight": 0.070345334195137,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 9,
+     "target": 25,
+     "weight": 0.250909414101931,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 9,
+     "target": 26,
+     "weight": 0.0918249884094724,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 9,
+     "target": 28,
+     "weight": 0.0688174382569234,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 9,
+     "target": 32,
+     "weight": 0.28013675186314,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 11,
+     "target": 22,
+     "weight": 0.0476555629672628,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 12,
+     "target": 15,
+     "weight": 0.137905821305551,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 12,
+     "target": 26,
+     "weight": 0.23423232524498,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 12,
+     "target": 28,
+     "weight": 0.128398189737967,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 12,
+     "target": 32,
+     "weight": 0.0199875316130254,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 13,
+     "target": 17,
+     "weight": 0.0367903454863793,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 14,
+     "target": 22,
+     "weight": 0.052584315490764,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 14,
+     "target": 26,
+     "weight": 0.0513409384860364,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 14,
+     "target": 32,
+     "weight": 0.0470969475597352,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 15,
+     "target": 27,
+     "weight": 0.0332708347492365,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 15,
+     "target": 28,
+     "weight": 0.172375045505536,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 15,
+     "target": 29,
+     "weight": 0.128797181180863,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 15,
+     "target": 32,
+     "weight": 0.141133608797355,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 16,
+     "target": 22,
+     "weight": 0.289122575632453,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 16,
+     "target": 26,
+     "weight": 0.0714002677849602,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 16,
+     "target": 28,
+     "weight": 0.0494048704793612,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 16,
+     "target": 32,
+     "weight": 0.123223846682647,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 16,
+     "target": 34,
+     "weight": 0.147806678155479,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 17,
+     "target": 29,
+     "weight": 0.147491981279099,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 18,
+     "target": 31,
+     "weight": 0.130440226684554,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 19,
+     "target": 31,
+     "weight": 0.0829961741542083,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 20,
+     "target": 21,
+     "weight": 0.125826611782452,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 20,
+     "target": 22,
+     "weight": 0.0463411334387999,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 20,
+     "target": 25,
+     "weight": 0.0352507671293005,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 20,
+     "target": 26,
+     "weight": 0.0114548798829321,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 20,
+     "target": 28,
+     "weight": 0.11670805072002,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 21,
+     "target": 25,
+     "weight": 0.0376185808270322,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 21,
+     "target": 26,
+     "weight": 0.038074926898894,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 21,
+     "target": 32,
+     "weight": 0.0356985056761735,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 22,
+     "target": 23,
+     "weight": 0.027101380575755,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 22,
+     "target": 26,
+     "weight": 0.0515423077481214,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 22,
+     "target": 27,
+     "weight": 0.037559691372846,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 22,
+     "target": 28,
+     "weight": 0.0920742499298726,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 22,
+     "target": 32,
+     "weight": 0.167637173598688,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 22,
+     "target": 33,
+     "weight": 0.157398370647772,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 23,
+     "target": 26,
+     "weight": 0.189339140395058,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 24,
+     "target": 26,
+     "weight": 0.114328788612454,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 24,
+     "target": 32,
+     "weight": 0.10204313437357,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 25,
+     "target": 26,
+     "weight": 0.17156321061124,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 25,
+     "target": 27,
+     "weight": 0.208644563256757,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 25,
+     "target": 28,
+     "weight": 0.358759837720789,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 25,
+     "target": 32,
+     "weight": 0.376095981654704,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 26,
+     "target": 27,
+     "weight": 0.229996707766019,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 26,
+     "target": 28,
+     "weight": 0.159080410321048,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 26,
+     "target": 32,
+     "weight": 0.0694720419022977,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 26,
+     "target": 33,
+     "weight": 0.145656335484411,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 27,
+     "target": 28,
+     "weight": 0.1731022885937,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 27,
+     "target": 29,
+     "weight": 0.119399301976917,
+     "weight_sign": 1.0
+    },
+    {
+     "source": 28,
+     "target": 32,
+     "weight": 0.0935216780997522,
+     "weight_sign": -1.0
+    },
+    {
+     "source": 32,
+     "target": 33,
+     "weight": 0.0755903681532026,
+     "weight_sign": -1.0
+    }
+   ]
+  }
+ ],
+ "scales": [
+  {
+   "name": "color",
+   "type": "ordinal",
+   "domain": {
+    "data": "node-data",
+    "field": {
+     "signal": "colorSelect"
+    },
+    "sort": true
+   },
+   "range": {
+    "scheme": "category20c"
+   }
+  },
+  {
+   "name": "sizeScale",
+   "type": "pow",
+   "exponent": 2,
+   "domain": {
+    "data": "node-data",
+    "field": {
+     "signal": "sizeSelect"
+    }
+   },
+   "range": [
+    8,
+    {
+     "signal": "2 * nodeRadius * nodeRadius"
+    }
+   ]
+  },
+  {
+   "name": "weightScale",
+   "type": "linear",
+   "domain": {
+    "data": "link-data",
+    "field": "weight"
+   },
+   "range": [
+    0.5,
+    {
+     "signal": "linkWidth"
+    }
+   ]
+  }
+ ],
+ "legends": [
+  {
+   "fill": "color",
+   "labelFontSize": {
+    "value": 12
+   },
+   "labelLimit": {
+    "value": 0
+   },
+   "encode": {
+    "labels": {
+     "update": {
+      "opacity": [
+       {
+        "test": "colorSelect === 'None'",
+        "value": 0
+       },
+       {
+        "value": 1
+       }
+      ]
+     }
+    },
+    "symbols": {
+     "update": {
+      "opacity": [
+       {
+        "test": "colorSelect === 'None'",
+        "value": 0
+       },
+       {
+        "value": 1
+       }
+      ]
+     }
+    }
+   }
+  }
+ ],
+ "marks": [
+  {
+   "name": "nodes",
+   "type": "symbol",
+   "zindex": 1,
+   "from": {
+    "data": "node-data"
+   },
+   "on": [
+    {
+     "trigger": "fix",
+     "modify": "node",
+     "values": "fix === true ? {fx: node.x, fy: node.y} : {fx: fix[0], fy: fix[1]}"
+    },
+    {
+     "trigger": "!fix",
+     "modify": "node",
+     "values": "{fx: null, fy: null}"
+    }
+   ],
+   "encode": {
+    "enter": {
+     "size": [
+      {
+       "test": "sizeSelect === 'None'",
+       "signal": "2 * nodeRadius * nodeRadius"
+      },
+      {
+       "scale": "sizeScale",
+       "field": {
+        "signal": "sizeSelect"
+       }
+      }
+     ],
+     "fill": {
+      "scale": "color",
+      "field": {
+       "signal": "colorSelect"
+      }
+     },
+     "stroke": {
+      "value": "white"
+     }
+    },
+    "update": {
+     "size": [
+      {
+       "test": "sizeSelect === 'None'",
+       "signal": "2 * nodeRadius * nodeRadius"
+      },
+      {
+       "scale": "sizeScale",
+       "field": {
+        "signal": "sizeSelect"
+       }
+      }
+     ],
+     "cursor": {
+      "value": "pointer"
+     },
+     "fill": [
+      {
+       "test": "datum.index === active",
+       "value": "#999"
+      },
+      {
+       "scale": "color",
+       "field": {
+        "signal": "colorSelect"
+       }
+      }
+     ]
+    }
+   },
+   "transform": [
+    {
+     "type": "force",
+     "iterations": 200,
+     "restart": {
+      "signal": "restart"
+     },
+     "static": {
+      "signal": "static"
+     },
+     "signal": "force",
+     "forces": [
+      {
+       "force": "center",
+       "x": {
+        "signal": "cx"
+       },
+       "y": {
+        "signal": "cy"
+       }
+      },
+      {
+       "force": "collide",
+       "radius": {
+        "expr": "sqrt(datum.size)/2 + 0*nodeRadius + 0*(sizeSelect === '')"
+       }
+      },
+      {
+       "force": "nbody",
+       "strength": {
+        "signal": "nodeCharge"
+       }
+      },
+      {
+       "force": "link",
+       "links": "link-data",
+       "distance": {
+        "signal": "linkDistance"
+       }
+      },
+      {
+       "force": "link",
+       "links": "link-data",
+       "strength": {
+        "signal": "linkStrength"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "path",
+   "from": {
+    "data": "link-data"
+   },
+   "interactive": false,
+   "encode": {
+    "update": {
+     "stroke": [
+      {
+       "test": "active != null && (datum.source.index == active || datum.target.index == active)",
+       "value": "#999"
+      },
+      {
+       "test": "datum.weight_sign < 0",
+       "value": "#F17720"
+      },
+      {
+       "value": "#00A7E1"
+      }
+     ],
+     "strokeWidth": {
+      "scale": "weightScale",
+      "field": "weight"
+     }
+    }
+   },
+   "transform": [
+    {
+     "type": "linkpath",
+     "require": {
+      "signal": "force"
+     },
+     "shape": "line",
+     "sourceX": "datum.source.x",
+     "sourceY": "datum.source.y",
+     "targetX": "datum.target.x",
+     "targetY": "datum.target.y"
+    }
+   ]
+  }
+ ]
+}

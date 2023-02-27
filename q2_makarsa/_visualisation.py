@@ -2,17 +2,19 @@ import json
 import tempfile
 from collections import defaultdict
 from pathlib import Path
+import pkg_resources
 
 import networkx as nx
 import pandas as pd
-import pkg_resources
+import numpy as np
 import q2templates
 import qiime2
 
 TEMPLATES = Path(pkg_resources.resource_filename("q2_makarsa", "assets"))
 
 TABBUTTON = """
-<button class="tablinks" onclick="openTab(event, '{{ tabtitle }}')">{{ tabtitle }}</button>
+<button class="tablinks" onclick="openTab(event, '{{ tabtitle }}')">
+{{ tabtitle }}</button>
 """
 
 INDEX = """
@@ -56,7 +58,8 @@ function openTab(evt, tabName) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
 
-  // Show the current tab, and add an "active" class to the button that opened the tab
+  // Show the current tab, and add an "active" class to the
+  // button that opened the tab
   var splitTabName = tabName.split(" ");
   if (splitTabName.length > 1)
   {
@@ -200,6 +203,10 @@ def graph_to_spec(network):
     links = [
         {"source": idx[n[0]], "target": idx[n[1]], **edges[n]} for n in edges
     ]
+    for link in links:
+        if "weight" in link:
+            link["weight_sign"] = np.sign(link["weight"])
+            link["weight"] = abs(link["weight"])
     # "group" in nodes is currently being used for colour
     # "value" in links has been dropped. not sure whether it did anything
     spec["data"] = [

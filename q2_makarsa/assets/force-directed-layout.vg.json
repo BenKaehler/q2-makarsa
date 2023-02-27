@@ -100,7 +100,7 @@
       "range": [8, {"signal": "2 * nodeRadius * nodeRadius"}]
     },
     {
-      "name": "weight",
+      "name": "weightScale",
       "type": "linear",
       "domain": {"data": "link-data", "field": "weight"},
       "range": [0.5, {"signal": "linkWidth"}]
@@ -187,8 +187,9 @@
         "update": {
           "stroke": [{"test": "active != null && (datum.source.index == active || datum.target.index == active)",
 		      "value": "#999"},
-		     {"value": "#ccc"}],
-          "strokeWidth": {"scale": "weight", "field": "weight"}
+		     {"test": "datum.weight_sign < 0", "value": "#F17720"},
+		     {"value": "#00A7E1"}],
+          "strokeWidth": {"scale": "weightScale", "field": "weight"}
         }
       },
       "transform": [
