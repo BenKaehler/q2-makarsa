@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v2
+
+    - name: Create conda environment
+      run: |
+        wget https://data.qiime2.org/distro/core/qiime2-2023.2-py38-linux-conda.yml
+        conda env create -n test --file qiime2-2023.2-py38-linux-conda.yml
+        conda activate test
+        conda install -c conda-forge -c bioconda r-spieceasi
+
+    - name: Install Python package
+      run: |
+        conda activate test
+        pip install .
+
+    - name: Run Flake8
+      run: |
+        conda activate test
+        flake8
+
+    - name: Run pytest
+      run: |
+        conda activate test
+        pytest
