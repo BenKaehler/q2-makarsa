@@ -107,3 +107,62 @@ plugin.methods.register_function(
         "This method generates the sparse matrix of network of input " "data"
     ),
 )
+
+
+
+plugin.methods.register_function(
+    function=flashweave,
+    inputs={"table": FeatureTable[Frequency],
+            "meta_table":  Metadata},
+    parameters={
+        "pca_dimension": Int,
+        "min_cluster_size": Int,
+        "max_cluster_size": Int,
+        "n_threads": Int,
+        "seed": Int,
+        "alpha": Float,
+        "nruns": Int,
+        "subsampleratio": Float,
+        "numclusters": Int,
+        "maxoverlap": Float,
+        "verbose": Bool
+        
+    },
+    outputs=[("network", Network)],
+    input_descriptions={
+        "table": (
+            "All sorts of compositional data though primarily intended "
+             "for microbiome relative abundance data "
+            "(generated from 16S amplicon sequence data)"),
+        
+        "meta_table": "a pathe which contain file ofmeta data of input data"
+    },
+    parameter_descriptions={
+        "pca_dimension": "PCA dimension (default: 10)",
+        "min_cluster_size": "minimum cluster size (default: 2)",
+        "max_cluster_size": "maximum cluster size (default: 50)",
+        "n_threads": "number of threads to use (default: 1) ",
+        "seed": "random seed (default: 1)",
+        "alpha": "threshold used to determine statistical significance",
+        "nruns": "flashweave parameter",
+        "subsampleratio": "flashweave parameter",
+        "numclusters": "flashweave parameter",
+        "maxoverlap": "flashweave parameter",
+        "verbose": "Enable verbose output"
+    },
+    output_descriptions={"network": "The inferred network"},
+    name="flashweave",
+    description=(
+        "FlashWeave predicts ecological interactions between microbes from large-scale compositional abundance data "
+    ),
+)
+
+
+
+
+
+
+
+
+
+
