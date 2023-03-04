@@ -32,20 +32,24 @@ jobs:
         
     - name: Install SpiecEasi
       run: |
+        source /home/runner/.bashrc
         mamba activate makarsa-test
         mamba install -y -c conda-forge -c bioconda r-spieceasi flake8
 
     - name: Install Makarsa
       run: |
+        source /home/runner/.bashrc
         mamba activate makarsa-test
         pip install .
 
     - name: Run Flake8
       run: |
+        source /home/runner/.bashrc
         mamba activate makarsa-test
         flake8
 
     - name: Run pytest
       run: |
+        source /home/runner/.bashrc
         mamba activate makarsa-test
         pytest
