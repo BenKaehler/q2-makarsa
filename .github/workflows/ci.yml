@@ -28,10 +28,14 @@ jobs:
       run: |
         wget https://data.qiime2.org/distro/core/qiime2-2023.2-py38-linux-conda.yml
         mamba env create -n makarsa-test --file qiime2-2023.2-py38-linux-conda.yml
+        mamba init
+        
+    - name: Install SpiecEasi
+      run: |
         mamba activate makarsa-test
         mamba install -y -c conda-forge -c bioconda r-spieceasi flake8
 
-    - name: Install Python package
+    - name: Install Makarsa
       run: |
         mamba activate makarsa-test
         pip install .
