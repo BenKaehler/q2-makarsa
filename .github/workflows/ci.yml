@@ -28,20 +28,20 @@ jobs:
       run: |
         wget https://data.qiime2.org/distro/core/qiime2-2023.2-py38-linux-conda.yml
         mamba env create -n makarsa-test --file qiime2-2023.2-py38-linux-conda.yml
-        conda activate makarsa-test
+        mamba activate makarsa-test
         mamba install -y -c conda-forge -c bioconda r-spieceasi flake8
 
     - name: Install Python package
       run: |
-        conda activate makarsa-test
+        mamba activate makarsa-test
         pip install .
 
     - name: Run Flake8
       run: |
-        conda activate makarsa-test
+        mamba activate makarsa-test
         flake8
 
     - name: Run pytest
       run: |
-        conda activate makarsa-test
+        mamba activate makarsa-test
         pytest
