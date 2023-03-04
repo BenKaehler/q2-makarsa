@@ -1,6 +1,6 @@
 # q2-makarsa
 
-[ci](https://github.com/BenKaehler/q2-makarsa/actions/workflows/ci.yml/badge.svg)
+![ci](https://github.com/BenKaehler/q2-makarsa/actions/workflows/ci.yml/badge.svg)
 
 q2-makarsa is a plugin to incorporate some functionality from the  [SpiecEasi](https://github.com/zdk123/SpiecEasi) package into the QIIME 2 environment together with additional network visualisation.
 
