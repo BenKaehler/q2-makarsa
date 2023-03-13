@@ -26,7 +26,7 @@ bibliography: joss.bib
 
 # Summary
 
-**q2-makarsa** is a plugin for the QIIME 2 microbiome bioinformatics platform. The plugin allows the QIIME 2 community to infer microbial ecological networks from community composition data by which we can identify central species and their influences on the species who have interactions with that central species. 
+**q2-makarsa** is a plugin for the QIIME 2 microbiome bioinformatics platform. The plugin allows the QIIME 2 community to infer microbial ecological networks from community composition data from which we can identify central species and their influences on the species that have interactions with that central species. 
 
 # Statement of need
 
