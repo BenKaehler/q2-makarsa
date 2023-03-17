@@ -1,3 +1,4 @@
+#!/usr/bin/env julia
 
 using FlashWeave
 using ArgParse
@@ -91,11 +92,3 @@ function main()
 end
 
 main()
-
-
-
-
-
-
-
-

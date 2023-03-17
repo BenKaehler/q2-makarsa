@@ -4,6 +4,7 @@ from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str
 
 from ._network import Network, NetworkDirectoryFormat, NetworkFormat
 from ._spieceasi import spiec_easi
+from ._flashweave import flashweave
 from ._visualisation import visualise_network
 
 plugin = Plugin(
@@ -109,12 +110,11 @@ plugin.methods.register_function(
 )
 
 
-
 plugin.methods.register_function(
     function=flashweave,
-    inputs={"table": FeatureTable[Frequency],
-            "meta_table":  Metadata},
+    inputs={"table": FeatureTable[Frequency]},
     parameters={
+        "meta_data":  Metadata,
         "pca_dimension": Int,
         "min_cluster_size": Int,
         "max_cluster_size": Int,
@@ -122,22 +122,20 @@ plugin.methods.register_function(
         "seed": Int,
         "alpha": Float,
         "nruns": Int,
-        "subsampleratio": Float,
-        "numclusters": Int,
-        "maxoverlap": Float,
+        "subsample_ratio": Float,
+        "num_clusters": Int,
+        "max_overlap": Float,
         "verbose": Bool
-        
     },
     outputs=[("network", Network)],
     input_descriptions={
         "table": (
             "All sorts of compositional data though primarily intended "
-             "for microbiome relative abundance data "
-            "(generated from 16S amplicon sequence data)"),
-        
-        "meta_table": "a pathe which contain file ofmeta data of input data"
+            "for microbiome relative abundance data "
+            "(generated from 16S amplicon sequence data)")
     },
     parameter_descriptions={
+        "meta_data": "a pathe which contain file ofmeta data of input data",
         "pca_dimension": "PCA dimension (default: 10)",
         "min_cluster_size": "minimum cluster size (default: 2)",
         "max_cluster_size": "maximum cluster size (default: 50)",
@@ -145,24 +143,15 @@ plugin.methods.register_function(
         "seed": "random seed (default: 1)",
         "alpha": "threshold used to determine statistical significance",
         "nruns": "flashweave parameter",
-        "subsampleratio": "flashweave parameter",
-        "numclusters": "flashweave parameter",
-        "maxoverlap": "flashweave parameter",
+        "subsample_ratio": "flashweave parameter",
+        "num_clusters": "flashweave parameter",
+        "max_overlap": "flashweave parameter",
         "verbose": "Enable verbose output"
     },
     output_descriptions={"network": "The inferred network"},
     name="flashweave",
     description=(
-        "FlashWeave predicts ecological interactions between microbes from large-scale compositional abundance data "
+        "FlashWeave predicts ecological interactions between microbes from "
+        "large-scale compositional abundance data "
     ),
 )
-
-
-
-
-
-
-
-
-
-
