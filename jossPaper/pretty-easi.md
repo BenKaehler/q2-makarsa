@@ -47,7 +47,8 @@ The visualizar provide portable, shareable reports, publication-ready figures, a
 
 The q2-makarsa plugin is written in Python, Julia, and R, and employs pandas [@mckinney2011pandas] for data manipulation, networkx [@hagberg2020networkx] and igraph [@csardi2006igraph] for network generation and visualization. We also used html [@raggett1999html] and javaScript[@arnold2005java] in some parts of our programming. The plugin is compatible with macOS and Linux operating systems.
 
-![SpiecEasi pipeline.\label{fig:grl}](spieceasi.png){width=40%}
+![SpiecEasi pipeline.\label{fig:grl}](flowchart.png){width=40%}
+![SpiecEasi pipeline.\label{fig:grl}](overview.png){width=40%}
 
 The standard workflow for SpiecEasi, which is called in q2-makarsa for network generation, is shown in \autoref{fig:grl} [@kurtz2015sparse]. q2-makarsa action accepts inp.file (i.e., matrix of feature counts per sample),out.file, method, lambda.min.ratio, nlambda, rep.num, ncores, thresh, subsample.ratio, seed, sel.criterion, verbose, pulsar.select, lambda.log, lambda.min and lambda.max as input for spieceasi method, and input_file,  input_meta, output, minclustersize, maxclustersize, pcadimension, nthreads, seed, alpha, nruns, subsampleratio, numclusters, maxoverlap and verbose for flashweave method. All of the input parameter has default values except input.file for spieceasi and input_file for flashweave. We have attached some statistical attributes to the network generated from spieceasi method. Here, we have used degree centrality, betweenness centrality, closeness centrality, eigenvector centrality, and associativity as node attributes. we also used weight to edges, although a weighted network is only available for mb and glasso methods. This plugin has one visualizer, which takes network object as input and then visualizes that network.
 
