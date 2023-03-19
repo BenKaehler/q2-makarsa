@@ -1,83 +1,92 @@
-
 import subprocess
 import tempfile
 from pathlib import Path
 
 import pandas as pd
-from networkx import Graph, read_graphml
+from networkx import Graph, read_gml, set_node_attributes
 
-
-def run_commands(cmds, verbose=True):
-    if verbose:
-        print(
-            "Running external command line application(s). This may print "
-            "messages to stdout and/or stderr."
-        )
-        print(
-            "The command(s) being run are below. These commands cannot "
-            "be manually re-run as they will depend on temporary files that "
-            "no longer exist."
-        )
-    for cmd in cmds:
-        if verbose:
-            print("\nCommand:", end=" ")
-            print(" ".join(cmd), end="\n\n")
-        subprocess.run(cmd, check=True)
+from ._run_commands import run_commands
 
 
 def flashweave(
     table: pd.DataFrame,
-    meta_table: pd.DataFrame,
-    min_cluster_size: int = 2,
-    max_cluster_size: int = 50,
-    pca_dimension: int = 10,
-    n_threads: int = 1,
-    seed: int = 42,
+    # not sure if the following conversion happens automagically
+    meta_data: pd.DataFrame = None,
+    heterogeneous: bool = False,
+    sensitive: bool = False,
+    max_k: int = 2,
     alpha: float = 0.05,
-    nruns: int = 10,
-    subsample_ratio: float = 0.8,
-    num_clusters: int = 15,
-    max_overlap: float = 0.8,
-    verbose: bool = False,
+    conv: float = 0.01,
+    feed_forward: bool = True,
+    max_tests: int = 20,
+    hps: float = 1.0,
+    FDR: bool = False,
+    n_obs_min: int = -1,
+    time_limit: int = 60,
+    normalize:  bool = True,
+    track_rejections: bool = False,
+    verbose: bool = True,
+    transposed: bool = False,
+    prec: int = 64,
+    make_sparse: bool = True,
+    update_interval: int = 10,
+    
 ) -> Graph:
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
         table_file = temp_dir / "input-data.tsv"
-        meta_table_file=temp_dir / "meta-input-data.tsv"
-        network_file = temp_dir / "network.graphml"
-        #table.to_csv(str(table_file), sep="\t")
-           #here I just need to pass the path of the input files as flashweave need only input path.
+        network_file = temp_dir / "network.gml"
+        table.to_csv(str(table_file), sep="\t")
         cmd = [
-            "julia",
             "run_FlashWeave.jl",
-            "--input-file",
+            "--datapath",
             str(table_file),
-            "--meta-input-file",
-            str(meta_table_file),
-            "--output-file",
+            "--output",
             str(network_file),
-            "--min-cluster-size",
-            str(min_cluster_size),
-            "--max-cluster-size",
-            str(max_cluster_size),
-            "--pca_dimension",
-            str(pca_dimension),
-            "--seed",
-            str(seed),
+            
+            "--heterogeneous",
+            str(heterogeneous),
+            "--sensitive",
+            str(sensitive),
+            "--max_k",
+            str(max_k),
             "--alpha",
             str(alpha),
-            "--nruns",
-            str(nruns),
-            "--subsample-ratio",
-            str(subsample_ratio),
-            "--num-clusters",
-            str(num_clusters),
-            "--max-overlap",
-            str(max_overlap),
-            
+            "--conv",
+            str(conv),
+            "--feed_forward",
+            str(feed_forward),
+            "--max_tests",
+            str(max_tests),
+            "--hps",
+            str(hps),
+            "--FDR",
+            str(FDR),
+            "--n_obs_min",
+            str(n_obs_min),
+            "--time_limit",
+            str(time_limit),
+            "--normalize",
+            str(normalize),
+            "--track_rejections",
+            str(track_rejections),
+            "--transposed",
+            str(transposed),
+            "--prec",
+            str(prec),
+            "--make_sparse",
+            str(make_sparse),           
+            "--update_interval",
+            str(update_interval)
         ]
-
+        if meta_data:
+            meta_data_file = temp_dir / "meta-input-data.tsv"
+            meta_data.to_csv(str(meta_data_file), sep="\t")
+            cmd += [
+                "--metadatapath",
+                str(meta_data_file),
+            ]
         if verbose:
             cmd.append("--verbose")
 
@@ -90,7 +99,16 @@ def flashweave(
                 "stdout and stderr to learn more."
             )
 
-        return read_graphml(str(network_file))
+        network = read_gml(str(network_file))
+
+    # SpiecEasi puts the feature id in a Feature attribute,
+    # so let's do the same thing here.
+    attributes = {}
+    for nid, attr in network.nodes(data=True):
+        attributes[nid] = {"Feature": nid}
+    set_node_attributes(network, attributes)
+
+    return network
 
 
 
