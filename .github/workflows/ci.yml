@@ -1,0 +1,55 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Setup Mamba
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+          python-version: 3.8
+          miniconda-version: 'latest'
+          mamba-version: "*"
+          channels: conda-forge,defaults
+          channel-priority: true
+
+    - name: Create conda environment
+      run: |
+        wget https://data.qiime2.org/distro/core/qiime2-2023.2-py38-linux-conda.yml
+        mamba env create -n makarsa-test --file qiime2-2023.2-py38-linux-conda.yml
+        mamba init
+        
+    - name: Install SpiecEasi
+      run: |
+        source /home/runner/.bashrc
+        mamba activate makarsa-test
+        mamba install -y -c conda-forge -c bioconda r-spieceasi flake8
+
+    - name: Install Makarsa
+      run: |
+        source /home/runner/.bashrc
+        mamba activate makarsa-test
+        pip install .
+
+    - name: Run Flake8
+      run: |
+        source /home/runner/.bashrc
+        mamba activate makarsa-test
+        flake8
+
+    - name: Run pytest
+      run: |
+        source /home/runner/.bashrc
+        mamba activate makarsa-test
+        pytest
