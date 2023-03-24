@@ -30,7 +30,6 @@ def flashweave(
     prec: int = 64,
     make_sparse: bool = True,
     update_interval: int = 10,
-    
 ) -> Graph:
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
@@ -44,7 +43,6 @@ def flashweave(
             str(table_file),
             "--output",
             str(network_file),
-            
             "--heterogeneous",
             str(heterogeneous),
             "--sensitive",
@@ -109,6 +107,3 @@ def flashweave(
     set_node_attributes(network, attributes)
 
     return network
-
-
-

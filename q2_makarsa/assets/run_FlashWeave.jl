@@ -82,7 +82,6 @@ function main()
             help = "if verbose=true, determines the interval (seconds) at which network stat updates are printed"
             arg_type = Int
             default = 10
-      
     end
 
     # Parse command line arguments
@@ -110,7 +109,6 @@ function main()
      prec = args["prec"]
      make_sparse = args["make_sparse"]
      update_interval = args["update_interval"]
-    
 
      # Call FlashWeave with parsed arguments
      netw_results = learn_network(input_file, input_meta, sensitive=true, heterogeneous=false)
@@ -118,12 +116,3 @@ function main()
 end
 
 main()
-
-
-
-
-
-
-
-
-

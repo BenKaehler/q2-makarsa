@@ -110,14 +110,15 @@ plugin.methods.register_function(
 )
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> flashweave
 plugin.methods.register_function(
     function=flashweave,
     inputs={"table": FeatureTable[Frequency]},
     parameters={
         "meta_data":  Metadata,
-        
-        
         "heterogeneous": Bool,
         "sensitive": Bool,
         "max_k": Int,
@@ -185,12 +186,3 @@ plugin.methods.register_function(
         "large-scale compositional abundance data "
     ),
 )
-
-
-
-
-
-
-
-
-
