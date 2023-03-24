@@ -4,6 +4,7 @@ from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str
 
 from ._network import Network, NetworkDirectoryFormat, NetworkFormat
 from ._spieceasi import spiec_easi
+from ._flashweave import flashweave
 from ._visualisation import visualise_network
 
 plugin = Plugin(
@@ -107,3 +108,89 @@ plugin.methods.register_function(
         "This method generates the sparse matrix of network of input " "data"
     ),
 )
+
+
+
+plugin.methods.register_function(
+    function=flashweave,
+    inputs={"table": FeatureTable[Frequency]},
+    parameters={
+        "meta_data":  Metadata,
+        
+        
+        "heterogeneous": Bool,
+        "sensitive": Bool,
+        "max_k": Int,
+        "alpha": Float,
+        "conv": Float,
+        "feed_forward": Bool,
+        "max_tests": Int,
+        "hps": Float,
+        "FDR": Bool,
+        "n_obs_min": Int,
+        "time_limit": Int,
+        "normalize": Bool,
+        "track_rejections": Bool,
+        "verbose": Bool,
+        "transposed": Bool,
+        "prec": Int,
+        "make_sparse": Bool,
+        "update_interval": Int
+    },
+    outputs=[("network", Network)],
+    input_descriptions={
+        "table": (
+            "All sorts of compositional data though primarily intended "
+            "for microbiome relative abundance data "
+            "(generated from 16S amplicon sequence data)")
+    },
+    parameter_descriptions={
+        "meta_data": "a path which contain file of meta data of input data",
+        
+        "heterogeneous": ("enable heterogeneous mode for multi-habitat or"
+                          "-protocol data with at least thousands of samples"
+                          "(FlashWeaveHE), default = false"),
+        "sensitive": ("enable fine-grained associations(FlashWeave-S,FlashWeaveHE-S),"
+                      "sensitive=false results in the fast modes FlashWeave-F"
+                      "or FlashWeaveHE-F,default = false"),
+        "max_k": ("maximum size of conditioning sets, high values can strongly"
+                  "increase runtime. max_k=0 results in no conditioning (univariate mode)"),
+        "alpha": "threshold used to determine statistical significance",
+        "conv": ("convergence threshold, i.e. if conv=0.01 assume convergence if the number"
+                 "of edges increased by only 1% after 100% more runtime (checked in intervals)"),
+        "feed_forward": "enable feed-forward heuristic,default = true ",
+        "max_tests": ("maximum number of conditional tests that should be performed"
+                      "on a variable pair before association is assumed"),
+        "hps": "reliability criterion for statistical tests when sensitive=false",
+        "FDR": ("perform False Discovery Rate correction (Benjamini-Hochberg method)"
+                "on pairwise associations, default =    false"),
+        "n_obs_min": ("don't compute associations between variables having less reliable samples"
+                      "(i.e. non-zero if heterogeneous=true) than this number. -1: automatically choose a threshold"),
+        "time_limit": ("if feed-forward heuristic is active,determines the interval(seconds)"
+                       "at which neighborhood information is updated"),
+        "normalize": ("automatically choose and perform data normalization"
+                      "(based on sensitive and heterogeneous), default = true"),
+        "track_rejections": ("store for each discarded edge, which variable set lead to its exclusion"
+                             "(can be memory intense for large networks), default = false"),
+        "verbose": "print progress information, default = true",
+        "transposed": "if true, rows of data are variables and columns are samples, default = false",
+        "prec": "precision in bits to use for calculations (16, 32, 64 or 128)",
+        "make_sparse": "use a sparse data representation (should be left at true in almost all cases),default = true",
+        "update_interval": "if verbose=true, determines the interval (seconds) at which network stat updates are printed"
+    },
+    output_descriptions={"network": "The inferred network"},
+    name="flashweave",
+    description=(
+        "FlashWeave predicts ecological interactions between microbes from "
+        "large-scale compositional abundance data "
+    ),
+)
+
+
+
+
+
+
+
+
+

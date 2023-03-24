@@ -71,7 +71,14 @@ option_list <- list(
   make_option("--lambda-max",
     action = "store", default = NULL, type = "numeric",
     help = "upper lambda limit if lambda-log is FALSE"
-  )
+  ),
+  make_option(c("-a","--crossdomain"),
+    action = "store", default = FALSE,
+    help = " Carry message about whether the data comes from single domain or cross domain"
+  )  
+    
+    
+    
 )
 
 opt <- parse_args(OptionParser(option_list = option_list))
@@ -94,16 +101,31 @@ lambda.log <- !(opt$`not-lambda-log`)
 lambda.min <- opt$lambda_min
 lambda.max <- opt$lambda_max
 pulsar.select <- !(opt$`not-pulsar-select`)
+crossdomain<-opt$crossdomain
 
 ### VALIDATE ARGUMENTS ###
 # Input is expected a .tsv file
 
-if (dir.exists(inp.file)) {
-  errQuit("Input is a directory.")
-} else {
-  data <- read.table(inp.file, sep = "\t", header = T, row.names = 1)
-}
+#if (dir.exists(inp.file)) {
+ # errQuit("Input is a directory.")
+#} else {
+ # data <- read.table(inp.file, sep = "\t", header = T, row.names = 1)
+#}
 
+if(!dir.exists(inp.file)) {
+  errQuit("Input directory does not exist.")
+} else if (crossdomain){
+  datalist <- list.files(inp.file, pattern=".tsv$", full.names=TRUE)
+  data <- lapply(datalist,function(x) {
+   as.matrix(read.table(file = x, 
+              sep = "\t", 
+              header = T, row.names=1))
+})  
+ } else{
+    datalist <- list.files(inp.file, pattern=".tsv$", full.names=TRUE)
+    data <- as.matrix(read.table(datalist, sep = "\t", header = T, row.names = 1))
+    }
+        
 
 # Output files are to be filenames (not directories) and are to be
 # removed and replaced if already present.
@@ -120,8 +142,9 @@ suppressWarnings(library(SpiecEasi))
 suppressWarnings(library(igraph))
 suppressWarnings(library(Matrix))
 
+
 se.out <- spiec.easi(
-  as.matrix(data),
+  data,
   method = method,
   lambda.min.ratio = lambda.min.ratio,
   nlambda = nlambda,
