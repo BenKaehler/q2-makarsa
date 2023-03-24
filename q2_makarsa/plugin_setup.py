@@ -20,8 +20,9 @@ plugin = Plugin(
         "relative abundance data (generated from 16S "
         "amplicon sequence data)."
     ),
-    short_description="A QIIME 2 plugin to expose some SpiecEasi "
-    "functionality.",
+    short_description=(
+        "A QIIME 2 plugin to expose some SpiecEasi functionality."
+    ),
     # citations=qiime2.plugin.Citations.load(
     #    'citations.bib', package='q2_dada2'
 )
@@ -94,31 +95,31 @@ plugin.methods.register_function(
         "thresh": "Threshold for StARS criterion",
         "subsample_ratio": "Subsample size for StARS",
         "seed": "Set the random seed for subsample set",
-        "sel_criterion": "Specifying criterion/method for model selection, "
-        "Accepts 'stars' [default], 'bstars' (Bounded StARS)",
+        "sel_criterion": (
+            "Specifying criterion/method for model selection, "
+            "Accepts 'stars' [default], 'bstars' (Bounded StARS)"
+        ),
         "verbose": "Print extra output [default]",
         "pulsar_select": "Perform model selection",
-        "lambda_log": "lambda.log should values of lambda be distributed "
-        "logarithmically (TRUE) or linearly (FALSE) between "
-        "lamba.min and lambda.max",
+        "lambda_log": (
+            "lambda.log should values of lambda be distributed "
+            "logarithmically (TRUE) or linearly (FALSE) between "
+            "lamba.min and lambda.max"
+        ),
     },
     output_descriptions={"network": "The inferred network"},
     name="SpiecEasi",
     description=(
-        "This method generates the sparse matrix of network of input " "data"
+        "This method generates the sparse matrix of network of input data"
     ),
 )
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> flashweave
 plugin.methods.register_function(
     function=flashweave,
     inputs={"table": FeatureTable[Frequency]},
     parameters={
-        "meta_data":  Metadata,
+        "meta_data": Metadata,
         "heterogeneous": Bool,
         "sensitive": Bool,
         "max_k": Int,
@@ -136,48 +137,85 @@ plugin.methods.register_function(
         "transposed": Bool,
         "prec": Int,
         "make_sparse": Bool,
-        "update_interval": Int
+        "update_interval": Int,
     },
     outputs=[("network", Network)],
     input_descriptions={
         "table": (
             "All sorts of compositional data though primarily intended "
             "for microbiome relative abundance data "
-            "(generated from 16S amplicon sequence data)")
+            "(generated from 16S amplicon sequence data)"
+        )
     },
     parameter_descriptions={
         "meta_data": "a path which contain file of meta data of input data",
-        
-        "heterogeneous": ("enable heterogeneous mode for multi-habitat or"
-                          "-protocol data with at least thousands of samples"
-                          "(FlashWeaveHE), default = false"),
-        "sensitive": ("enable fine-grained associations(FlashWeave-S,FlashWeaveHE-S),"
-                      "sensitive=false results in the fast modes FlashWeave-F"
-                      "or FlashWeaveHE-F,default = false"),
-        "max_k": ("maximum size of conditioning sets, high values can strongly"
-                  "increase runtime. max_k=0 results in no conditioning (univariate mode)"),
+        "heterogeneous": (
+            "enable heterogeneous mode for multi-habitat or"
+            "-protocol data with at least thousands of samples"
+            "(FlashWeaveHE), default = false"
+        ),
+        "sensitive": (
+            "enable fine-grained associations(FlashWeave-S,FlashWeaveHE-S),"
+            "sensitive=false results in the fast modes FlashWeave-F"
+            "or FlashWeaveHE-F,default = false"
+        ),
+        "max_k": (
+            "maximum size of conditioning sets, high values can"
+            " stronglyincrease runtime. max_k=0 results in no conditioning"
+            " (univariate mode)"
+        ),
         "alpha": "threshold used to determine statistical significance",
-        "conv": ("convergence threshold, i.e. if conv=0.01 assume convergence if the number"
-                 "of edges increased by only 1% after 100% more runtime (checked in intervals)"),
+        "conv": (
+            "convergence threshold, i.e. if conv=0.01 assume convergence if"
+            " the numberof edges increased by only 1% after 100% more runtime"
+            " (checked in intervals)"
+        ),
         "feed_forward": "enable feed-forward heuristic,default = true ",
-        "max_tests": ("maximum number of conditional tests that should be performed"
-                      "on a variable pair before association is assumed"),
-        "hps": "reliability criterion for statistical tests when sensitive=false",
-        "FDR": ("perform False Discovery Rate correction (Benjamini-Hochberg method)"
-                "on pairwise associations, default =    false"),
-        "n_obs_min": ("don't compute associations between variables having less reliable samples"
-                      "(i.e. non-zero if heterogeneous=true) than this number. -1: automatically choose a threshold"),
-        "time_limit": ("if feed-forward heuristic is active,determines the interval(seconds)"
-                       "at which neighborhood information is updated"),
-        "normalize": ("automatically choose and perform data normalization"
-                      "(based on sensitive and heterogeneous), default = true"),
-        "track_rejections": ("store for each discarded edge, which variable set lead to its exclusion"
-                             "(can be memory intense for large networks), default = false"),
+        "max_tests": (
+            "maximum number of conditional tests that should be performed"
+            "on a variable pair before association is assumed"
+        ),
+        "hps": (
+            "reliability criterion for statistical tests when sensitive=false"
+        ),
+        "FDR": (
+            "perform False Discovery Rate correction (Benjamini-Hochberg"
+            " method)on pairwise associations, default =    false"
+        ),
+        "n_obs_min": (
+            "don't compute associations between variables having less reliable"
+            " samples(i.e. non-zero if heterogeneous=true) than this number."
+            " -1: automatically choose a threshold"
+        ),
+        "time_limit": (
+            "if feed-forward heuristic is active,determines the"
+            " interval(seconds)at which neighborhood information is updated"
+        ),
+        "normalize": (
+            "automatically choose and perform data normalization"
+            "(based on sensitive and heterogeneous), default = true"
+        ),
+        "track_rejections": (
+            "store for each discarded edge, which variable set lead to its"
+            " exclusion(can be memory intense for large networks), default ="
+            " false"
+        ),
         "verbose": "print progress information, default = true",
-        "transposed": "if true, rows of data are variables and columns are samples, default = false",
-        "prec": "precision in bits to use for calculations (16, 32, 64 or 128)",
-        "make_sparse": "use a sparse data representation (should be left at true in almost all cases),default = true",
-        "update_interval": "if verbose=true, determines the interval (seconds) at which network stat updates are printed"
+        "transposed": (
+            "if true, rows of data are variables and columns are samples,"
+            " default = false"
+        ),
+        "prec": (
+            "precision in bits to use for calculations (16, 32, 64 or 128)"
+        ),
+        "make_sparse": (
+            "use a sparse data representation (should be left at true in"
+            " almost all cases),default = true"
+        ),
+        "update_interval": (
+            "if verbose=true, determines the interval (seconds) at which"
+            " network stat updates are printed"
+        ),
     },
     output_descriptions={"network": "The inferred network"},
     name="flashweave",

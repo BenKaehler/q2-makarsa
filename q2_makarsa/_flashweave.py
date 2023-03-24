@@ -74,7 +74,7 @@ def flashweave(
             "--prec",
             str(prec),
             "--make_sparse",
-            str(make_sparse),           
+            str(make_sparse),
             "--update_interval",
             str(update_interval)
         ]
