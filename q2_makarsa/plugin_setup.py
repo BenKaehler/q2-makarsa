@@ -1,6 +1,6 @@
 from networkx import Graph, read_graphml, write_graphml
 from q2_types.feature_table import FeatureTable, Frequency
-from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str
+from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str, List
 
 from ._network import Network, NetworkDirectoryFormat, NetworkFormat
 from ._spieceasi import spiec_easi
@@ -57,7 +57,7 @@ plugin.visualizers.register_function(
 
 plugin.methods.register_function(
     function=spiec_easi,
-    inputs={"table": FeatureTable[Frequency]},
+    inputs={"table": List[FeatureTable[Frequency]]},
     parameters={
         "method": Str,
         "lambda_min_ratio": Float,

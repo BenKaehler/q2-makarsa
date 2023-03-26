@@ -2,14 +2,14 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-import pandas as pd
 from networkx import Graph, read_graphml
+import biom
 
 from ._run_commands import run_commands
 
 
 def spiec_easi(
-    table: pd.DataFrame,
+    table: biom.Table,
     method: str = "glasso",
     lambda_min_ratio: float = 1e-3,
     nlambda: int = 20,
@@ -28,15 +28,19 @@ def spiec_easi(
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
-        table_file = temp_dir / "input-data.tsv"
+        table_files = []
+        for i, one_table in enumerate(table):
+            table_file = str(temp_dir / f"input-data-{i}.biom")
+            table_files.append(table_file)
+            with biom.util.biom_open(table_file, 'w') as fh:
+                one_table.to_hdf5(fh, 'dummy')
+        table_files = ', '.join(table_files)
         network_file = temp_dir / "network.mtx"
-        # EEE would be better to save as a biom
-        table.to_csv(str(table_file), sep="\t")
 
         cmd = [
             "run_SpiecEasi.R",
             "--input-file",
-            str(table_file),
+            table_files,
             "--output-file",
             str(network_file),
             "--method",

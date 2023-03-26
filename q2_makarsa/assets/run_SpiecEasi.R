@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
 library("optparse")
+library("biomformat")
 
 errQuit <- function(mesg, status = 1) {
   message("Error: ", mesg)
@@ -10,7 +11,7 @@ errQuit <- function(mesg, status = 1) {
 option_list <- list(
   make_option(c("-i", "--input-file"),
     action = "store", type = "character",
-    help = "File path to directory with the .tsv files to be processed"
+    help = "File path to biom file to be processed"
   ),
   make_option(c("-o", "--output-file"),
     action = "store", type = "character",
@@ -96,14 +97,8 @@ lambda.max <- opt$lambda_max
 pulsar.select <- !(opt$`not-pulsar-select`)
 
 ### VALIDATE ARGUMENTS ###
-# Input is expected a .tsv file
 
-if (dir.exists(inp.file)) {
-  errQuit("Input is a directory.")
-} else {
-  data <- read.table(inp.file, sep = "\t", header = T, row.names = 1)
-}
-
+data <- lapply(strsplit(inp.file, ", ")[[1]], function (x) {t(as.matrix(biom_data(read_biom(x))))})
 
 # Output files are to be filenames (not directories) and are to be
 # removed and replaced if already present.
@@ -121,7 +116,7 @@ suppressWarnings(library(igraph))
 suppressWarnings(library(Matrix))
 
 se.out <- spiec.easi(
-  as.matrix(data),
+  data,
   method = method,
   lambda.min.ratio = lambda.min.ratio,
   nlambda = nlambda,
@@ -135,20 +130,22 @@ se.out <- spiec.easi(
   )
 )
 
+features <- list(Feature=unlist(lapply(data, colnames)))
+
 if (method=='mb') {
 bm <- symBeta(getOptBeta(se.out), mode="maxabs")
 diag(bm) <- 0
 weights <- Matrix::summary(t(bm))[,3]
 network <- adj2igraph(Matrix::drop0(getRefit(se.out)),
                    edge.attr=list(weight=weights),
-                  vertex.attr = list(Feature=colnames(data)))
+                  vertex.attr = features)
 } else if (method=='glasso') {
 secor  <- cov2cor(getOptCov(se.out))
 bm     <- summary(triu(secor*getRefit(se.out), k=1)) 
-network <- adj2igraph(getRefit(se.out),edge.attr=list(weight=bm[,3]),vertex.attr = list(Feature=colnames(data)))
+network <- adj2igraph(getRefit(se.out),edge.attr=list(weight=bm[,3]),vertex.attr = features)
 }else{
     print("Weighted graph only available for mb and glasso method")
-    network <- adj2igraph(getRefit(se.out),vertex.attr = list(Feature=colnames(data)))
+    network <- adj2igraph(getRefit(se.out),vertex.attr = features)
 }
 
 write_graph(network, out.file, "graphml")
