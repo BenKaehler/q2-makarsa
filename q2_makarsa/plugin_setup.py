@@ -68,7 +68,6 @@ plugin.methods.register_function(
         "subsample_ratio": Float,
         "seed": Float,
         "sel_criterion": Str,
-        "verbose": Bool,
         "pulsar_select": Bool,
         "lambda_log": Bool,
         "lambda_min": Float,
@@ -99,7 +98,6 @@ plugin.methods.register_function(
             "Specifying criterion/method for model selection, "
             "Accepts 'stars' [default], 'bstars' (Bounded StARS)"
         ),
-        "verbose": "Print extra output [default]",
         "pulsar_select": "Perform model selection",
         "lambda_log": (
             "lambda.log should values of lambda be distributed "
@@ -127,17 +125,15 @@ plugin.methods.register_function(
         "conv": Float,
         "feed_forward": Bool,
         "max_tests": Int,
-        "hps": Float,
-        "FDR": Bool,
+        "hps": Int,
+        "fdr": Bool,
         "n_obs_min": Int,
-        "time_limit": Int,
+        "time_limit": Float,
         "normalize": Bool,
         "track_rejections": Bool,
-        "verbose": Bool,
-        "transposed": Bool,
         "prec": Int,
         "make_sparse": Bool,
-        "update_interval": Int,
+        "update_interval": Float,
     },
     outputs=[("network", Network)],
     input_descriptions={
@@ -157,7 +153,7 @@ plugin.methods.register_function(
         "sensitive": (
             "enable fine-grained associations(FlashWeave-S,FlashWeaveHE-S),"
             "sensitive=false results in the fast modes FlashWeave-F"
-            "or FlashWeaveHE-F,default = false"
+            "or FlashWeaveHE-F,default = true"
         ),
         "max_k": (
             "maximum size of conditioning sets, high values can"
@@ -178,9 +174,9 @@ plugin.methods.register_function(
         "hps": (
             "reliability criterion for statistical tests when sensitive=false"
         ),
-        "FDR": (
+        "fdr": (
             "perform False Discovery Rate correction (Benjamini-Hochberg"
-            " method)on pairwise associations, default =    false"
+            " method)on pairwise associations, default = true"
         ),
         "n_obs_min": (
             "don't compute associations between variables having less reliable"
@@ -199,11 +195,6 @@ plugin.methods.register_function(
             "store for each discarded edge, which variable set lead to its"
             " exclusion(can be memory intense for large networks), default ="
             " false"
-        ),
-        "verbose": "print progress information, default = true",
-        "transposed": (
-            "if true, rows of data are variables and columns are samples,"
-            " default = false"
         ),
         "prec": (
             "precision in bits to use for calculations (16, 32, 64 or 128)"

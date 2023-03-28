@@ -19,7 +19,6 @@ def spiec_easi(
     subsample_ratio: float = 0.8,
     seed: float = None,
     sel_criterion: str = "stars",
-    verbose: bool = False,
     pulsar_select: bool = True,
     lambda_log: bool = True,
     lambda_min: float = -1,
@@ -59,10 +58,9 @@ def spiec_easi(
             str(subsample_ratio),
             "--sel-criterion",
             str(sel_criterion),
+            "--verbose"
         ]
 
-        if verbose:
-            cmd.append("--verbose")
         if not lambda_log:
             cmd.append("--not-lambda-log")
         if not pulsar_select:
