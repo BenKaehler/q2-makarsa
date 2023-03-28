@@ -1,9 +1,9 @@
-import qiime2.plugin.model as model
-from qiime2.plugin import ValidationError
-from networkx import Graph, read_graphml
 from xml.etree.ElementTree import ParseError
 
 import qiime2.plugin
+import qiime2.plugin.model as model
+from networkx import Graph, read_graphml
+from qiime2.plugin import ValidationError
 
 
 class NetworkFormat(model.TextFileFormat):
@@ -17,6 +17,7 @@ class NetworkFormat(model.TextFileFormat):
 
 
 NetworkDirectoryFormat = model.SingleFileDirectoryFormat(
-    'NetworkDirectoryFormat', 'network.graphml', NetworkFormat)
+    "NetworkDirectoryFormat", "network.graphml", NetworkFormat
+)
 
-Network = qiime2.plugin.SemanticType('Network')
+Network = qiime2.plugin.SemanticType("Network")
