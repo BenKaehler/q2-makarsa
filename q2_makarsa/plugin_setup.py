@@ -1,10 +1,12 @@
 from networkx import Graph, read_graphml, write_graphml
 from q2_types.feature_table import FeatureTable, Frequency
 from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str
+import pandas as pd
 
-from ._network import Network, NetworkDirectoryFormat, NetworkFormat
+from ._network import Network, NetworkDirectoryFormat, NetworkFormat, NodeCommunityFormat, Node_Community, NodeDirectoryFormat
 from ._spieceasi import spiec_easi
 from ._visualisation import visualise_network
+from ._louvain import louvain_communities
 
 plugin = Plugin(
     name="makarsa",
@@ -30,7 +32,6 @@ plugin.register_formats(NetworkDirectoryFormat, NetworkFormat)
 plugin.register_semantic_type_to_format(
     Network, artifact_format=NetworkDirectoryFormat
 )
-
 
 @plugin.register_transformer
 def _1(network: Graph) -> NetworkFormat:
@@ -106,4 +107,43 @@ plugin.methods.register_function(
     description=(
         "This method generates the sparse matrix of network of input " "data"
     ),
+)
+
+plugin.register_semantic_types(Node_Community)
+plugin.register_formats(NodeCommunityFormat, NodeDirectoryFormat)
+plugin.register_semantic_type_to_format(
+    Node_Community, artifact_format=NodeDirectoryFormat
+)
+
+
+
+
+@plugin.register_transformer
+def _3(community_out: pd.DataFrame) -> NodeCommunityFormat:
+    ff = NodeCommunityFormat()
+    community_out.to_csv(str(ff), sep='\t', index=False)
+    return ff
+
+plugin.methods.register_function(
+    function=louvain_communities,
+    inputs={"network_input": Network},
+    parameters={
+        "num_partitions": Int,
+        "remove_neg": Bool,
+        "seed": Int
+        },
+    outputs=[("community_out", Node_Community)],
+    input_descriptions={
+        'network_input': ('OTU co-ocurrence or co-abbundance network')
+    },
+    parameter_descriptions={
+        'num_partitions': 'Number of partitions to use to obatin the consensus.',
+        'remove_neg': 'Remove negative edges from the network [Default uses absolute value].',
+        'seed': 'Seed value for deterministic result.'
+    },
+    output_descriptions={'community_out': ('output file containing network nodes and their respective communities.')},
+    name='Louvain Community Detection',
+    description=("Obtain the consensus community partition of an OTU co-ocurrence"
+                 " or co-abbundance network using the louvain algorithm."),
+
 )
