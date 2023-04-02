@@ -79,18 +79,18 @@ The data file is in BIOM format with the following attributes
 The next step is to import the BIOM file as a frequency [FeatureTable](https://docs.qiime2.org/2022.8/semantic-types/) within QIIME 2.
 
 ```
-qiime tools import \\
-	--input-path Suberitida.biom \\
-	--type 'FeatureTable[Frequency]' \\
-	--input-format BIOMV210Format \\
+qiime tools import \
+	--input-path Suberitida.biom \
+	--type 'FeatureTable[Frequency]' \
+	--input-format BIOMV210Format \
 	--output-path sponge-feature-table.qza
 # Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
 ```
 The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working folder if this command was successful. Now, we are ready to use q2-makarsa to access the SpiecEasi algorithms to infer the microbial network. The most minimal command to generate the network requires the name of artefact containing the FeatureTable and the name of the intended output artefact containing the inferred network. 
 
 ```
-qiime makarsa spiec-easi \\
-	--i-table sponge-feature-table.qza \\
+qiime makarsa spiec-easi \
+	--i-table sponge-feature-table.qza \
 	--o-network sponge-net.qza
 # Saved Network to: sponge-net.qza
 ```
@@ -98,7 +98,9 @@ qiime makarsa spiec-easi \\
 From the ```sponge-net.qza``` network artefact a visualisation can be created and then viewed
 
 ```
-qiime makarsa visualise-network --i-network sponge-net.qza --o-visualization sponge-net.qzv
+qiime makarsa visualise-network \
+	--i-network sponge-net.qza \
+	--o-visualization sponge-net.qzv
 #Saved Visualization to: sponge-net.qzv
 qiime tools view sponge-net.qzv
 ```
