@@ -278,16 +278,20 @@ def annotate_with_metadata(network, metadata):
 
 
 def annotate_node_stats(network):
-    dd = nx.degree_centrality(network)
-    nx.set_node_attributes(network, dd, "Degree Centrality")
-    bb = nx.betweenness_centrality(network)
-    nx.set_node_attributes(network, bb, "Betweenness Centrality")
-    cc = nx.closeness_centrality(network)
-    nx.set_node_attributes(network, cc, "Closeness Centrality")
-    ee = nx.eigenvector_centrality(network)
-    nx.set_node_attributes(network, ee, "Eigenvector Centrality")
-    ee = nx.assortativity.average_neighbor_degree(network)
-    nx.set_node_attributes(network, ee, "Associativity")
+    centralities = [
+        ('Degree Centrality', nx.degree_centrality),
+        ('Betweenness Centrality', nx.betweenness_centrality),
+        ('Closeness Centrality', nx.closeness_centrality),
+        ('Eigenvector Centrality', nx.eigenvector_centrality),
+        ('Associativity', nx.assortativity.average_neighbor_degree)
+    ]
+
+    for label, centrality_func in centralities:
+        try:
+            centrality = centrality_func(network)
+            nx.set_node_attributes(network, centrality, label)
+        except nx.NetworkXException as e:
+            print(f"Exception occurred while computing {label}: {str(e)}")
 
 
 def render_table(tab_buttons, tab_contents, tabtitle, table):

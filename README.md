@@ -31,7 +31,8 @@ q2-makarsa requires a working QIIME 2 environment, installed using conda. Please
 Make sure your conda environment is activated (as described in the QIIME 2 installation instructions), then install the dependencies:
 
 ```
-conda install -c bioconda -c conda-forge r-spieceasi
+conda install -c bioconda -c conda-forge r-spieceasi julia
+julia -e 'using Pkg; Pkg.add(["FlashWeave", "ArgParse", "GraphIO"])'
 ```
 
 In the same conda environment pip install from the q2-makarsa github repo:
@@ -44,8 +45,8 @@ pip install git+https://github.com/BenKaehler/q2-makarsa.git
 
 From within the conda environment create a working folder and move into it
 ```
-mkdir pluginExample
-cd pluginExample/
+mkdir plugin-example
+cd plugin-example/
 ```
 
 This folder will contain the QIIME 2 artefacts produced by q2-makarsa at the completion of each example.
@@ -78,30 +79,31 @@ The data file is in BIOM format with the following attributes
 The next step is to import the BIOM file as a frequency [FeatureTable](https://docs.qiime2.org/2022.8/semantic-types/) within QIIME 2.
 
 ```
-qiime tools import --input-path Suberitida.biom \\
+qiime tools import \\
+	--input-path Suberitida.biom \\
 	--type 'FeatureTable[Frequency]' \\
 	--input-format BIOMV210Format \\
-	--output-path spongeFeatureTable.qza
-
-#Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
+	--output-path sponge-feature-table.qza
+# Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
 ```
 The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working folder if this command was successful. Now, we are ready to use q2-makarsa to access the SpiecEasi algorithms to infer the microbial network. The most minimal command to generate the network requires the name of artefact containing the FeatureTable and the name of the intended output artefact containing the inferred network. 
 
 ```
-qiime makarsa spiec-easi --i-table spongeFeatureTable.qza \
-	--o-network spongeNet.qza
-# Saved Network to: spongeNet.qza
+qiime makarsa spiec-easi \\
+	--i-table sponge-feature-table.qza \\
+	--o-network sponge-net.qza
+# Saved Network to: sponge-net.qza
 ```
 
-From the ```spongeNet.qza``` network artefact a visualisation can be created and then viewed
+From the ```sponge-net.qza``` network artefact a visualisation can be created and then viewed
 
 ```
-qiime makarsa visualise-network --i-network spongeNet.qza --o-visualization spongeNet.qzv
-#Saved Visualization to: spongeNet.qzv
-qiime tools view spongeNet.qzv
+qiime makarsa visualise-network --i-network sponge-net.qza --o-visualization sponge-net.qzv
+#Saved Visualization to: sponge-net.qzv
+qiime tools view sponge-net.qzv
 ```
 
-The network images should open in your default browser. Alternatively, you can upload ```spongeNet.qva``` to [qiime2view](https://view.qiime2.org/). The network containing the largest number of members is in the tab labelled _Group 1_ , next largest network in the tab _Group 2_, and so on down. Trivial networks of two members and singletons are listed by feature in the _Pairs_ and _Singles_ tab respectively. 
+The network images should open in your default browser. Alternatively, you can upload ```sponge-net.qva``` to [qiime2view](https://view.qiime2.org/). The network containing the largest number of members is in the tab labelled _Group 1_ , next largest network in the tab _Group 2_, and so on down. Trivial networks of two members and singletons are listed by feature in the _Pairs_ and _Singles_ tab respectively. 
 
 ![largest network](images/Sponge_Suberitida_Group1_screen.png)
 ![network](images/network.png)
@@ -116,9 +118,11 @@ The algorithm utilised to infer the network can be set with ```-p-method``` para
 3. ``slr`` Sparse and Low-Rank method
 
 For example to infer the network from the example data using the MB method execute the command
+
 ```
-qiime makarsa spiec-easi --i-table spongeFeatureTable.qza \\
-	--o-network spongeNet.qza \\
+qiime makarsa spiec-easi \\
+	--i-table spongeFeatureTable.qza \\
+	--o-network sponge-net.qza \\
 	--p-method mb
 ```
 
