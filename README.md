@@ -122,9 +122,9 @@ The algorithm utilised to infer the network can be set with ```-p-method``` para
 For example to infer the network from the example data using the MB method execute the command
 
 ```
-qiime makarsa spiec-easi \\
-	--i-table spongeFeatureTable.qza \\
-	--o-network sponge-net.qza \\
+qiime makarsa spiec-easi \
+	--i-table spongeFeatureTable.qza \
+	--o-network sponge-net.qza \
 	--p-method mb
 ```
 
