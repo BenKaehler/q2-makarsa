@@ -3,6 +3,7 @@ import tempfile
 from pathlib import Path
 
 import pandas as pd
+import qiime2
 from networkx import Graph, read_gml, set_node_attributes
 
 from ._run_commands import run_commands
@@ -10,7 +11,7 @@ from ._run_commands import run_commands
 
 def flashweave(
     table: pd.DataFrame,
-    meta_data: pd.DataFrame = None,
+    meta_data: qiime2.Metadata = None,
     # defaults copied from FlashWeave.jl/src/learning.jl
     heterogeneous: bool = False,
     sensitive: bool = True,
@@ -62,6 +63,7 @@ def flashweave(
             "--verbose"
         ]
         if meta_data:
+            meta_data = meta_data.to_dataframe()
             meta_data_file = temp_dir / "meta-input-data.tsv"
             meta_data.to_csv(str(meta_data_file), sep="\t")
             cmd += [
