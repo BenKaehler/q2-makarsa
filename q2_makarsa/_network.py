@@ -27,7 +27,7 @@ class NodeCommunityFormat(model.TextFileFormat):
         try:
             table = pd.read_table(str(self))
             if not isinstance(table, pd.DataFrame):
-                raise ValidationError("")
+                raise ValidationError("no table in file")
         except ParseError as err:
             raise ValidationError("bad node community table") from err
 
