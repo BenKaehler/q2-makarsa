@@ -124,6 +124,10 @@ def _3(community_out: pd.DataFrame) -> NodeMapFormat:
     community_out.to_csv(str(ff), sep='\t', index=False)
     return ff
 
+@plugin.register_transformer
+def _4(ff: NodeMapFormat) -> pd.DataFrame:
+    return pd.read_csv(str(ff), sep='\t')
+
 plugin.methods.register_function(
     function=louvain_communities,
     inputs={"network_input": Network},
