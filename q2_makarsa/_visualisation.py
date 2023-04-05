@@ -171,13 +171,14 @@ def graph_to_spec(network):
     colour_options = ["None"]
     size_options = ["None"]
     for key in attributes.columns:
-        try:
-            attributes[key].astype(float)
-            size_options.append(key)
+        if key == "Feature":
             continue
-        except (ValueError, TypeError):
-            pass
-        if key != "Feature":
+        column = attributes[key]
+        if pd.api.types.is_integer_dtype(column):
+            colour_options.append(key)
+        elif pd.api.types.is_numeric_dtype(column):
+            size_options.append(key)
+        else:
             colour_options.append(key)
 
     size_selector = {

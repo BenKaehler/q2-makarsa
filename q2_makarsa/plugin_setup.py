@@ -117,7 +117,7 @@ plugin.methods.register_function(
     function=flashweave,
     inputs={"table": FeatureTable[Frequency]},
     parameters={
-        "meta_data": Metadata,
+        "metadata": Metadata,
         "heterogeneous": Bool,
         "sensitive": Bool,
         "max_k": Int,
@@ -144,7 +144,7 @@ plugin.methods.register_function(
         )
     },
     parameter_descriptions={
-        "meta_data": "a path which contain file of meta data of input data",
+        "metadata": "a path which contain file of meta data of input data",
         "heterogeneous": (
             "enable heterogeneous mode for multi-habitat or"
             "-protocol data with at least thousands of samples"

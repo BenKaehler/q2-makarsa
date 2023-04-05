@@ -11,7 +11,7 @@ from ._run_commands import run_commands
 
 def flashweave(
     table: pd.DataFrame,
-    meta_data: qiime2.Metadata = None,
+    metadata: qiime2.Metadata = None,
     # defaults copied from FlashWeave.jl/src/learning.jl
     heterogeneous: bool = False,
     sensitive: bool = True,
@@ -62,14 +62,16 @@ def flashweave(
             str(update_interval),
             "--verbose"
         ]
-        if meta_data:
-            meta_data = meta_data.to_dataframe()
-            meta_data_file = temp_dir / "meta-input-data.tsv"
-            meta_data.to_csv(str(meta_data_file), sep="\t")
-            cmd += [
-                "--metadatapath",
-                str(meta_data_file),
-            ]
+        if metadata:
+            metadata = metadata.to_dataframe()
+            if set(table.index) <= set(metadata.index):
+                metadata = metadata.reindex(table.index)
+                metadata_file = temp_dir / "meta-input-data.tsv"
+                metadata.to_csv(str(metadata_file), sep="\t")
+                cmd += [
+                    "--metadatapath",
+                    str(metadata_file),
+                ]
 
         flags = (
             (heterogeneous, "--heterogeneous"),
