@@ -22,7 +22,7 @@ NetworkDirectoryFormat = model.SingleFileDirectoryFormat(
 
 Network = qiime2.plugin.SemanticType("Network")
 
-class NodeCommunityFormat(model.TextFileFormat):
+class NodeMapFormat(model.TextFileFormat):
     def _validate_(self, level):
         try:
             table = pd.read_table(str(self))
@@ -33,6 +33,6 @@ class NodeCommunityFormat(model.TextFileFormat):
 
 
 NodeDirectoryFormat = model.SingleFileDirectoryFormat(
-    "NodeDirectoryFormat", "pd.DataFrame", NodeCommunityFormat
+    "NodeDirectoryFormat", "pd.DataFrame", NodeMapFormat
 )
-Node_Community = qiime2.plugin.SemanticType("Node_Community")
+NodeMap = qiime2.plugin.SemanticType("NodeMap")

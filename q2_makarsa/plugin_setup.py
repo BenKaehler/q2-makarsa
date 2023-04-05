@@ -3,7 +3,7 @@ from q2_types.feature_table import FeatureTable, Frequency
 from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str
 import pandas as pd
 
-from ._network import Network, NetworkDirectoryFormat, NetworkFormat, NodeCommunityFormat, Node_Community, NodeDirectoryFormat
+from ._network import Network, NetworkDirectoryFormat, NetworkFormat, NodeMapFormat, NodeMap, NodeDirectoryFormat
 from ._spieceasi import spiec_easi
 from ._visualisation import visualise_network
 from ._louvain import louvain_communities
@@ -109,18 +109,18 @@ plugin.methods.register_function(
     ),
 )
 
-plugin.register_semantic_types(Node_Community)
-plugin.register_formats(NodeCommunityFormat, NodeDirectoryFormat)
+plugin.register_semantic_types(NodeMap)
+plugin.register_formats(NodeMapFormat, NodeDirectoryFormat)
 plugin.register_semantic_type_to_format(
-    Node_Community, artifact_format=NodeDirectoryFormat
+    NodeMap, artifact_format=NodeDirectoryFormat
 )
 
 
 
 
 @plugin.register_transformer
-def _3(community_out: pd.DataFrame) -> NodeCommunityFormat:
-    ff = NodeCommunityFormat()
+def _3(community_out: pd.DataFrame) -> NodeMapFormat:
+    ff = NodeMapFormat()
     community_out.to_csv(str(ff), sep='\t', index=False)
     return ff
 
@@ -132,7 +132,7 @@ plugin.methods.register_function(
         "remove_neg": Bool,
         "seed": Int
         },
-    outputs=[("community_out", Node_Community)],
+    outputs=[("community_out", NodeMap)],
     input_descriptions={
         'network_input': ('OTU co-ocurrence or co-abbundance network')
     },
