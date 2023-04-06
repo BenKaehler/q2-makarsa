@@ -42,36 +42,31 @@ q2-makarsa is at the $\alpha$ stage. In addition to wrapping the SpiecEasi and
 FlashWeave packages it provides a visualisation for generated networks. As
 development continues additional features will be listed here.
 
-* Most features of SpiecEasi are exposed to the user except the batch-mode
-* Most features of FlashWeave are exposed to the user except meta-values
+* All of SpiecEasi's features are exposed to the user except batch-mode execution (thread-level parallelism is supported)
+* All of FlashWeave's `learn_network` features are exposed
 * Visualisation features
-  * Relationships between taxa are represented as ecological networks
+  * Relationships between features (eg. ASVs, OTUs, MVs, taxa, peptides) are represented as ecological networks
   * The network is interactive and its overall size and shape on the
 		  screen can be manipulated manually.
   * An image of the network can be saved to the local device in PNG
 		  format.
-  * Network nodes can be selected and information on which taxon is
+  * Network nodes can be selected and information on which feature is
 		  represented by the node, statistics, and various centrality measures
 		  for the node will be displayed.
   * Network edges are colour coded for positive (blue) and negative
   (orange) correlations
-  * Edge thickness is scaled according to a range of user-selected
-  statistics with thicker nodes indicating stronger connections between
-  taxa.
+  * Edge thickness is scaled according to statistics appropriate to each method with thicker edges indicating stronger connections between features.
   * Node size is scaled according user-selected statistics such as
   centrality measures.
-  * Node are colour coded according to user-selected categories such as
-  taxon level
+  * Nodes are colour coded according to user-selected categories such as
+  taxonomic classification
   * Synchronises settings across tabs meaning that if you have multiple
   tabs open in the visualisation, any changes you make to the settings
   (such as the scaling of edges or nodes) will be applied to all tabs
   at once.
-  * Node attributes can be added via metadata within the user input data
-  file.
+  * Node attributes can be added via feature metadata (eg. taxonomy, DNA sequence, differential abundance scores)
     * If node attributes are taxonomic labels, visualisation offers
-			  colourings at any taxonomic level. The visualization will allow
-			  you to choose the level of the taxonomic hierarchy at which you
-			  want to apply colourings. 
+			  colourings at any taxonomic level
 
 ## Installation
 
