@@ -11,7 +11,8 @@ setup(
     entry_points={
         "qiime2.plugins": ["q2-makarsa=q2_makarsa.plugin_setup:plugin"]
     },
-    scripts=["q2_makarsa/assets/run_SpiecEasi.R"],
+    scripts=["q2_makarsa/assets/run_SpiecEasi.R",
+             "q2_makarsa/assets/run_FlashWeave.jl"],
     package_data={
         "q2_makarsa": ["assets/*", "assets/assets/*/*"],
         "q2_makarsa.tests": ["data/*"],

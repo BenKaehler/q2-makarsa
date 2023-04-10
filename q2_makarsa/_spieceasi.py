@@ -2,30 +2,14 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-import pandas as pd
 from networkx import Graph, read_graphml
+import biom
 
-
-def run_commands(cmds, verbose=True):  # EEE need to credit the authors of this
-    if verbose:
-        print(
-            "Running external command line application(s). This may print "
-            "messages to stdout and/or stderr."
-        )
-        print(
-            "The command(s) being run are below. These commands cannot "
-            "be manually re-run as they will depend on temporary files that "
-            "no longer exist."
-        )
-    for cmd in cmds:
-        if verbose:
-            print("\nCommand:", end=" ")
-            print(" ".join(cmd), end="\n\n")
-        subprocess.run(cmd, check=True)
+from ._run_commands import run_commands
 
 
 def spiec_easi(
-    table: pd.DataFrame,
+    table: biom.Table,
     method: str = "glasso",
     lambda_min_ratio: float = 1e-3,
     nlambda: int = 20,
@@ -35,7 +19,6 @@ def spiec_easi(
     subsample_ratio: float = 0.8,
     seed: float = None,
     sel_criterion: str = "stars",
-    verbose: bool = False,
     pulsar_select: bool = True,
     lambda_log: bool = True,
     lambda_min: float = -1,
@@ -44,15 +27,19 @@ def spiec_easi(
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
         temp_dir = Path(temp_dir_name)
-        table_file = temp_dir / "input-data.tsv"
+        table_files = []
+        for i, one_table in enumerate(table):
+            table_file = str(temp_dir / f"input-data-{i}.biom")
+            table_files.append(table_file)
+            with biom.util.biom_open(table_file, 'w') as fh:
+                one_table.to_hdf5(fh, 'dummy')
+        table_files = ', '.join(table_files)
         network_file = temp_dir / "network.mtx"
-        # EEE would be better to save as a biom
-        table.to_csv(str(table_file), sep="\t")
 
         cmd = [
             "run_SpiecEasi.R",
             "--input-file",
-            str(table_file),
+            table_files,
             "--output-file",
             str(network_file),
             "--method",
@@ -71,10 +58,9 @@ def spiec_easi(
             str(subsample_ratio),
             "--sel-criterion",
             str(sel_criterion),
+            "--verbose"
         ]
 
-        if verbose:
-            cmd.append("--verbose")
         if not lambda_log:
             cmd.append("--not-lambda-log")
         if not pulsar_select:
