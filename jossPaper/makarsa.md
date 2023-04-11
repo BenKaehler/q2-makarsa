@@ -72,16 +72,19 @@ The current version of **q2-makarsa** exposes the two methods for network
 inference SpiecEasi and FlashWeave by the parameter options `spiec-easi` and
 `flashweave` respectively. Specifically, **q2-makarsa** makes available: 
 
-* All of [SpiecEasi's](https://github.com/zdk123/SpiecEasi). features except batch-mode execution (thread-level parallelism is supported);
+* All of [SpiecEasi's](https://github.com/zdk123/SpiecEasi) features except
+  batch-mode execution (thread-level parallelism is supported);
 * [FlashWeave's](https://github.com/meringlab/FlashWeave.jl) `learn_network`
   features in their entirety. 
 
-The universial visialisation method is accessed by the option
-`visualise-network`. This option combined with QIIME 2 `view` tool allows the user to understand the infered ecological network is a variety of ways.
+The universal visualisation method is accessed by the option
+`visualise-network`. This option combined with QIIME 2 `view` tool allows the
+user to understand the inferred ecological network is a variety of ways.
 
 * The network is interactive and its overall size and shape on the screen can
   be manipulated manually within the user's browser.
-* A publication ready image of the network can be saved to the local device in PNG format.
+* A publication ready image of the network can be saved to the local device in
+  PNG format.
 * Network nodes can be selected and information on which feature (eg. ASVs,
   OTUs, MVs, taxa, peptides)  is represented by the node, statistics, and
   various centrality measures for the node will be displayed.
@@ -93,15 +96,15 @@ The universial visialisation method is accessed by the option
   measures.
 * Nodes are colour coded according to user-selected categories such as
   taxonomic classification
-* Settings are sychronised across tabs meaning that if you have multiple tabs
-	open in the visualisation, any changes you make to the settings (such as
-	the scaling of edges or nodes) will be applied to all tabs at once.
+* Settings are synchronised across tabs meaning that if you have multiple tabs
+  open in the visualisation, any changes you make to the settings (such as the
+  scaling of edges or nodes) will be applied to all tabs at once.
 * Node attributes can be added via feature metadata (eg. taxonomy, DNA
   sequence, differential abundance scores). If the node attributes are
   taxonomic labels, visualisation offers colourings at any taxonomic level
 
 
-<!-- In spieceasi, ecological interactions between microbial populations are infered
+<!-- In spieceasi, ecological interactions between microbial populations are inferred
 by 
 - taking advantage of the proportionality invariance of relative abundance data
   and 
@@ -114,7 +117,7 @@ glasso, slr etc, and uses StARS for model selection. There are several other
 parameters that are also used in this plugin, for more details please visit
 [SpiecEasi homepage](https://github.com/zdk123/SpiecEasi). 
 
-On the otherhand, FlashWeave uses a statistical approach to infer these
+On the other hand, FlashWeave uses a statistical approach to infer these
 relationships based on conditional mutual information tests, which allows it to
 handle both linear and non-linear relationships between variables.
 Additionally, FlashWeave includes various algorithmic parameters, such as
@@ -181,7 +184,7 @@ visualizer takes network object as input and then visualizes that network.
 # Acknowledgements
 
 The authors acknowledge support from University of Dhaka, Bangladesh and UNSW
-Canberra, Australia. This work is a partial fullfillment of PhD research at
+Canberra, Australia. This work is a partial fulfilment of PhD research at
 UNSW Canberra.
 
 # References
