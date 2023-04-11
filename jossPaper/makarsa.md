@@ -101,81 +101,82 @@ The universial visialisation method is accessed by the option
   taxonomic labels, visualisation offers colourings at any taxonomic level
 
 
-%%In spieceasi, ecological interactions between microbial populations are infered
-%%by 
-%%- taking advantage of the proportionality invariance of relative abundance data
-  %%and 
-%%- making assumptions about the underlying network structure when the number of
-  %%taxa in the dataset is larger than the number of sampled communities
-  %%[@kurtz2015sparse].
+<!-- In spieceasi, ecological interactions between microbial populations are infered
+by 
+- taking advantage of the proportionality invariance of relative abundance data
+  and 
+- making assumptions about the underlying network structure when the number of
+  taxa in the dataset is larger than the number of sampled communities
+  [@kurtz2015sparse].
 
-%%It provides several methods for neighbourhood selection, for example mb,
-%%glasso, slr etc, and uses StARS for model selection. There are several other
-%%parameters that are also used in this plugin, for more details please visit
-%%[SpiecEasi homepage](https://github.com/zdk123/SpiecEasi). 
+It provides several methods for neighbourhood selection, for example mb,
+glasso, slr etc, and uses StARS for model selection. There are several other
+parameters that are also used in this plugin, for more details please visit
+[SpiecEasi homepage](https://github.com/zdk123/SpiecEasi). 
 
-%%On the otherhand, FlashWeave uses a statistical approach to infer these
-%%relationships based on conditional mutual information tests, which allows it to
-%%handle both linear and non-linear relationships between variables.
-%%Additionally, FlashWeave includes various algorithmic parameters, such as
-%%heterogeneous and sensitive, which can be used to optimize performance and
-%%sensitivity based on the specific properties of the dataset being analyzed.
-%%Finally, FlashWeave is a valuable tool for microbial network analysis because
-%%it allows researchers to identify potentially important relationships between
-%%microbes in complex communities, which can help to better understand the
-%%underlying biology and potentially lead to the development of new therapies or
-%%interventions for various diseases. To learn more about FlashWeave and its user
-%%manual, please visit the project
-%%[homepage](https://github.com/meringlab/FlashWeave.jl).
+On the otherhand, FlashWeave uses a statistical approach to infer these
+relationships based on conditional mutual information tests, which allows it to
+handle both linear and non-linear relationships between variables.
+Additionally, FlashWeave includes various algorithmic parameters, such as
+heterogeneous and sensitive, which can be used to optimize performance and
+sensitivity based on the specific properties of the dataset being analyzed.
+Finally, FlashWeave is a valuable tool for microbial network analysis because
+it allows researchers to identify potentially important relationships between
+microbes in complex communities, which can help to better understand the
+underlying biology and potentially lead to the development of new therapies or
+interventions for various diseases. To learn more about FlashWeave and its user
+manual, please visit the project
+[homepage](https://github.com/meringlab/FlashWeave.jl).
 
-%%The name of the visualizer of this plugin is 'visualisation' which takes
-%%generated network as input and visualizes it in a publication-quality figure.
-%%The visualizer provides portable, shareable reports, publication-ready figures,
-%%and integrated decentralized data provenance. In this visualizer, we have
-%%attached some statistical attributes to the network generated from the
-%%spieceasi and flashweave methods to make our network more attractive and
-%%informative. For example, we have added different centrality measurements as
-%%node attributes in the generated network. In this case, we have used
-%%betweenness centrality, degree centrality, closeness centrality, and
-%%eigenvector centrality to measure the centrality properties of nodes, which can
-%%be used in visualisation as the size of the nodes of the generated network. By
-%%doing this we can easily identify which node has the most betweenness value in
-%%that network, in other words, which microbial species is most influential in
-%%that ecological network. We also have added weights of interactions as edges
-%%attribute, although a weighted network is only available for mb and glasso
-%%methods, which will help to identify the pair of microbial taxa which have the
-%%most interactions among any other pair of microbial taxa in that network.
-%%Overall, from visualisation, one can easily identify which species are most
-%%influential in that community and which pair of microbial species have stronger
-%%interactions. In addition, integration as a QIIME 2 plugin, makarsa supports
-%%the use of multiple user interfaces, including a prototype graphical user
-%%interface (q2studio), facilitating its use for non-expert users. The plugin is
-%%freely available under the BSD-3-Clause license at
+The name of the visualizer of this plugin is 'visualisation' which takes
+generated network as input and visualizes it in a publication-quality figure.
+The visualizer provides portable, shareable reports, publication-ready figures,
+and integrated decentralized data provenance. In this visualizer, we have
+attached some statistical attributes to the network generated from the
+spieceasi and flashweave methods to make our network more attractive and
+informative. For example, we have added different centrality measurements as
+node attributes in the generated network. In this case, we have used
+betweenness centrality, degree centrality, closeness centrality, and
+eigenvector centrality to measure the centrality properties of nodes, which can
+be used in visualisation as the size of the nodes of the generated network. By
+doing this we can easily identify which node has the most betweenness value in
+that network, in other words, which microbial species is most influential in
+that ecological network. We also have added weights of interactions as edges
+attribute, although a weighted network is only available for mb and glasso
+methods, which will help to identify the pair of microbial taxa which have the
+most interactions among any other pair of microbial taxa in that network.
+Overall, from visualisation, one can easily identify which species are most
+influential in that community and which pair of microbial species have stronger
+interactions. In addition, integration as a QIIME 2 plugin, makarsa supports
+the use of multiple user interfaces, including a prototype graphical user
+interface (q2studio), facilitating its use for non-expert users. The plugin is
+freely available under the BSD-3-Clause license at
 [](https://github.com/BenKaehler/makarsa).
 
-%% DO WE NEED THIS?
-%%The q2-makarsa plugin is written in Python, Julia [@bezanson2017julia], and R,
-%%and employs pandas [@mckinney2011pandas] for data manipulation, networkx
-%%[@hagberg2020networkx] and igraph [@csardi2006igraph] for network generation
-%%and visualization. We also used html [@raggett1999html] and
-%%javaScript[@arnold2005java] in some parts of our programming. The plugin is
-%%compatible with macOS and Linux operating systems.
+ DO WE NEED THIS?
+The q2-makarsa plugin is written in Python, Julia [@bezanson2017julia], and R,
+and employs pandas [@mckinney2011pandas] for data manipulation, networkx
+[@hagberg2020networkx] and igraph [@csardi2006igraph] for network generation
+and visualization. We also used html [@raggett1999html] and
+javaScript[@arnold2005java] in some parts of our programming. The plugin is
+compatible with macOS and Linux operating systems. -->
 
 ![SpiecEasi pipeline.\label{fig:grl}](flowchart.png){width=40%}   ![SpiecEasi
 pipeline.\label{fig:grl}](overview.png){width=40%}
 
-%% DO WE NEED THIS?
-%%The standard workflow and an overview of this plugin are shown in
-%%\autoref{fig:grl} [@kurtz2015sparse]. q2-makarsa action accepts inp.file (i.e.,
-%%matrix of feature counts per sample),out.file, method, lambda.min.ratio,
-%%nlambda, rep.num, ncores, thresh, subsample.ratio, seed, sel.criterion,
-%%verbose, pulsar.select, lambda.log, lambda.min and lambda.max as input for
-%%spieceasi method, and input_file,  input_meta, output,heterogeneous, sensitive,
-%%max_k, alpha, conv, feed_forward, max_tests, hps, FDR, n_obs_min, time_limit,
-%%normalize, track_rejections, verbose, transposed, prec, make_sparse, and
-%%update_interval for flashweave method. All of the input parameter has default
-%%values except input.file for spieceasi and input_file for flashweave. . The
-%%visualizer takes network object as input and then visualizes that network.
+<!-- DO WE NEED THIS?
+The standard workflow and an overview of this plugin are shown in
+\autoref{fig:grl} [@kurtz2015sparse]. q2-makarsa action accepts inp.file (i.e.,
+matrix of feature counts per sample),out.file, method, lambda.min.ratio,
+nlambda, rep.num, ncores, thresh, subsample.ratio, seed, sel.criterion,
+verbose, pulsar.select, lambda.log, lambda.min and lambda.max as input for
+spieceasi method, and input_file,  input_meta, output,heterogeneous, sensitive,
+max_k, alpha, conv, feed_forward, max_tests, hps, FDR, n_obs_min, time_limit,
+normalize, track_rejections, verbose, transposed, prec, make_sparse, and
+update_interval for flashweave method. All of the input parameter has default
+values except input.file for spieceasi and input_file for flashweave. . The
+visualizer takes network object as input and then visualizes that network.
+-->
 
 # Acknowledgements
 
