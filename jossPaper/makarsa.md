@@ -50,7 +50,7 @@ The name of the visualizer of this plugin is 'visualisation' which takes generat
 
 The q2-makarsa plugin is written in Python, Julia [@bezanson2017julia], and R, and employs pandas [@mckinney2011pandas] for data manipulation, networkx [@hagberg2020networkx] and igraph [@csardi2006igraph] for network generation and visualization. We also used html [@raggett1999html] and javaScript[@arnold2005java] in some parts of our programming. The plugin is compatible with macOS and Linux operating systems.
 
-![SpiecEasi pipeline.\label{fig:grl}](flowchart.png){width=40%}   ![SpiecEasi pipeline.\label{fig:grl}](overview.png){width=40%}
+![SpiecEasi pipeline.\label{fig:grl}](Data_flow_diagram.png){width=40%}   ![SpiecEasi pipeline.\label{fig:grl}](overview.png){width=40%}
 
 The standard workflow and an overview of this plugin are shown in \autoref{fig:grl} [@kurtz2015sparse]. q2-makarsa action accepts inp.file (i.e., matrix of feature counts per sample),out.file, method, lambda.min.ratio, nlambda, rep.num, ncores, thresh, subsample.ratio, seed, sel.criterion, verbose, pulsar.select, lambda.log, lambda.min and lambda.max as input for spieceasi method, and input_file,  input_meta, output,heterogeneous, sensitive, max_k, alpha, conv, feed_forward, max_tests, hps, FDR, n_obs_min, time_limit, normalize, track_rejections, verbose, transposed, prec, make_sparse, and update_interval for flashweave method. All of the input parameter has default values except input.file for spieceasi and input_file for flashweave. . The visualizer takes network object as input and then visualizes that network.
 
