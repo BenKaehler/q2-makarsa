@@ -196,7 +196,8 @@ parameter switch and one of 3 keywords:
 For example to infer the network from the example data using the MB method
 execute the command
 
-``` qiime makarsa spiec-easi \ 
+``` 
+qiime makarsa spiec-easi \ 
 			--i-table spongeFeatureTable.qza \ 
 			--o-network sponge-net.qza \ 
 			--p-method mb 
