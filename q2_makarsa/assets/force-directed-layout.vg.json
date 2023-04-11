@@ -10,7 +10,9 @@
     { "name": "cx", "update": "width / 2" },
     { "name": "cy", "update": "height / 2" },
     { "name": "nodeRadius", "value": 8,
-      "bind": {"input": "range", "min": 1, "max": 50, "step": 1, "name": "node radius"} },
+      "bind": {"input": "range", "min": 1, "max": 30, "step": 1, "name": "node scale"} },
+    { "name": "linkWidth", "value": 5,
+      "bind": {"input": "range", "min": 0.5, "max": 10, "step": 0.25, "name": "link scale"} },
     { "name": "nodeCharge", "value": -30,
       "bind": {"input": "range", "min":-60, "max": 10, "step": 1, "name": "node charge"} },
     { "name": "linkDistance", "value": 30,
@@ -91,10 +93,17 @@
       "range": {"scheme": "category20c"}
     },
     {
-      "name": "weight",
+      "name": "sizeScale",
+      "type": "pow",
+      "exponent": 2,
+      "domain": {"data": "node-data", "field": {"signal": "sizeSelect"}},
+      "range": [8, {"signal": "2 * nodeRadius * nodeRadius"}]
+    },
+    {
+      "name": "weightScale",
       "type": "linear",
       "domain": {"data": "link-data", "field": "weight"},
-      "range": [0, 5]
+      "range": [0.5, {"signal": "linkWidth"}]
     }
   ],
 
@@ -139,13 +148,16 @@
 
       "encode": {
         "enter": {
+          "size": [{"test": "sizeSelect === 'None'", "signal": "2 * nodeRadius * nodeRadius"},
+		   {"scale": "sizeScale", "field": {"signal": "sizeSelect"}}],
           "fill": {"scale": "color", "field": {"signal": "colorSelect"}},
           "stroke": {"value": "white"}
         },
         "update": {
-          "size": {"signal": "2 * nodeRadius * nodeRadius"},
+          "size": [{"test": "sizeSelect === 'None'", "signal": "2 * nodeRadius * nodeRadius"},
+		   {"scale": "sizeScale", "field": {"signal": "sizeSelect"}}],
           "cursor": {"value": "pointer"},
-          "fill": [{"test": "datum.index === active", "value": "black"},
+          "fill": [{"test": "datum.index === active", "value": "#999"},
 	           {"scale": "color", "field": {"signal": "colorSelect"}}]
         }
       },
@@ -153,13 +165,13 @@
       "transform": [
         {
           "type": "force",
-          "iterations": 300,
+          "iterations": 200,
           "restart": {"signal": "restart"},
           "static": {"signal": "static"},
           "signal": "force",
           "forces": [
             {"force": "center", "x": {"signal": "cx"}, "y": {"signal": "cy"}},
-            {"force": "collide", "radius": {"signal": "nodeRadius"}},
+            {"force": "collide", "radius": {"expr": "sqrt(datum.size)/2 + 0*nodeRadius + 0*(sizeSelect === '')"}},
             {"force": "nbody", "strength": {"signal": "nodeCharge"}},
             {"force": "link", "links": "link-data", "distance": {"signal": "linkDistance"}},
             {"force": "link", "links": "link-data", "strength": {"signal": "linkStrength"}}
@@ -174,9 +186,10 @@
       "encode": {
         "update": {
           "stroke": [{"test": "active != null && (datum.source.index == active || datum.target.index == active)",
-		      "value": "black"},
-		     {"value": "#ccc"}],
-          "strokeWidth": {"scale": "weight", "field": "weight"}
+		      "value": "#999"},
+		     {"test": "datum.weight_sign < 0", "value": "#F17720"},
+		     {"value": "#00A7E1"}],
+          "strokeWidth": {"scale": "weightScale", "field": "weight"}
         }
       },
       "transform": [

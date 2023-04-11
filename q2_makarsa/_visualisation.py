@@ -2,49 +2,115 @@ import json
 import tempfile
 from collections import defaultdict
 from pathlib import Path
+import pkg_resources
 
 import networkx as nx
 import pandas as pd
-import pkg_resources
+import numpy as np
 import q2templates
 import qiime2
 
 TEMPLATES = Path(pkg_resources.resource_filename("q2_makarsa", "assets"))
 
-EXTENDS = "{% extends 'tabbed.html' %}\n"
+TABBUTTON = """
+<button class="tablinks" onclick="openTab(event, '{{ tabtitle }}')">
+{{ tabtitle }}</button>
+"""
 
-TITLE = "{% block title %}q2-makarsa : {{ title }}{% endblock %}\n"
+INDEX = """
+{% extends 'base.html' %}
 
-HEAD = """
+{% block title %}q2-makarsa : {{ title }}{% endblock %}
+
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
 <link rel="stylesheet" href="./assets/css/vega.css">
+<link rel="stylesheet" href="./assets/css/tabs.css">
+{% endblock %}
+
+{% block content %}
+<!-- Tab links -->
+<div class="tab">
+{{ tabbuttons }}
+</div>
+
+<!-- Tab content -->
+{{ tabcontents }}
+
+<script type="text/javascript">
+var lastSuffix;
+
+function openTab(evt, tabName) {
+  // thanks https://www.w3schools.com/howto/howto_js_tabs.asp
+
+  // Declare all variables
+  var i, tabcontent, tablinks;
+
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the current tab, and add an "active" class to the
+  // button that opened the tab
+  var splitTabName = tabName.split(" ");
+  if (splitTabName.length > 1)
+  {
+    var thisSuffix = splitTabName.pop();
+    if (lastSuffix !== undefined)
+    {
+      var thisView = window["view" + thisSuffix];
+      var lastView = window["view" + lastSuffix];
+      var signals = [
+        "nodeRadius", "linkWidth", "nodeCharge", "linkDistance",
+        "linkStrength", "static", "sizeSelect", "colorSelect"
+      ]
+      for (i = 0; i < signals.length; i++)
+        thisView.signal(signals[i], lastView.signal(signals[i]));
+      thisView.runAsync();
+    }
+    lastSuffix = thisSuffix;
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+document.getElementsByClassName("tablinks")[0].click();
+</script>
+
 {% endblock %}
 """
 
 TABCONTENT = """
-{% block tabcontent %}
+<div id="{{ tabtitle }}" class="tabcontent">
 
-  <div id="nodeTable"></div>
-  <div id="view"></div>
+  <div id="nodeTable{{ suffix }}"></div>
+  <button onclick="exportPNG{{ suffix }}()">Download as PNG</button>
   <p></p>
-  <button onclick="exportPNG()">Download as PNG</button>
+  <div id="view{{ suffix }}"></div>
   <script type="text/javascript">
     var spec = {{ spec }};
-    var view;
+    var view{{ suffix }};
 
-    render(spec).catch(err => console.error(err));
+    render{{ suffix }}(spec).catch(err => console.error(err));
 
-    var firstDatum = view.data('node-data')[0];
+    var firstDatum = view{{ suffix }}.data('node-data')[0];
     firstDatum = JSON.parse(JSON.stringify(firstDatum));
     for (const key in firstDatum) {
       firstDatum[key] = "&lt select a node to display &gt";
     }
     var firstNodeSelect = {"datum": firstDatum};
-    drawTable("", firstNodeSelect);
-    view.addSignalListener('nodeSelect', drawTable);
+    drawTable{{ suffix }}("", firstNodeSelect);
+    view{{ suffix }}.addSignalListener('nodeSelect', drawTable{{ suffix }});
 
-    function drawTable(name, value) {
+    function drawTable{{ suffix }}(name, value) {
       var table = document.createElement("TABLE");
       table.classList.add("dataframe");
       table.classList.add("table");
@@ -62,23 +128,23 @@ TABCONTENT = """
         cell.innerHTML = value.datum[key]
       }
 
-      var nodeTable = document.getElementById("nodeTable");
+      var nodeTable = document.getElementById("nodeTable{{ suffix }}");
       nodeTable.innerHTML = "";
       nodeTable.appendChild(table);
     }
 
-    function render(spec) {
-      view = new vega.View(vega.parse(spec), {
+    function render{{ suffix }}(spec) {
+      view{{ suffix }} = new vega.View(vega.parse(spec), {
         renderer:  'svg',  // renderer (canvas or svg)
-        container: '#view',   // parent DOM container
+        container: '#view{{ suffix }}',   // parent DOM container
         hover:     true       // enable hover processing
       });
-      return view.runAsync();
+      return view{{ suffix }}.runAsync();
     }
 
     /* thanks https://stackoverflow.com/a/70395566 */
-    function exportPNG(){
-      view.toImageURL('png').then(function(url) {
+    function exportPNG{{ suffix }}(){
+      view{{ suffix }}.toImageURL('png').then(function(url) {
         var link = document.createElement('a');
         link.setAttribute('href', url);
         link.setAttribute('target', '_blank');
@@ -87,13 +153,13 @@ TABCONTENT = """
       }).catch(err => console.error(err));
     }
   </script>
-{% endblock %}
+</div>
 """
 
 TABLECONTENT = """
-{% block tabcontent %}
+<div id="{{ tabtitle }}" class="tabcontent">
 {{ table }}
-{% endblock %}
+</div>
 """
 
 
@@ -102,22 +168,34 @@ def graph_to_spec(network):
         spec = json.load(fh)
 
     attributes = pd.DataFrame([r for _, r in network.nodes(data=True)])
-    selector = {
+    colour_options = ["None"]
+    size_options = ["None"]
+    for key in attributes.columns:
+        if key == "Feature":
+            continue
+        column = attributes[key]
+        if pd.api.types.is_integer_dtype(column):
+            colour_options.append(key)
+        elif pd.api.types.is_numeric_dtype(column):
+            size_options.append(key)
+        else:
+            colour_options.append(key)
+
+    size_selector = {
+        "name": "sizeSelect",
+        "value": "None",
+        "bind": {"input": "select", "name": "size ", "options": []},
+    }
+    size_selector["bind"]["options"] = size_options
+    spec["signals"].insert(0, size_selector)
+
+    colour_selector = {
         "name": "colorSelect",
         "value": "None",
         "bind": {"input": "select", "name": "color ", "options": []},
     }
-    options = ["None"]
-    for key in attributes.columns:
-        try:
-            attributes[key].astype(float)
-            continue
-        except (ValueError, TypeError):
-            pass
-        if key != "Feature":
-            options.append(key)
-    selector["bind"]["options"] = options
-    spec["signals"].insert(0, selector)
+    colour_selector["bind"]["options"] = colour_options
+    spec["signals"].insert(0, colour_selector)
 
     nodes = nx.nodes(network)
     idx = {nid: i for i, nid in enumerate(nodes)}
@@ -126,6 +204,10 @@ def graph_to_spec(network):
     links = [
         {"source": idx[n[0]], "target": idx[n[1]], **edges[n]} for n in edges
     ]
+    for link in links:
+        if "weight" in link:
+            link["weight_sign"] = np.sign(link["weight"])
+            link["weight"] = abs(link["weight"])
     # "group" in nodes is currently being used for colour
     # "value" in links has been dropped. not sure whether it did anything
     spec["data"] = [
@@ -175,10 +257,7 @@ def add_taxonomy_levels(row):
     return row
 
 
-def visualise_network(
-    output_dir: str, network: nx.Graph, metadata: qiime2.Metadata = None
-) -> None:
-
+def annotate_with_metadata(network, metadata):
     metadata = metadata.to_dataframe()
     if "Taxon" in metadata.columns:
         metadata = metadata.apply(add_taxonomy_levels, axis=1)
@@ -198,58 +277,82 @@ def visualise_network(
             attributes[nid] = {"Feature": name[1:], **metadata.loc[name[1:]]}
     nx.set_node_attributes(network, attributes)
 
+
+def annotate_node_stats(network):
+    centralities = [
+        ('Degree Centrality', nx.degree_centrality),
+        ('Betweenness Centrality', nx.betweenness_centrality),
+        ('Closeness Centrality', nx.closeness_centrality),
+        ('Eigenvector Centrality', nx.eigenvector_centrality),
+        ('Associativity', nx.assortativity.average_neighbor_degree)
+    ]
+
+    for label, centrality_func in centralities:
+        try:
+            centrality = centrality_func(network)
+            nx.set_node_attributes(network, centrality, label)
+        except nx.NetworkXException as e:
+            print(f"Exception occurred while computing {label}: {str(e)}")
+
+
+def render_table(tab_buttons, tab_contents, tabtitle, table):
+    button = TABBUTTON.replace("{{ tabtitle }}", tabtitle)
+    tab_buttons.append(button)
+
+    table = q2templates.df_to_html(table, index=False)
+    content = TABLECONTENT.replace("{{ tabtitle }}", tabtitle)
+    content = content.replace("{{ table }}", table)
+    tab_contents.append(content)
+
+
+def visualise_network(
+    output_dir: str, network: nx.Graph, metadata: qiime2.Metadata = None
+) -> None:
+
+    if metadata:
+        annotate_with_metadata(network, metadata)
+
+    annotate_node_stats(network)
+
     q2templates.util.copy_assets(
         TEMPLATES / "assets", Path(output_dir) / "assets"
     )
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
-        temp_dir = Path(temp_dir_name)
-
         groups, pairs, singles = get_connected_components(network)
 
-        source_files = []
-        tabs = []
+        tab_buttons = []
+        tab_contents = []
         for i, graph in enumerate(groups):
-            if i == 0:
-                source_file = "index.html"
-                content = EXTENDS + TITLE + HEAD
-            else:
-                source_file = f"group-{i+1}.html"
-                content = EXTENDS + HEAD
-            title = f"Group {i+1}"
-            spec = json.dumps(graph_to_spec(graph), indent=1)
-            content += TABCONTENT.replace("{{ spec }}", spec)
+            tabtitle = f"Group {i+1}"
 
-            source_file, tab = create_html_file(
-                temp_dir, source_file, title, content
-            )
-            tabs.append(tab)
-            source_files.append(source_file)
+            button = TABBUTTON.replace("{{ tabtitle }}", tabtitle)
+            tab_buttons.append(button)
+
+            spec = json.dumps(graph_to_spec(graph), indent=1)
+            content = TABCONTENT.replace("{{ tabtitle }}", tabtitle)
+            content = content.replace("{{ suffix }}", f"{i+1}")
+            content = content.replace("{{ spec }}", spec)
+            tab_contents.append(content)
 
         if pairs:
-            pairs_table = pd.DataFrame(
-                pairs, columns=["Feature 1", "Feature 2"]
-            )
-            table = q2templates.df_to_html(pairs_table, index=False)
-            content = EXTENDS + TABLECONTENT.replace("{{ table }}", table)
-            source_file, tab = create_html_file(
-                temp_dir, "pairs.html", "Pairs", content
-            )
-            tabs.append(tab)
-            source_files.append(source_file)
+            table = pd.DataFrame(pairs, columns=["Feature 1", "Feature 2"])
+            render_table(tab_buttons, tab_contents, "Pairs", table)
 
         if singles:
-            singles_table = pd.DataFrame(singles, columns=["Feature"])
-            table = q2templates.df_to_html(singles_table, index=False)
-            content = EXTENDS + TABLECONTENT.replace("{{ table }}", table)
-            source_file, tab = create_html_file(
-                temp_dir, "singles.html", "Singles", content
-            )
-            tabs.append(tab)
-            source_files.append(source_file)
+            table = pd.DataFrame(singles, columns=["Feature"])
+            render_table(tab_buttons, tab_contents, "Singles", table)
+
+        content = INDEX.replace("{{ tabbuttons }}", "\n".join(tab_buttons))
+        content = content.replace("{{ tabcontents }}", "\n".join(tab_contents))
+
+        temp_dir = Path(temp_dir_name)
+        source_file = temp_dir / "index.html"
+        with open(source_file, 'w') as fh:
+            fh.write(content)
 
         q2templates.render(
-            source_files,
+            [source_file],
             output_dir,
-            context={"title": "Networks", "tabs": tabs},
+            context={"title": "Networks"}
         )
