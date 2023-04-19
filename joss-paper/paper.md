@@ -27,7 +27,7 @@ bibliography: joss.bib
 # Summary
 
 **q2-makarsa** is a plugin for the QIIME 2 microbiome bioinformatics platform.
-The plugin allows the QIIME 2 community to infer and visualise microbial
+The plugin allows biologists to infer and visualise microbial
 ecological networks from compositional data. Ecological networks provide a
 method for detecting community structure and identifying key species, peptides,
 or any biologically meaningful covariates.
@@ -50,15 +50,31 @@ level within a common formal mathematical framework [@delmas2019analysing].
 Here, we present a QIIME 2 plugin [@Bolyen2019] that will help to infer
 microbial interactions by using network analysis.
 
-**q2-makarsa** makes available the functionality of SpiecEasi
-[@kurtz2015sparse] and FlashWeave [@tackmann2019rapid], two popular tools for
-microbial network analysis, within the QIIME 2 microbiome bioinformatics
-platform. Among currently available microbial network analysis tools, SpiecEasi
-has been comparatively widely adopted by the microbiome research community and
+**q2-makarsa** makes two popular microbial network inference methods,
+SpiecEasi [@kurtz2015sparse] and FlashWeave [@tackmann2019rapid], available to
+users of the [QIIME 2](https://qiime2.org/) bioinformatics platform and bundles
+it with a new tool
+for visualising the inferred networks and producing publication-ready figures.
+By bringing these methods into the QIIME 2 platform, users can take data from 
+laboratory to plot without breaking QIIME 2's distributed provenance tracking,
+improving scientific reproducibility. QIIME 2 also provides users with greater
+convenience by allowing non-specialists to access tools from, for instance,
+the [Galaxy](https://usegalaxy.org/) graphical user interface or the command line,
+rather than from R or Julia, greatly increasing their usability and audience.
+Additionally, by providing users easy access to these competing methods
+of network inference, users can compare and assess the robustness of
+network inference on their data.
+
+# Summary of Functionality
+
+SpiecEasi
+has been widely adopted by the microbiome research community and
 has been cited in over 1000 scientific publications [@google2023]. SpiecEasi
 has been rigorously tested and benchmarked against other methods for microbial
 network analysis and has been shown to perform well across a variety of
-datasets and scenarios. FlashWeave [@tackmann2019rapid] is another new package
+datasets and scenarios.
+
+FlashWeave [@tackmann2019rapid] is a newer package
 used for microbial network analysis, and it is gaining popularity and
 acceptance in the scientific community for its novel algorithm, large-scale
 analysis, and multinomics integration properties. Both packages are actively
@@ -67,8 +83,8 @@ they are regularly updated and improved with new features and bug fixes.
 Overall, SpiecEasi and FlashWeave are powerful tools for analyzing microbial
 data and identifying potential interactions between microbial taxa.
 
-The current version of **q2-makarsa** exposes the two methods for network
-inference SpiecEasi and FlashWeave by the parameter options `spiec-easi` and
+The current version of **q2-makarsa** exposes SpiecEasi and FlashWeave via the
+QIIME 2 actions `spiec-easi` and
 `flashweave` respectively. Specifically, **q2-makarsa** makes available: 
 
 * All of [SpiecEasi's](https://github.com/zdk123/SpiecEasi) features except
@@ -86,43 +102,51 @@ network is a variety of ways.
   be manipulated manually within the user's browser.
 * A publication ready image of the network can be saved to the local device in
   PNG format.
-* Network nodes can be selected and information on which feature (eg. ASVs,
-  OTUs, MVs, taxa, peptides)  is represented by the node, statistics, and
+* Network nodes can be selected and information on each feature (eg. ASVs,
+  OTUs, MVs, taxa, peptides) is represented by the node, statistics, and
   various centrality measures for the node will be displayed.
-* Network edges are colour coded for positive (blue) and negative (orange)
-  correlations
-* Edge thickness is scaled according to statistics appropriate to each method
-  with thicker edges indicating stronger connections between features.
-* Node size is scaled according user-selected statistics such as centrality
-  measures.
-* Nodes are colour coded according to user-selected categories such as
-  taxonomic classification
-* Settings are synchronised across tabs meaning that if you have multiple tabs
-  open in the visualisation, any changes you make to the settings (such as the
-  scaling of edges or nodes) will be applied to all tabs at once.
 * Node attributes can be added via feature metadata (eg. taxonomy, DNA
   sequence, differential abundance scores). If the node attributes are
   taxonomic labels, visualisation offers colourings at any taxonomic level
+* Network edges are colour coded for positive (blue) and negative (orange)
+  correlations
+* Edge thickness is scaled according to statistics appropriate to each method
+  with thicker edges indicating stronger associations between features.
+* Node size is scaled according user-selected statistics such as centrality
+  measures.
+* Nodes can be colour coded according to user-selected categories such as
+  taxonomic classification.
+* Disjoint inferred networks are displayed in their own tabs.
+* Settings are synchronised across tabs meaning that if you have multiple tabs
+  open in the visualisation, any changes you make to the settings (such as the
+  scaling of edges or nodes) will be applied to all tabs at once.
 
-The following figure \autoref{fig:visual} represent a particular state of output
-generated by the visualizer. In this figure, we have used betweenness centrality as network
+Figure 1 \autoref{fig:visual} is an example of a PNG image saved directly from
+the visualiser. This figure is a visualisation of the networks inferred from the 
+QIIME 2 Parkinson's Mouse Tutorial data [@pdmice] using FlashWeave. Nodes represent
+ASV (Amplicon Sequence Variants), are coloured by taxonomic classification, and 
+sized proportional to their ANCOM W statistic [@cite]. In this instance the ANCOM
+W statistic gives an indication of how differentially abundant ASVs are between
+healthy and Parkinson's Disease-affected donor mice.
+
+In this figure, inferred form the QIIME 2 Parkin's Mouse Tutorial
+data using FlashWeave, we have used ANCOM W [@mandal2015analysis] as network
 node size, and weights of interactions between any two species as the width of edges in the network.
 Users can access all the options mentioned above through QIIME 2 `view` tool and can change these
-options according to their need to produce a publication-quality figure.
-From this visualized network, it is obvious which node (taxa) has more influence, and which node(taxa)
+options according to their need to produce their figures.
+From this visualized network, it is obvious which node (ASV) has more influence, and which node (taxa)
 has more interactions in the microbial community represented by the given data.
-![Visualization.\label{fig:visual}](visualize_net.png){width=40%}
 
+The plugin workflows are summarised in Figure \autoref{fig:grl}.
 
-![Data_flow_diagram.\label{fig:grl}](Data_flow_diagram.png){width=40%}  
-![Overview.\label{fig:grl}](overview.png){width=40%}
+![Networks of ASVs from the QIIME 2 Parkinson's Mouse Tutorial, as inferred by FlashWeave. Edge thicknesses represent strength of association and orange edges are negative. Nodes coloured taxonomic order. Node sizes are proportional to ANCOM W statistic.\label{fig:visual}](visualize_net.png){width=100%}
 
-The standard workflow and an overview of this plugin are shown in
-\autoref{fig:grl}.The plugin is freely available under the BSD-3-Clause license at
-[](https://github.com/BenKaehler/makarsa). The installation procedures and usage 
-instructions are explained on GitHub page of this plugin[](https://github.com/BenKaehler/makarsa).
+![Available data flows.\label{fig:grl}](Data_flow_diagram.png){width=40%}  
 
-
+The plugin is freely available under the [BSD-3-Clause license](https://github.com/BenKaehler/q2-makarsa/blob/main/LICENSE).
+SpiecEasi and FlashWeave must be installed and used under their licensing restrictions.
+Installation instructions, a usage tutorial, and example outputs are given on the [project
+website](https://isaactowers.github.io/q2-makarsa/).
 
 # Acknowledgements
 
