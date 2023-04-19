@@ -125,17 +125,9 @@ Figure 1 \autoref{fig:visual} is an example of a PNG image saved directly from
 the visualiser. This figure is a visualisation of the networks inferred from the 
 QIIME 2 Parkinson's Mouse Tutorial data [@pdmice] using FlashWeave. Nodes represent
 ASV (Amplicon Sequence Variants), are coloured by taxonomic classification, and 
-sized proportional to their ANCOM W statistic [@cite]. In this instance the ANCOM
+sized proportional to their ANCOM W statistic [@mandal2015analysis]. In this instance the ANCOM
 W statistic gives an indication of how differentially abundant ASVs are between
 healthy and Parkinson's Disease-affected donor mice.
-
-In this figure, inferred form the QIIME 2 Parkin's Mouse Tutorial
-data using FlashWeave, we have used ANCOM W [@mandal2015analysis] as network
-node size, and weights of interactions between any two species as the width of edges in the network.
-Users can access all the options mentioned above through QIIME 2 `view` tool and can change these
-options according to their need to produce their figures.
-From this visualized network, it is obvious which node (ASV) has more influence, and which node (taxa)
-has more interactions in the microbial community represented by the given data.
 
 The plugin workflows are summarised in Figure \autoref{fig:grl}.
 
