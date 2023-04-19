@@ -55,7 +55,7 @@ microbial interactions by using network analysis.
 microbial network analysis, within the QIIME 2 microbiome bioinformatics
 platform. Among currently available microbial network analysis tools, SpiecEasi
 has been comparatively widely adopted by the microbiome research community and
-has been cited in almost 1004 scientific publications [@google2023]. SpiecEasi
+has been cited in over 1000 scientific publications [@google2023]. SpiecEasi
 has been rigorously tested and benchmarked against other methods for microbial
 network analysis and has been shown to perform well across a variety of
 datasets and scenarios. FlashWeave [@tackmann2019rapid] is another new package
