@@ -121,7 +121,7 @@ network is a variety of ways.
   open in the visualisation, any changes you make to the settings (such as the
   scaling of edges or nodes) will be applied to all tabs at once.
 
-Figure 1 \autoref{fig:visual} is an example of a PNG image saved directly from
+\autoref{fig:visual} is an example of a PNG image saved directly from
 the visualiser. This figure is a visualisation of the networks inferred from the 
 QIIME 2 Parkinson's Mouse Tutorial data [@pdmice] using FlashWeave. Nodes represent
 ASV (Amplicon Sequence Variants), are coloured by taxonomic classification, and 
@@ -129,7 +129,7 @@ sized proportional to their ANCOM W statistic [@mandal2015analysis]. In this ins
 W statistic gives an indication of how differentially abundant ASVs are between
 healthy and Parkinson's Disease-affected donor mice.
 
-The plugin workflows are summarised in Figure \autoref{fig:grl}.
+The plugin workflows are summarised in \autoref{fig:grl}.
 
 ![Networks of ASVs from the QIIME 2 Parkinson's Mouse Tutorial, as inferred by FlashWeave. Edge thicknesses represent strength of association and orange edges are negative. Nodes coloured taxonomic order. Node sizes are proportional to ANCOM W statistic.\label{fig:visual}](visualize_net.png){width=100%}
 
