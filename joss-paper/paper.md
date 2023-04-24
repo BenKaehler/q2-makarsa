@@ -39,8 +39,8 @@ habitat are known collectively as a microbiome. The microbiomes that occupy the
 human body crucially impact human health in positive and negative ways
 [@berg2020microbiome]. Microbe-microbe and host-microbe interactions may play a
 significant role in many areas; for example, food science
-[@singh2017microbiome; @torrazza2011developing; @foodsecurity2017], health
-science [@torrazza2011developing; @diease2011] and agricultural production
+[@singh2017microbiome; @torrazza2011developing], health
+science [@torrazza2011developing] and agricultural production
 [@berg2020microbiome]. Understanding the functions, interactions, temporal and
 spatial structures, and population dynamics of microbial communities, will lead
 to breakthroughs in those areas. To discover the interactions among microbiota
