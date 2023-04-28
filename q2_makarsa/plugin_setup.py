@@ -116,8 +116,6 @@ plugin.register_semantic_type_to_format(
 )
 
 
-
-
 @plugin.register_transformer
 def _3(community_out: pd.DataFrame) -> NodeMapFormat:
     ff = NodeMapFormat()
@@ -128,13 +126,26 @@ def _3(community_out: pd.DataFrame) -> NodeMapFormat:
 def _4(ff: NodeMapFormat) -> pd.DataFrame:
     return pd.read_csv(str(ff), sep='\t')
 
+@plugin.register_transformer
+def _5(ff: NodeMapFormat) -> Metadata:
+    with ff.open() as fh:
+        df = pd.read_csv(fh, sep='\t', header=0, index_col=0)
+        return Metadata(df)
+
+@plugin.register_transformer
+def _6(data: Metadata) -> NodeMapFormat:
+    ff = NodeMapFormat()
+    data.to_csv(str(ff), sep='\t', index=False)
+    return ff
+
 plugin.methods.register_function(
     function=louvain_communities,
     inputs={"network_input": Network},
     parameters={
         "num_partitions": Int,
         "remove_neg": Bool,
-        "seed": Int
+        "deterministic": Bool,
+        "threshold": Float
         },
     outputs=[("community_out", NodeMap)],
     input_descriptions={
@@ -143,7 +154,8 @@ plugin.methods.register_function(
     parameter_descriptions={
         'num_partitions': 'Number of partitions to use to obatin the consensus.',
         'remove_neg': 'Remove negative edges from the network [Default uses absolute value].',
-        'seed': 'Seed value for deterministic result.'
+        'deterministic': 'Run code on deterministic mode.',
+        'threshold': 'Threshold value used to discard nodes that are not well supported in the consensus matrices'
     },
     output_descriptions={'community_out': ('output file containing network nodes and their respective communities.')},
     name='Louvain Community Detection',
