@@ -167,7 +167,8 @@ plugin.methods.register_function(
                      'are not well supported in the consensus matrices'
     },
     output_descriptions={
-        'community_out': ('output file containing network nodes and their respective communities.')
+        'community_out': 'output file containing network nodes'
+        'and their respective communities.'
         },
     name='Louvain Community Detection',
     description=("Obtain the consensus community partition of an OTU "
