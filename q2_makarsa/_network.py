@@ -6,6 +6,7 @@ from networkx import Graph, read_graphml
 from qiime2.plugin import ValidationError
 import pandas as pd
 
+
 class NetworkFormat(model.TextFileFormat):
     def _validate_(self, level):
         try:
@@ -21,6 +22,7 @@ NetworkDirectoryFormat = model.SingleFileDirectoryFormat(
 )
 
 Network = qiime2.plugin.SemanticType("Network")
+
 
 class NodeMapFormat(model.TextFileFormat):
     def _validate_(self, level):
