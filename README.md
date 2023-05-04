@@ -40,12 +40,6 @@ In the same conda environment pip install from the q2-makarsa github repo:
 pip install git+https://github.com/BenKaehler/q2-makarsa.git
 ```
 
-Install the python libraries needed for the community prediction:
-
-```
-pip install python-louvain
-pip install netneurotools
-```
 ## Usage Examples
 
 From within the conda environment create a working folder and move into it
