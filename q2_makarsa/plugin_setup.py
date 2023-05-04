@@ -3,7 +3,8 @@ from q2_types.feature_table import FeatureTable, Frequency
 from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str
 import pandas as pd
 
-from ._network import Network, NetworkDirectoryFormat, NetworkFormat, NodeMapFormat, NodeMap, NodeDirectoryFormat
+from ._network import Network, NetworkDirectoryFormat, NetworkFormat
+from ._network import NodeMapFormat, NodeMap, NodeDirectoryFormat
 from ._spieceasi import spiec_easi
 from ._visualisation import visualise_network
 from ._louvain import louvain_communities
@@ -32,6 +33,7 @@ plugin.register_formats(NetworkDirectoryFormat, NetworkFormat)
 plugin.register_semantic_type_to_format(
     Network, artifact_format=NetworkDirectoryFormat
 )
+
 
 @plugin.register_transformer
 def _1(network: Graph) -> NetworkFormat:
@@ -122,9 +124,11 @@ def _3(community_out: pd.DataFrame) -> NodeMapFormat:
     community_out.to_csv(str(ff), sep='\t', index=False)
     return ff
 
+
 @plugin.register_transformer
 def _4(ff: NodeMapFormat) -> pd.DataFrame:
     return pd.read_csv(str(ff), sep='\t')
+
 
 @plugin.register_transformer
 def _5(ff: NodeMapFormat) -> Metadata:
@@ -132,11 +136,13 @@ def _5(ff: NodeMapFormat) -> Metadata:
         df = pd.read_csv(fh, sep='\t', header=0, index_col=0)
         return Metadata(df)
 
+
 @plugin.register_transformer
 def _6(data: Metadata) -> NodeMapFormat:
     ff = NodeMapFormat()
     data.to_csv(str(ff), sep='\t', index=False)
     return ff
+
 
 plugin.methods.register_function(
     function=louvain_communities,
@@ -152,14 +158,19 @@ plugin.methods.register_function(
         'network_input': ('OTU co-ocurrence or co-abbundance network')
     },
     parameter_descriptions={
-        'num_partitions': 'Number of partitions to use to obatin the consensus.',
-        'remove_neg': 'Remove negative edges from the network [Default uses absolute value].',
+        'num_partitions': 'Number of partitions to use to obatain'
+                          'the consensus.',
+        'remove_neg': 'Remove negative edges from the network'
+                      '[Default uses absolute value].',
         'deterministic': 'Run code on deterministic mode.',
-        'threshold': 'Threshold value used to discard nodes that are not well supported in the consensus matrices'
+        'threshold': 'Threshold value used to discard nodes that'
+                     'are not well supported in the consensus matrices'
     },
-    output_descriptions={'community_out': ('output file containing network nodes and their respective communities.')},
+    output_descriptions={
+        'community_out': ('output file containing network nodes and their respective communities.')
+        },
     name='Louvain Community Detection',
-    description=("Obtain the consensus community partition of an OTU co-ocurrence"
-                 " or co-abbundance network using the louvain algorithm."),
+    description=("Obtain the consensus community partition of an OTU "
+                 "or co-abbundance network using the louvain algorithm."),
 
 )
