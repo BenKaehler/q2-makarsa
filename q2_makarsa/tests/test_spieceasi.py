@@ -11,6 +11,13 @@ class TestSpieceasi(TestPluginBase):
 
     def test_defaults(self):
         table = biom.load_table(self.get_data_path("table.biom"))
-        observed = spiec_easi(table.to_dataframe().transpose(), rep_num=5)
+        observed = spiec_easi([table], rep_num=5)
         expected = read_graphml(self.get_data_path("network.graphml"))
+        self.assertTrue(iso.is_isomorphic(observed, expected))
+
+    def test_cross_domain(self):
+        hmp216S = biom.load_table(self.get_data_path("hmp216S.biom"))
+        hmp2prot = biom.load_table(self.get_data_path("hmp2prot.biom"))
+        observed = spiec_easi([hmp216S, hmp2prot], rep_num=5)
+        expected = read_graphml(self.get_data_path("network-cd.graphml"))
         self.assertTrue(iso.is_isomorphic(observed, expected))
