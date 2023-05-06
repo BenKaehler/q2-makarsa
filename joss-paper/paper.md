@@ -17,9 +17,15 @@ authors:
     orcid: 0000-0002-5318-9551 
     equal-contrib: true 
     affiliation: 1
+  - name: Rodrigo Hernández-Velázquez
+    orcid: 0009-0009-3048-8573
+    equal-contrib: true 
+    affiliation: 2
 affiliations:
   - name: School of Science, UNSW Canberra, Australia
     index: 1
+  - name: Laboratory of Food Systems Biotechnology, Institute of Food, Nutrition, and Health, ETH Zürich, Zürich 8092, Switzerland
+    index: 2
 date: April 2023
 bibliography: joss.bib
 ---
