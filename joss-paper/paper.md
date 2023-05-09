@@ -101,8 +101,8 @@ network is a variety of ways.
 Although many network visualization tools can be adapted for microbiome networks,
 a few tools are specifically designed for microbiome network visualization and analysis,
 and only very few directly identify central species. Commonly used microbiome network 
-visualization tools are MicNet[@favila2022micnet], CoNet[@faust2016conet], 
-NetCoMi[@peschel2021netcomi], and so on. Among them, MicNet[@favila2022micnet] uses
+visualization tools are MicNet [@favila2022micnet], CoNet [@faust2016conet], 
+NetCoMi [@peschel2021netcomi], and so on. Among them, MicNet [@favila2022micnet] uses
 algorithms to identify central species for given data. On the other hand, q2-makarsa 
 identifies central species and allows the user to manipulate the visualization according
 to the options available and their needs. It also provides all statistical information of 
