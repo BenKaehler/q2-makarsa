@@ -98,6 +98,18 @@ visualizes it in a publication-quality figure. This option combined with
 QIIME 2 `view` tool allows the user to understand the inferred ecological 
 network is a variety of ways.
 
+Although many network visualization tools can be adapted for microbiome networks,
+a few tools are specifically designed for microbiome network visualization and analysis,
+and only very few directly identify central species. Commonly used microbiome network 
+visualization tools are MicNet [@favila2022micnet], CoNet [@faust2016conet], 
+NetCoMi [@peschel2021netcomi], and so on. Among them, MicNet [@favila2022micnet] uses
+algorithms to identify central species for given data. On the other hand, q2-makarsa 
+identifies central species and allows the user to manipulate the visualization according
+to the options available and their needs. It also provides all statistical information of 
+selected nodes which will be helpful in inferring biological insights.The visualizer of
+q2-makarsa offers a series of features that distinguish it from other network visualization tools,
+for example,
+
 * The network is interactive and its overall size and shape on the screen can
   be manipulated manually within the user's browser.
 * A publication ready image of the network can be saved to the local device in
@@ -134,6 +146,7 @@ The plugin workflows are summarised in \autoref{fig:grl}.
 ![Networks of ASVs from the QIIME 2 Parkinson's Mouse Tutorial, as inferred by FlashWeave. Edge thicknesses represent strength of association and orange edges are negative. Nodes coloured taxonomic order. Node sizes are proportional to ANCOM W statistic.\label{fig:visual}](visualize_net.png){width=100%}
 
 ![Available data flows.\label{fig:grl}](Data_flow_diagram.png){width=40%}  
+
 
 The plugin is freely available under the [BSD-3-Clause license](https://github.com/BenKaehler/q2-makarsa/blob/main/LICENSE).
 SpiecEasi and FlashWeave must be installed and used under their licensing restrictions.
