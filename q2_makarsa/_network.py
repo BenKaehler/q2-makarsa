@@ -4,6 +4,7 @@ import qiime2.plugin
 import qiime2.plugin.model as model
 from networkx import Graph, read_graphml
 from qiime2.plugin import ValidationError
+import pandas as pd
 
 
 class NetworkFormat(model.TextFileFormat):
@@ -21,3 +22,19 @@ NetworkDirectoryFormat = model.SingleFileDirectoryFormat(
 )
 
 Network = qiime2.plugin.SemanticType("Network")
+
+
+class NodeMapFormat(model.TextFileFormat):
+    def _validate_(self, level):
+        try:
+            table = pd.read_table(str(self))
+            if not isinstance(table, pd.DataFrame):
+                raise ValidationError("no table in file")
+        except ParseError as err:
+            raise ValidationError("bad node community table") from err
+
+
+NodeDirectoryFormat = model.SingleFileDirectoryFormat(
+    "NodeDirectoryFormat", "pd.DataFrame", NodeMapFormat
+)
+NodeMap = qiime2.plugin.SemanticType("NodeMap")
