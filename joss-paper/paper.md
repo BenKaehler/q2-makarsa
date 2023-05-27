@@ -17,9 +17,15 @@ authors:
     orcid: 0000-0002-5318-9551 
     equal-contrib: true 
     affiliation: 1
+  - name: Rodrigo Hernández-Velázquez
+    orcid: 0009-0009-3048-8573
+    equal-contrib: true 
+    affiliation: 2
 affiliations:
   - name: School of Science, UNSW Canberra, Australia
     index: 1
+  - name: Laboratory of Food Systems Biotechnology, Institute of Food, Nutrition, and Health, ETH Zürich, Zürich 8092, Switzerland
+    index: 2
 date: April 2023
 bibliography: joss.bib
 ---
@@ -51,9 +57,10 @@ Here, we present a QIIME 2 plugin [@Bolyen2019] that will help to infer
 microbial interactions by using network analysis.
 
 **q2-makarsa** makes two popular microbial network inference methods,
-SpiecEasi [@kurtz2015sparse] and FlashWeave [@tackmann2019rapid], available to
-users of the [QIIME 2](https://qiime2.org/) bioinformatics platform and bundles
-it with a new tool
+SpiecEasi [@kurtz2015sparse] and FlashWeave [@tackmann2019rapid] and a method 
+to obtain node communities based on the Louvain algorithm [@Blondel_2008], 
+available to users of the [QIIME 2](https://qiime2.org/) bioinformatics 
+platform and bundles it with a new tool
 for visualising the inferred networks and producing publication-ready figures.
 By bringing these methods into the QIIME 2 platform, users can take data from 
 laboratory to plot without breaking QIIME 2's distributed provenance tracking,
@@ -83,14 +90,28 @@ they are regularly updated and improved with new features and bug fixes.
 Overall, SpiecEasi and FlashWeave are powerful tools for analyzing microbial
 data and identifying potential interactions between microbial taxa.
 
+To simplify the complexity of the network a widely used approach is to obtain
+a community partition of nodes. For this goal the Louvain algorithm 
+[@Blondel_2008] is widely used, which is implemented in the python library 
+Networkx [@SciPyProceedings_11]. This algorithm maximizes the modularity to 
+obtain the communities and is not deterministic. It has also been shown that 
+a consensus of multiple partitions obtained from the same clustering method 
+consensus allows to obtain a partition that is closer to the actual community 
+structure of the system [@Lancichinetti2012].
+
 The current version of **q2-makarsa** exposes SpiecEasi and FlashWeave via the
 QIIME 2 actions `spiec-easi` and
-`flashweave` respectively. Specifically, **q2-makarsa** makes available: 
+`flashweave` respectively. Additionally it enables exploring the community 
+structure of the network via the `louvain-communities` action.
+Specifically, **q2-makarsa** makes available: 
 
 * All of [SpiecEasi's](https://github.com/zdk123/SpiecEasi) features except
   batch-mode execution (thread-level parallelism is supported);
 * [FlashWeave's](https://github.com/meringlab/FlashWeave.jl) `learn_network`
-  features in their entirety. 
+  features in their entirety.
+* A consensus of Louvain community partitions obtained through the algorithm
+  proposed by 
+  [Lancichinetti & Fortunato, 2012](https://www.nature.com/articles/srep00336#Sec7).
 
 The universal visualisation method is accessed by the option
 `visualise-network`, which takes generated network as input and
