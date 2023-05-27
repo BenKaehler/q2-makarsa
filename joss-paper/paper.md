@@ -57,16 +57,16 @@ Here, we present a QIIME 2 plugin [@Bolyen2019] that will help to infer
 microbial interactions by using network analysis.
 
 **q2-makarsa** makes two popular microbial network inference methods,
-SpiecEasi [@kurtz2015sparse] and FlashWeave [@tackmann2019rapid] and a method 
-to obtain node communities based on the Louvain algorithm [@Blondel_2008], 
+SpiecEasi [@kurtz2015sparse] and FlashWeave [@tackmann2019rapid], and a method 
+to obtain node communities based on the Louvain algorithm [@Blondel_2008] 
 available to users of the [QIIME 2](https://qiime2.org/) bioinformatics 
 platform and bundles it with a new tool
 for visualising the inferred networks and producing publication-ready figures.
 By bringing these methods into the QIIME 2 platform, users can take data from 
 laboratory to plot without breaking QIIME 2's distributed provenance tracking,
 improving scientific reproducibility. QIIME 2 also provides users with greater
-convenience by allowing non-specialists to access tools from, for instance,
-the [Galaxy](https://usegalaxy.org/) graphical user interface or the command line,
+convenience by allowing non-specialists to access tools via any of QIIME 2's
+interfaces, such as the command line or a graphical user interface,
 rather than from R or Julia, greatly increasing their usability and audience.
 Additionally, by providing users easy access to these competing methods
 of network inference, users can compare and assess the robustness of
