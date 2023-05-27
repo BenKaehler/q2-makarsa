@@ -23,7 +23,8 @@ option_list <- list(
   ),
   make_option(c("-l", "--lambda-min-ratio"),
     action = "store", default = NULL, type = "numeric",
-    help = "the scaling factor that determines the minimum sparsity/lambda parameter"
+    help = "the scaling factor that determines the minimum sparsity/lambda
+    parameter"
   ),
   make_option(c("-d", "--nlambda"),
     action = "store", default = NULL, type = "numeric",
@@ -51,7 +52,8 @@ option_list <- list(
   ),
   make_option("--sel-criterion",
     action = "store", default = "stars", type = "character",
-    help = " Specifying criterion/method for model selection, Accepts 'stars' [default], 'bstars' (Bounded StARS)"
+    help = " Specifying criterion/method for model selection, Accepts 'stars'
+	[default], 'bstars' (Bounded StARS)"
   ),
   make_option(c("-v", "--verbose"),
     action = "store_true", default = FALSE,
@@ -59,7 +61,8 @@ option_list <- list(
   ),
   make_option("--not-lambda-log",
     action = "store_true", default = FALSE,
-    help = "lambda-log should values of lambda be distributed logarithmically (TRUE) or linearly (FALSE) between lamba-min and lambda-max "
+    help = "lambda-log should values of lambda be distributed logarithmically
+	(TRUE) or linearly (FALSE) between lamba-min and lambda-max "
   ),
   make_option("--not-pulsar-select",
     action = "store_true", default = FALSE,
@@ -98,7 +101,9 @@ pulsar.select <- !(opt$`not-pulsar-select`)
 
 ### VALIDATE ARGUMENTS ###
 
-data <- lapply(strsplit(inp.file, ", ")[[1]], function (x) {t(as.matrix(biom_data(read_biom(x))))})
+data <- lapply(strsplit(inp.file, ", ")[[1]], function(x) {
+  t(as.matrix(biom_data(read_biom(x))))
+})
 
 # Output files are to be filenames (not directories) and are to be
 # removed and replaced if already present.
@@ -130,22 +135,26 @@ se.out <- spiec.easi(
   )
 )
 
-features <- list(Feature=unlist(lapply(data, colnames)))
+features <- list(Feature = unlist(lapply(data, colnames)))
 
-if (method=='mb') {
-bm <- symBeta(getOptBeta(se.out), mode="maxabs")
-diag(bm) <- 0
-weights <- Matrix::summary(t(bm))[,3]
-network <- adj2igraph(Matrix::drop0(getRefit(se.out)),
-                   edge.attr=list(weight=weights),
-                  vertex.attr = features)
-} else if (method=='glasso') {
-secor  <- cov2cor(getOptCov(se.out))
-bm     <- summary(triu(secor*getRefit(se.out), k=1)) 
-network <- adj2igraph(getRefit(se.out),edge.attr=list(weight=bm[,3]),vertex.attr = features)
-}else{
-    print("Weighted graph only available for mb and glasso method")
-    network <- adj2igraph(getRefit(se.out),vertex.attr = features)
+if (method == "mb") {
+  bm <- symBeta(getOptBeta(se.out), mode = "maxabs")
+  diag(bm) <- 0
+  weights <- Matrix::summary(t(bm))[, 3]
+  network <- adj2igraph(Matrix::drop0(getRefit(se.out)),
+    edge.attr = list(weight = weights),
+    vertex.attr = features
+  )
+} else if (method == "glasso") {
+  secor <- cov2cor(getOptCov(se.out))
+  bm <- summary(triu(secor * getRefit(se.out), k = 1))
+  network <- adj2igraph(getRefit(se.out),
+    edge.attr = list(weight = bm[, 3]),
+    vertex.attr = features
+  )
+} else {
+  print("Weighted graph only available for mb and glasso method")
+  network <- adj2igraph(getRefit(se.out), vertex.attr = features)
 }
 
 write_graph(network, out.file, "graphml")
