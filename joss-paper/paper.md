@@ -72,7 +72,7 @@ Additionally, by providing users easy access to these competing methods
 of network inference, users can compare and assess the robustness of
 network inference on their data.
 
-# Summary of Functionality
+# Summary of functionality
 
 SpiecEasi
 has been widely adopted by the microbiome research community and
@@ -119,6 +119,10 @@ visualizes it in a publication-quality figure. This option combined with
 QIIME 2 `view` tool allows the user to understand the inferred ecological 
 network is a variety of ways.
 
+The visualizer of
+q2-makarsa offers a series of features that distinguish it from other network visualization tools,
+for example,
+
 * The network is interactive and its overall size and shape on the screen can
   be manipulated manually within the user's browser.
 * A publication ready image of the network can be saved to the local device in
@@ -156,10 +160,27 @@ The plugin workflows are summarised in \autoref{fig:grl}.
 
 ![Available data flows.\label{fig:grl}](Data_flow_diagram.png){width=40%}  
 
+
 The plugin is freely available under the [BSD-3-Clause license](https://github.com/BenKaehler/q2-makarsa/blob/main/LICENSE).
 SpiecEasi and FlashWeave must be installed and used under their licensing restrictions.
 Installation instructions, a usage tutorial, and example outputs are given on the [project
 website](https://isaactowers.github.io/q2-makarsa/).
+
+# Comparison with other similar packages
+
+Many network visualisation tools exist. For instance, the SpiecEasi documentation recommends
+igraph [@csardi2006igraph] and the FlashWeave documentation recommends Cytoscape [@shannon2003cytoscape]
+or Gephi [@bastian2009gephi]. q2-makarsa differs from this approach by combining those inference
+tools with a customised visualisation tool and community detection without the need for the
+user to code in R or Julia.
+
+Other pipelines exist that are more similar to q2-makarsa, for instance MicNet [@favila2022micnet],
+CoNet [@faust2016conet], and NetCoMi [@peschel2021netcomi]. MicNet offers a web interface, similar tools,
+and an active GitHub repository. CoNet is a Cytoscape plugin that can perform inference on microbial
+count data. NetCoMi is an R package that provides access to similar tools (notably SpiecEasi) and is also
+actively maintained. These pipelines offer varying features but none are QIIME 2 plugins so would break
+provenance tracking for QIIME 2 users, and none offer FlashWeave for network inference or Louvaine
+community detection.
 
 # Acknowledgements
 
