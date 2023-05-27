@@ -7,20 +7,16 @@ tags:
 authors:
   - name: Zakir Hossine
     orcid: 0000-0001-6354-3166
-    equal-contrib: true
     affiliation: 1
   - name: Isaac N. Towers
     orcid: 0000-0002-4308-6129
-    equal-contrib: true
-    affiliation: 1
-  - name: Ben Kaehler
-    orcid: 0000-0002-5318-9551 
-    equal-contrib: true 
     affiliation: 1
   - name: Rodrigo Hernández-Velázquez
     orcid: 0009-0009-3048-8573
-    equal-contrib: true 
     affiliation: 2
+  - name: Benjamin Kaehler
+    orcid: 0000-0002-5318-9551 
+    affiliation: 1
 affiliations:
   - name: School of Science, UNSW Canberra, Australia
     index: 1
