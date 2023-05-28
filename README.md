@@ -47,12 +47,12 @@ development continues additional features will be listed here.
 * Visualisation features
   * Relationships between features (eg. ASVs, OTUs, MVs, taxa, peptides) are represented as ecological networks
   * The network is interactive and its overall size and shape on the
-		  screen can be manipulated manually.
+          screen can be manipulated manually.
   * An image of the network can be saved to the local device in PNG
-		  format.
+          format.
   * Network nodes can be selected and information on which feature is
-		  represented by the node, statistics, and various centrality measures
-		  for the node will be displayed.
+          represented by the node, statistics, and various centrality measures
+          for the node will be displayed.
   * Network edges are colour coded for positive (blue) and negative
   (orange) correlations
   * Edge thickness is scaled according to statistics appropriate to each method with thicker edges indicating stronger connections between features.
@@ -66,7 +66,7 @@ development continues additional features will be listed here.
   at once.
   * Node attributes can be added via feature metadata (eg. taxonomy, DNA sequence, differential abundance scores)
     * If node attributes are taxonomic labels, visualisation offers
-			  colourings at any taxonomic level
+              colourings at any taxonomic level
 
 ## Installation
 
@@ -133,10 +133,10 @@ The next step is to import the BIOM file as a frequency [FeatureTable](https://d
 
 ```
 qiime tools import \
-	--input-path Suberitida.biom \
-	--type 'FeatureTable[Frequency]' \
-	--input-format BIOMV210Format \
-	--output-path sponge-feature-table.qza
+    --input-path Suberitida.biom \
+    --type 'FeatureTable[Frequency]' \
+    --input-format BIOMV210Format \
+    --output-path sponge-feature-table.qza
 ```
 The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working
 folder if this command was successful. 
@@ -150,8 +150,8 @@ intended output artefact containing the inferred network.
 
 ```
 qiime makarsa spiec-easi \
-	--i-table sponge-feature-table.qza \
-	--o-network sponge-net.qza
+    --i-table sponge-feature-table.qza \
+    --o-network sponge-net.qza
 ```
 
 From the ```sponge-net.qza``` network artefact a visualisation can be created
@@ -159,8 +159,8 @@ and then viewed
 
 ```
 qiime makarsa visualise-network \
-	--i-network sponge-net.qza \
-	--o-visualization sponge-net.qzv
+    --i-network sponge-net.qza \
+    --o-visualization sponge-net.qzv
 
 qiime tools view sponge-net.qzv
 ```
@@ -196,7 +196,7 @@ execute the command
 
 ```
 qiime makarsa spiec-easi \ 
-   --i-table spongeFeatureTable.qza \ 
+   --i-table sponge-feature-table.qza \ 
    --o-network sponge-net.qza \ 
    --p-method mb 
 ```
@@ -222,14 +222,14 @@ similar. Create the network.
 
 ```
 qiime makarsa flashweave \
-	--i-table sponge-feature-table.qza \
-	--o-network sponge-fw-net.qza
+    --i-table sponge-feature-table.qza \
+    --o-network sponge-fw-net.qza
 ```
 Then generate the visualisation.
 ```
 qiime makarsa visualise-network \
-	--i-network sponge-fw-net.qza \
-	--o-visualization sponge-fw-net.qzv
+    --i-network sponge-fw-net.qza \
+    --o-visualization sponge-fw-net.qzv
 ```
 View the visualisation as usual
 ```
@@ -238,7 +238,7 @@ qiime tools view sponge-net.qzv
 
 ![fw-network](images/sponge-fw-network.png)
 
-#### Modularity optimization
+#### Community detection
 
 Once a network graph is generated, this can be used to identify modules of
 co-occurring features. This is useful for, e.g., grouping these features
@@ -247,14 +247,22 @@ for downstream analyses. For module detection, q2-makarsa employs the
 
 ```
 qiime makarsa louvain-communities \
-   --i-network-input sponge-net.qza \
-   --o-community-out node-map.qza
+   --i-network sponge-net.qza \
+   --o-community node-map.qza
 ```
 
-You can view the resulting node map (showing which features belong to 
-each module):
+Now you can colour your nodes by community.
+```
+qiime makarsa visualise-network \
+    --i-network sponge-net.qza \
+    --m-metadata-file node-map.qza \
+    --o-visualization sponge-louvain-net.qzv
+```
+
+Alternatively you can view the resulting node map (showing which features belong to 
+each module).
 ```
 qiime metadata tabulate \
-        --m-input-file node-map.qza \
-        --o-visualization node-map.qzv
+   --m-input-file node-map.qza \
+   --o-visualization node-map.qzv
 ```

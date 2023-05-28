@@ -232,9 +232,9 @@ def _nodemap_to_df(fh):
 
 
 @plugin.register_transformer
-def _3(community_out: pd.DataFrame) -> NodeMapFormat:
+def _3(community: pd.DataFrame) -> NodeMapFormat:
     ff = NodeMapFormat()
-    community_out.to_csv(str(ff), sep='\t', index=False)
+    community.to_csv(str(ff), sep='\t', index=False)
     return ff
 
 
@@ -260,16 +260,16 @@ def _6(data: q2.Metadata) -> NodeMapFormat:
 
 plugin.methods.register_function(
     function=louvain_communities,
-    inputs={"network_input": Network},
+    inputs={"network": Network},
     parameters={
         "num_partitions": Int,
         "remove_neg": Bool,
         "deterministic": Bool,
         "threshold": Float
         },
-    outputs=[("community_out", NodeMap)],
+    outputs=[("community", NodeMap)],
     input_descriptions={
-        'network_input': ('OTU co-ocurrence or co-abbundance network')
+        'network': ('OTU co-ocurrence or co-abbundance network')
     },
     parameter_descriptions={
         'num_partitions': 'Number of partitions to use to obatain'
@@ -281,7 +281,7 @@ plugin.methods.register_function(
                      'are not well supported in the consensus matrices'
     },
     output_descriptions={
-        'community_out': 'output file containing network nodes'
+        'community': 'output file containing network nodes'
         'and their respective communities.'
         },
     name='Louvain Community Detection',
