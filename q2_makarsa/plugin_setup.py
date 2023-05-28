@@ -1,5 +1,6 @@
 from networkx import Graph, read_graphml, write_graphml
 from q2_types.feature_table import FeatureTable, Frequency
+import qiime2 as q2
 import pandas as pd
 from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str, List
 
@@ -226,6 +227,10 @@ plugin.register_semantic_type_to_format(
 )
 
 
+def _nodemap_to_df(fh):
+    return pd.read_csv(fh, sep='\t', header=0, index_col=0, dtype='str')
+
+
 @plugin.register_transformer
 def _3(community_out: pd.DataFrame) -> NodeMapFormat:
     ff = NodeMapFormat()
@@ -235,18 +240,19 @@ def _3(community_out: pd.DataFrame) -> NodeMapFormat:
 
 @plugin.register_transformer
 def _4(ff: NodeMapFormat) -> pd.DataFrame:
-    return pd.read_csv(str(ff), sep='\t')
-
-
-@plugin.register_transformer
-def _5(ff: NodeMapFormat) -> Metadata:
     with ff.open() as fh:
-        df = pd.read_csv(fh, sep='\t', header=0, index_col=0)
-        return Metadata(df)
+        return _nodemap_to_df(fh)
 
 
 @plugin.register_transformer
-def _6(data: Metadata) -> NodeMapFormat:
+def _5(ff: NodeMapFormat) -> q2.Metadata:
+    with ff.open() as fh:
+        df = _nodemap_to_df(fh)
+        return q2.Metadata(df)
+
+
+@plugin.register_transformer
+def _6(data: q2.Metadata) -> NodeMapFormat:
     ff = NodeMapFormat()
     data.to_csv(str(ff), sep='\t', index=False)
     return ff
