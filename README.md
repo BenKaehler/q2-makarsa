@@ -31,7 +31,7 @@ from 16S amplicon sequencing.
 [FlashWeave](https://github.com/meringlab/FlashWeave.jl) is a
 [Julia](https://julialang.org/) based package which predicts ecological
 interactions between microbes from large-scale compositional abundance data
-(i.e. OTU tables constructed from sequencing data) through statistical
+(e.g., ASV or OTU tables constructed from sequencing data) through statistical
 co-occurrence or co-abundance. It reports direct associations, with adjustment
 for bystander effects and other confounders, and can furthermore integrate
 environmental or technical factors into the analysis of microbial systems.
@@ -137,7 +137,6 @@ qiime tools import \
 	--type 'FeatureTable[Frequency]' \
 	--input-format BIOMV210Format \
 	--output-path sponge-feature-table.qza
-# Imported Suberitida.biom as BIOMV210Format to spongeFeatureTable.qza
 ```
 The QIIME 2 artefact ```spongeFeatureTable.qza``` should exist in the working
 folder if this command was successful. 
@@ -153,7 +152,6 @@ intended output artefact containing the inferred network.
 qiime makarsa spiec-easi \
 	--i-table sponge-feature-table.qza \
 	--o-network sponge-net.qza
-# Saved Network to: sponge-net.qza
 ```
 
 From the ```sponge-net.qza``` network artefact a visualisation can be created
@@ -163,7 +161,7 @@ and then viewed
 qiime makarsa visualise-network \
 	--i-network sponge-net.qza \
 	--o-visualization sponge-net.qzv
-#Saved Visualization to: sponge-net.qzv
+
 qiime tools view sponge-net.qzv
 ```
 
@@ -196,10 +194,11 @@ parameter switch and one of 3 keywords:
 For example to infer the network from the example data using the MB method
 execute the command
 
-``` qiime makarsa spiec-easi \ 
-			--i-table spongeFeatureTable.qza \ 
-			--o-network sponge-net.qza \ 
-			--p-method mb 
+```
+qiime makarsa spiec-easi \ 
+   --i-table spongeFeatureTable.qza \ 
+   --o-network sponge-net.qza \ 
+   --p-method mb 
 ```
 
 The remaining parameters relate to selection of the optimal penalty $\lambda$
@@ -225,14 +224,12 @@ similar. Create the network.
 qiime makarsa flashweave \
 	--i-table sponge-feature-table.qza \
 	--o-network sponge-fw-net.qza
-# Saved Network to: sponge-fw-net.qza
 ```
 Then generate the visualisation.
 ```
 qiime makarsa visualise-network \
 	--i-network sponge-fw-net.qza \
 	--o-visualization sponge-fw-net.qzv
-#Saved Visualization to: sponge-fw-net.qzv
 ```
 View the visualisation as usual
 ```
@@ -240,3 +237,24 @@ qiime tools view sponge-net.qzv
 ```
 
 ![fw-network](images/sponge-fw-network.png)
+
+#### Modularity optimization
+
+Once a network graph is generated, this can be used to identify modules of
+co-occurring features. This is useful for, e.g., grouping these features
+for downstream analyses. For module detection, q2-makarsa employs the 
+[Louvain method](https://doi.org/10.1088%2F1742-5468%2F2008%2F10%2FP10008).
+
+```
+qiime makarsa louvain-communities \
+   --i-network-input sponge-net.qza \
+   --o-community-out node-map.qza
+```
+
+You can view the resulting node map (showing which features belong to 
+each module):
+```
+qiime metadata tabulate \
+        --m-input-file node-map.qza \
+        --o-visualization node-map.qzv
+```
