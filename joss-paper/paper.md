@@ -11,10 +11,13 @@ authors:
   - name: Isaac N. Towers
     orcid: 0000-0002-4308-6129
     affiliation: 1
+  - name: Nicholas A Bokulich
+    orcid: 0000-0002-1784-8935
+    affiliation: 2
   - name: Rodrigo Hernández-Velázquez
     orcid: 0009-0009-3048-8573
     affiliation: 2
-  - name: Benjamin Kaehler
+  - name: Benjamin D Kaehler
     orcid: 0000-0002-5318-9551 
     affiliation: 1
 affiliations:
