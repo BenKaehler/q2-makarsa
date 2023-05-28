@@ -119,7 +119,7 @@ def louvain_communities(
             count += 1
     # Convert to final format in dictionary keys-nodes values-community
     final_partition = pd.DataFrame({
-        'OTUID': list(final_consensus.keys()),
+        'id': list(final_consensus.keys()),
         'COMMUNITY': final_consensus.values()
         })
 
