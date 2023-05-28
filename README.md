@@ -240,7 +240,7 @@ qiime tools view sponge-net.qzv
 
 #### Modularity optimization
 
-Once a network graph is generated, this can be used to detect modules of
+Once a network graph is generated, this can be used to identify modules of
 co-occurring features. This is useful for, e.g., grouping these features
 for downstream analyses. For module detection, q2-makarsa employs the 
 [Louvain method](https://doi.org/10.1088%2F1742-5468%2F2008%2F10%2FP10008).
@@ -257,22 +257,4 @@ each module):
 qiime metadata tabulate \
         --m-input-file node-map.qza \
         --o-visualization node-map.qzv --verbose
-```
-
-This node map can also be passed to other QIIME 2 actions as Metadata, 
-e.g., to provide feature metadata for visualizations or to group the 
-features in a feature table according to module affiliation. (note: 
-the new feature IDs will be arbitrary module IDs and will no longer 
-correspond to, e.g., the taxonomic or phylogenetic affiliations of 
-the member features, as the member features may belong to multiple 
-clades!)
-
-```
-qiime feature-table group \
-	--i-table sponge-feature-table.qza \
-	--p-axis feature \
-	--m-metadata-file node-map.qza \
-	--m-metadata-column COMMUNITY \
-	--p-mode sum \
-	--o-grouped-table grouped-table.qza
 ```
