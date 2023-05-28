@@ -256,5 +256,5 @@ each module):
 ```
 qiime metadata tabulate \
         --m-input-file node-map.qza \
-        --o-visualization node-map.qzv --verbose
+        --o-visualization node-map.qzv
 ```
