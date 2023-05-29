@@ -1,18 +1,15 @@
 import networkx as nx
 import pandas as pd
-from ._network import NetworkDirectoryFormat
 
 
 def louvain_communities(
-                        network_input: NetworkDirectoryFormat,
+                        network: nx.Graph,
                         num_partitions: int = 100,
                         remove_neg: bool = False,
                         deterministic: bool = False,
                         threshold: float = 0.3
                         ) -> pd.DataFrame:
     # load data and create network graph
-
-    G = nx.read_graphml("/".join([str(network_input), "network.graphml"]))
 
     def remove_negative_edges(G):
         # Remove the negative edges from the graph
@@ -30,22 +27,23 @@ def louvain_communities(
         return G
 
     if remove_neg is True:
-        G = remove_negative_edges(G)
+        network = remove_negative_edges(network)
     else:
-        G = absolute_value_edges(G)
+        network = absolute_value_edges(network)
 
     def divide_nonzero(x):
         return x / num_partitions if x != 0 else 0
 
-    def consensus_matrix(G,  # Networkx graph object
+    def consensus_matrix(network,  # Networkx graph object
                          num_partitions: int = 100,
                          deterministic: bool = False):
         louvain_sum = pd.DataFrame()
         for i in range(num_partitions):
             if deterministic is False:
-                best_partition = nx.community.louvain_communities(G)
+                best_partition = nx.community.louvain_communities(network)
             else:
-                best_partition = nx.community.louvain_communities(G, seed=i)
+                best_partition = nx.community.louvain_communities(
+                    network, seed=i)
             louvain_df = list_to_dataframe(best_partition)
             # Add partitons
             louvain_sum = louvain_sum.add(louvain_df, fill_value=0)
@@ -97,7 +95,8 @@ def louvain_communities(
     count = 1
     while (different_consensus):
         if count == 1:
-            consensus_1 = consensus_matrix(G, num_partitions, deterministic)
+            consensus_1 = consensus_matrix(
+                    network, num_partitions, deterministic)
             # Check if all the partitions are the same
             if consensus_1.isin([0, 1]).all().all():
                 # convert to networkx community format
@@ -117,10 +116,11 @@ def louvain_communities(
         else:
             consensus_1 = consensus_2
             count += 1
+
     # Convert to final format in dictionary keys-nodes values-community
     final_partition = pd.DataFrame({
-        'OTUID': list(final_consensus.keys()),
-        'COMMUNITY': final_consensus.values()
+        'feature id': [network.nodes[k]['Feature'] for k in final_consensus],
+        'Community': final_consensus.values()
         })
 
     return final_partition

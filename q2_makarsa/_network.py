@@ -11,10 +11,13 @@ class NetworkFormat(model.TextFileFormat):
     def _validate_(self, level):
         try:
             network = read_graphml(str(self))
-            if not isinstance(network, Graph):
-                raise ValidationError("no graph in network file")
         except ParseError as err:
             raise ValidationError("bad network file") from err
+        if not isinstance(network, Graph):
+            raise ValidationError("no graph in network file")
+        for node in network.nodes():
+            if "Feature" not in network.nodes[node]:
+                raise ValidationError("nodes must have Feature attributes")
 
 
 NetworkDirectoryFormat = model.SingleFileDirectoryFormat(
@@ -28,13 +31,16 @@ class NodeMapFormat(model.TextFileFormat):
     def _validate_(self, level):
         try:
             table = pd.read_table(str(self))
-            if not isinstance(table, pd.DataFrame):
-                raise ValidationError("no table in file")
         except ParseError as err:
             raise ValidationError("bad node community table") from err
+        if not isinstance(table, pd.DataFrame):
+            raise ValidationError("no table in file")
+        for thing in ('feature id', 'Community'):
+            if thing not in table.columns:
+                raise ValidationError(f"table does not include {thing}")
 
 
 NodeDirectoryFormat = model.SingleFileDirectoryFormat(
-    "NodeDirectoryFormat", "pd.DataFrame", NodeMapFormat
+    "NodeDirectoryFormat", "community.tsv", NodeMapFormat
 )
 NodeMap = qiime2.plugin.SemanticType("NodeMap")
