@@ -14,4 +14,3 @@ class TestFlashweave(TestPluginBase):
         observed = flashweave(table)
         expected = read_gml(self.get_data_path("network-fw.gml"))
         self.assertTrue(iso.is_isomorphic(observed, expected))
-
