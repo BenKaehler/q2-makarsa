@@ -1,11 +1,9 @@
 from networkx import read_gml
-# from networkx import write_graphml 
 import networkx.algorithms.isomorphism as iso
 from qiime2.plugin.testing import TestPluginBase
 import biom
 
 from q2_makarsa._flashweave import flashweave
-
 
 class TestFlashweave(TestPluginBase):
     package = "q2_makarsa.tests"
