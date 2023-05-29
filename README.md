@@ -266,3 +266,16 @@ qiime metadata tabulate \
    --m-input-file node-map.qza \
    --o-visualization node-map.qzv
 ```
+
+The node map can be input as feature metadata to other QIIME 2 actions. For
+example, the following action can be used to group the features in a feature
+table based on their community affiliation.
+```
+qiime feature-table group \
+	--i-table sponge-feature-table.qza \
+	--p-axis feature \
+	--m-metadata-file node-map.qza \
+	--m-metadata-column Community \
+	--p-mode sum \
+	--o-grouped-table grouped-table.qza
+```
