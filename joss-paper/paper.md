@@ -178,7 +178,7 @@ CoNet [@faust2016conet], and NetCoMi [@peschel2021netcomi]. MicNet offers a web 
 and an active GitHub repository. CoNet is a Cytoscape plugin that can perform inference on microbial
 count data. NetCoMi is an R package that provides access to similar tools (notably SpiecEasi) and is also
 actively maintained. These pipelines offer varying features but none are QIIME 2 plugins so would break
-provenance tracking for QIIME 2 users, and none offer FlashWeave for network inference or Louvaine
+provenance tracking for QIIME 2 users, and none offer FlashWeave for network inference or Louvain
 community detection.
 
 # Acknowledgements
