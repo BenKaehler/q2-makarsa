@@ -34,7 +34,8 @@ jobs:
       run: |
         source /home/runner/.bashrc
         mamba activate makarsa-test
-        mamba install -y -c conda-forge -c bioconda r-spieceasi flake8
+        mamba install -y -c conda-forge -c bioconda r-spieceasi flake8 julia
+        julia -e 'using Pkg; Pkg.add(["FlashWeave", "ArgParse", "GraphIO"])'
 
     - name: Install Makarsa
       run: |
