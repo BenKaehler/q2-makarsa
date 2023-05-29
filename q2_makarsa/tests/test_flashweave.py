@@ -5,6 +5,7 @@ import biom
 
 from q2_makarsa._flashweave import flashweave
 
+
 class TestFlashweave(TestPluginBase):
     package = "q2_makarsa.tests"
 
