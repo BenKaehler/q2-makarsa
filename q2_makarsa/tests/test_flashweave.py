@@ -11,7 +11,8 @@ class TestFlashweave(TestPluginBase):
 
     def test_defaults(self):
         table = biom.load_table(self.get_data_path("table.biom"))
-        df = table.to_dataframe()
+        table_T = table.transpose()
+        df = table_T.to_dataframe()
         observed = flashweave(df)
         expected = read_gml(self.get_data_path("network-fw.gml"))
         self.assertTrue(iso.is_isomorphic(observed, expected))
