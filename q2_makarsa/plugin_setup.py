@@ -1,11 +1,15 @@
 from networkx import Graph, read_graphml, write_graphml
 from q2_types.feature_table import FeatureTable, Frequency
+import qiime2 as q2
+import pandas as pd
 from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str, List
 
 from ._network import Network, NetworkDirectoryFormat, NetworkFormat
+from ._network import NodeMapFormat, NodeMap, NodeDirectoryFormat
 from ._spieceasi import spiec_easi
 from ._flashweave import flashweave
 from ._visualisation import visualise_network
+from ._louvain import louvain_communities
 
 plugin = Plugin(
     name="makarsa",
@@ -214,4 +218,74 @@ plugin.methods.register_function(
         "FlashWeave predicts ecological interactions between microbes from "
         "large-scale compositional abundance data "
     ),
+)
+
+plugin.register_semantic_types(NodeMap)
+plugin.register_formats(NodeMapFormat, NodeDirectoryFormat)
+plugin.register_semantic_type_to_format(
+    NodeMap, artifact_format=NodeDirectoryFormat
+)
+
+
+def _nodemap_to_df(fh):
+    return pd.read_csv(fh, sep='\t', header=0, index_col=0, dtype='str')
+
+
+@plugin.register_transformer
+def _3(community: pd.DataFrame) -> NodeMapFormat:
+    ff = NodeMapFormat()
+    community.to_csv(str(ff), sep='\t', index=False)
+    return ff
+
+
+@plugin.register_transformer
+def _4(ff: NodeMapFormat) -> pd.DataFrame:
+    with ff.open() as fh:
+        return _nodemap_to_df(fh)
+
+
+@plugin.register_transformer
+def _5(ff: NodeMapFormat) -> q2.Metadata:
+    with ff.open() as fh:
+        df = _nodemap_to_df(fh)
+        return q2.Metadata(df)
+
+
+@plugin.register_transformer
+def _6(data: q2.Metadata) -> NodeMapFormat:
+    ff = NodeMapFormat()
+    data.to_csv(str(ff), sep='\t', index=False)
+    return ff
+
+
+plugin.methods.register_function(
+    function=louvain_communities,
+    inputs={"network": Network},
+    parameters={
+        "num_partitions": Int,
+        "remove_neg": Bool,
+        "deterministic": Bool,
+        "threshold": Float
+        },
+    outputs=[("community", NodeMap)],
+    input_descriptions={
+        'network': ('OTU co-ocurrence or co-abbundance network')
+    },
+    parameter_descriptions={
+        'num_partitions': 'Number of partitions to use to obatain'
+                          'the consensus.',
+        'remove_neg': 'Remove negative edges from the network'
+                      '[Default uses absolute value].',
+        'deterministic': 'Run code on deterministic mode.',
+        'threshold': 'Threshold value used to discard nodes that'
+                     'are not well supported in the consensus matrices'
+    },
+    output_descriptions={
+        'community': 'output file containing network nodes'
+        'and their respective communities.'
+        },
+    name='Louvain Community Detection',
+    description=("Obtain the consensus community partition of an OTU "
+                 "or co-abbundance network using the louvain algorithm."),
+
 )
