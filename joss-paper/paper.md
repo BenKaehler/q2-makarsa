@@ -167,11 +167,11 @@ website](https://isaactowers.github.io/q2-makarsa/).
 
 Many network visualisation tools exist. For instance, the SpiecEasi documentation recommends
 igraph [@csardi2006igraph] and the FlashWeave documentation recommends Cytoscape [@shannon2003cytoscape]
-or Gephi [@bastian2009gephi]. q2-makarsa differs from this approach by combining those inference
+or Gephi [@bastian2009gephi]. **q2-makarsa** differs from this approach by combining those inference
 tools with a customised visualisation tool and community detection without the need for the
 user to code in R or Julia.
 
-Other pipelines exist that are more similar to q2-makarsa, for instance MicNet [@favila2022micnet],
+Other pipelines exist that are more similar to **q2-makarsa**, for instance MicNet [@favila2022micnet],
 CoNet [@faust2016conet], and NetCoMi [@peschel2021netcomi]. MicNet offers a web interface, similar tools,
 and an active GitHub repository. CoNet is a Cytoscape plugin that can perform inference on microbial
 count data. NetCoMi is an R package that provides access to similar tools (notably SpiecEasi) and is also
@@ -179,7 +179,7 @@ actively maintained.
 
 These pipelines offer varying features. **q2-makarsa** is distinguished by being a plugin for the popular
 QIIME 2 microbiome bioinformatics platform, giving users access to multiple user interfaces, interactive 
-provenance tracking, interoperability, and other benefits. It also uniqeuly offers access to FlashWeave
+provenance tracking, interoperability, and other benefits. It also uniquely offers access to FlashWeave
 and consensus Louvain community detection.
 
 # Acknowledgements
