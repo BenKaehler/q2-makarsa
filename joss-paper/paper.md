@@ -72,9 +72,8 @@ network inference on their data.
 
 # Summary of functionality
 
-SpiecEasi has been widely adopted by the microbiome research community and
-has been cited in over 1000 scientific publications
-([Google Scholar](https://scholar.google.com.au/)). SpiecEasi
+SpiecEasi [@kurtz2015sparse] is widely recognised and enjoys broad adoption
+within the microbiome research community. SpiecEasi
 has been rigorously tested and benchmarked against other methods for microbial
 network analysis and has been shown to perform well across a variety of
 datasets and scenarios.
