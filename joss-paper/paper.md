@@ -25,7 +25,7 @@ affiliations:
     index: 1
   - name: Laboratory of Food Systems Biotechnology, Institute of Food, Nutrition, and Health, ETH Zürich, Zürich 8092, Switzerland
     index: 2
-date: April 2023
+date: June 2023
 bibliography: joss.bib
 ---
 
