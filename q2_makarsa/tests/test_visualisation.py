@@ -122,7 +122,7 @@ class TestVisualiseNetwork(TestPluginBase):
             self.assertTrue("Betweenness Centrality" in network.nodes[node_id])
             self.assertTrue("Closeness Centrality" in network.nodes[node_id])
             self.assertTrue("Eigenvector Centrality" in network.nodes[node_id])
-            self.assertTrue("Associativity" in network.nodes[node_id])
+            self.assertTrue("Assortativity" in network.nodes[node_id])
 
     def test_visualise_network(self):  # thanks ChatGPT
         network = nx.Graph()

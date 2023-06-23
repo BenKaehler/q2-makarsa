@@ -284,7 +284,7 @@ def annotate_node_stats(network):
         ('Betweenness Centrality', nx.betweenness_centrality),
         ('Closeness Centrality', nx.closeness_centrality),
         ('Eigenvector Centrality', nx.eigenvector_centrality),
-        ('Associativity', nx.assortativity.average_neighbor_degree)
+        ('Assortativity', nx.assortativity.average_neighbor_degree)
     ]
 
     for label, centrality_func in centralities:
