@@ -90,7 +90,7 @@
       "name": "color",
       "type": "ordinal",
       "domain": {"data": "node-data", "field": {"signal": "colorSelect"}, "sort": true},
-      "range": {"scheme": "category20c"}
+      "range": {"scheme": "plasma"}
     },
     {
       "name": "sizeScale",
