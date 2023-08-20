@@ -59,8 +59,9 @@ class TestVisualiseNetwork(TestPluginBase):
 
     def test_graph_to_spec(self):
         graphs, pairs, singles = get_connected_components(self.network)
-        observed = graph_to_spec(graphs[0])
+        display_attributes, observed = graph_to_spec(graphs[0])
         expected = self.load_json("spec.json")
+        self.assertObjectEqual(display_attributes, ["Feature"])
         self.assertObjectEqual(observed, expected)
 
     def test_get_connected_components(self):

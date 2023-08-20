@@ -101,9 +101,8 @@ TABCONTENT = """
 
     render{{ suffix }}(spec).catch(err => console.error(err));
 
-    var firstDatum = view{{ suffix }}.data('node-data')[0];
-    firstDatum = JSON.parse(JSON.stringify(firstDatum));
-    for (const key in firstDatum) {
+    var firstDatum = {};
+    for (const key of {{ display_attributes }}) {
       firstDatum[key] = "&lt select a node to display &gt";
     }
     var firstNodeSelect = {"datum": firstDatum};
@@ -117,15 +116,12 @@ TABCONTENT = """
       table.classList.add("table-striped");
       table.classList.add("table-hover");
 
-      for (const key in value.datum) {
-        if (key == "index" || key.startsWith('Taxon Level')) {
-            continue;
-        }
+      for (const key of {{ display_attributes }}) {
         row = table.insertRow(-1);
-        var cell = row.insertCell(-1)
-        cell.innerHTML = key
-        cell = row.insertCell(-1)
-        cell.innerHTML = value.datum[key]
+        var cell = row.insertCell(-1);
+        cell.innerHTML = key;
+        cell = row.insertCell(-1);
+        cell.innerHTML = value.datum[key];
       }
 
       var nodeTable = document.getElementById("nodeTable{{ suffix }}");
@@ -163,6 +159,22 @@ TABLECONTENT = """
 """
 
 
+def add_mv_distances(network, idx, nodes, links):
+    rev_idx = {b: a for a, b in idx.items()}
+    distances = dict(nx.shortest_path_length(network))
+    radius = 0
+    for a in nodes:
+        for b in nodes:
+            b[a["index"]] = \
+                distances[rev_idx[a["index"]]][rev_idx[b["index"]]]
+            radius = max(radius, b[a["index"]])
+        for link in links:
+            link[a["index"]] = max(
+                distances[rev_idx[a["index"]]][rev_idx[link["source"]]],
+                distances[rev_idx[a["index"]]][rev_idx[link["target"]]])
+    return radius
+
+
 def graph_to_spec(network):
     with open(TEMPLATES / "force-directed-layout.vg.json") as fh:
         spec = json.load(fh)
@@ -170,7 +182,10 @@ def graph_to_spec(network):
     attributes = pd.DataFrame([r for _, r in network.nodes(data=True)])
     colour_options = ["None"]
     size_options = ["None"]
+    display_attributes = []
     for key in attributes.columns:
+        if not key.startswith("Taxon Level"):
+            display_attributes.append(key)
         if key == "Feature":
             continue
         column = attributes[key]
@@ -184,17 +199,16 @@ def graph_to_spec(network):
     size_selector = {
         "name": "sizeSelect",
         "value": "None",
-        "bind": {"input": "select", "name": "size ", "options": []},
+        "bind": {"input": "select", "name": "size ", "options": size_options},
     }
-    size_selector["bind"]["options"] = size_options
     spec["signals"].insert(0, size_selector)
 
     colour_selector = {
         "name": "colorSelect",
         "value": "None",
-        "bind": {"input": "select", "name": "color ", "options": []},
+        "bind": {
+            "input": "select", "name": "color ", "options": colour_options},
     }
-    colour_selector["bind"]["options"] = colour_options
     spec["signals"].insert(0, colour_selector)
 
     nodes = nx.nodes(network)
@@ -210,11 +224,25 @@ def graph_to_spec(network):
             link["weight"] = abs(link["weight"])
     # "group" in nodes is currently being used for colour
     # "value" in links has been dropped. not sure whether it did anything
+
+    radius = add_mv_distances(network, idx, nodes, links)
+
+    spec["signals"].insert(2, {
+        "name": "focusRadius",
+        "value": 1,
+        "bind": {
+            "input": "range",
+            "min": 1,
+            "max": radius,
+            "step": 1,
+            "name": "focus radius"}})
+
     spec["data"] = [
         {"name": "node-data", "values": nodes},
         {"name": "link-data", "values": links},
     ]
-    return spec
+
+    return display_attributes, spec
 
 
 def get_connected_components(network):
@@ -329,10 +357,14 @@ def visualise_network(
             button = TABBUTTON.replace("{{ tabtitle }}", tabtitle)
             tab_buttons.append(button)
 
-            spec = json.dumps(graph_to_spec(graph), indent=1)
+            display_attributes, spec = graph_to_spec(graph)
+            display_attributes = json.dumps(display_attributes)
+            spec = json.dumps(spec, indent=1)
             content = TABCONTENT.replace("{{ tabtitle }}", tabtitle)
             content = content.replace("{{ suffix }}", f"{i+1}")
             content = content.replace("{{ spec }}", spec)
+            content = content.replace(
+                    "{{ display_attributes }}", display_attributes)
             tab_contents.append(content)
 
         if pairs:

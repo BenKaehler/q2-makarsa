@@ -58,18 +58,18 @@
       ]
     },
     {
-      "description": "Flag to highlight node and links",
-      "name": "active", "value": null,
-      "on": [
-        { "events": "symbol:mouseover", "update": "datum.index" },
-        { "events": "mouseover[!event.item]", "update": "null" }
-      ]
-    },
-    {
       "description": "Selection for node table",
       "name": "nodeSelect", "value": null,
       "on": [
-        { "events": "symbol:mousedown", "update": "item()" }
+        { "events": "symbol:click", "update": "item()" }
+      ]
+    },
+    {
+      "description": "Flag to highlight node and links",
+      "name": "focus", "value": null,
+      "on": [
+        { "events": "symbol:dblclick!", "update": "datum.index" },
+        { "events": "window:dblclick", "update": "null" }
       ]
     }
   ],
@@ -104,6 +104,13 @@
       "type": "linear",
       "domain": {"data": "link-data", "field": "weight"},
       "range": [0.5, {"signal": "linkWidth"}]
+    },
+    {
+      "name": "opacityScale",
+      "type": "log",
+      "reverse": true,
+      "domain": [1, 10],
+      "range": [0.1, 1]
     }
   ],
 
@@ -147,18 +154,14 @@
       ],
 
       "encode": {
-        "enter": {
-          "size": [{"test": "sizeSelect === 'None'", "signal": "2 * nodeRadius * nodeRadius"},
-		   {"scale": "sizeScale", "field": {"signal": "sizeSelect"}}],
-          "fill": {"scale": "color", "field": {"signal": "colorSelect"}},
-          "stroke": {"value": "white"}
-        },
         "update": {
           "size": [{"test": "sizeSelect === 'None'", "signal": "2 * nodeRadius * nodeRadius"},
 		   {"scale": "sizeScale", "field": {"signal": "sizeSelect"}}],
           "cursor": {"value": "pointer"},
-          "fill": [{"test": "datum.index === active", "value": "#999"},
-	           {"scale": "color", "field": {"signal": "colorSelect"}}]
+          "fill": [{"scale": "color", "field": {"signal": "colorSelect"}}],
+	  "opacity": [{"test": "focus === null", "value": 0.8},
+		      {"test": "datum[focus] <= focusRadius", "scale": "opacityScale", "field": {"signal": "focus"}},
+		      {"value": 0.1}]
         }
       },
 
@@ -185,11 +188,12 @@
       "interactive": false,
       "encode": {
         "update": {
-          "stroke": [{"test": "active != null && (datum.source.index == active || datum.target.index == active)",
-		      "value": "#999"},
-		     {"test": "datum.weight_sign < 0", "value": "#F17720"},
+          "stroke": [{"test": "datum.weight_sign < 0", "value": "#F17720"},
 		     {"value": "#00A7E1"}],
-          "strokeWidth": {"scale": "weightScale", "field": "weight"}
+          "strokeWidth": {"scale": "weightScale", "field": "weight"},
+	  "opacity": [{"test": "focus === null", "value": 0.8},
+		      {"test": "datum[focus] <= focusRadius", "scale": "opacityScale", "field": {"signal": "focus"}},
+		      {"value": 0.1}]
         }
       },
       "transform": [
