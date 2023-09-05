@@ -165,11 +165,11 @@ def add_mv_distances(network, idx, nodes, links):
     radius = 0
     for a in nodes:
         for b in nodes:
-            b[a["index"]] = \
-                distances[rev_idx[a["index"]]][rev_idx[b["index"]]]
-            radius = max(radius, b[a["index"]])
+            d = distances[rev_idx[a["index"]]][rev_idx[b["index"]]]
+            b[str(a["index"])] = d
+            radius = max(radius, d)
         for link in links:
-            link[a["index"]] = max(
+            link[str(a["index"])] = max(
                 distances[rev_idx[a["index"]]][rev_idx[link["source"]]],
                 distances[rev_idx[a["index"]]][rev_idx[link["target"]]])
     return radius
