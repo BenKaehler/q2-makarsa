@@ -13,7 +13,7 @@ from ._louvain import louvain_communities
 
 plugin = Plugin(
     name="makarsa",
-    version="0.0.0-dev",
+    version="0.0.1-dev",
     website="https://github.com/BenKaehler/q2-makarsa",
     package="q2_makarsa",
     description=(
