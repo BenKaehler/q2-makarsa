@@ -1,4 +1,4 @@
-#!/usr/bin/env julia --threads=4 
+#!/usr/bin/env julia 
 
 using FlashWeave
 using ArgParse
