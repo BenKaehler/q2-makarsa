@@ -13,22 +13,23 @@ from ._run_commands import run_commands
 
 def encode_metadata(metadata):
     encoded_metadata = []
-    for column in metadata.columns():
-        values = metadata.get_column()
+    for column in metadata.columns:
+        values = metadata.get_column(column)
 
         if isinstance(values, q2.CategoricalMetadataColumn):
-            values = q2.to_dataframe()
-        elif isinstance(values, q2.NumericalMetadataColumn):
-            values = q2.to_dataframe()
-            values = values >= values[0].median()
-            values.columns[0] = f"{values.columns[0]} High"
+            values = values.to_dataframe()
+        elif isinstance(values, q2.NumericMetadataColumn):
+            values = values.to_dataframe()
+            values = values >= values.iloc[:, 0].median()
+            values = values.replace({True: "High", False: "Low"})
 
         encoder = OneHotEncoder(sparse=False)
         encoded = encoder.fit_transform(values)
         columns = [f"{column} {c}" for c in encoder.categories_[0]]
         if len(columns) == 2:
-            encoded = encoded[:, 1]
-            columns = columns[1]
+            encoded = encoded[:, 1].reshape(-1, 1)
+            columns = [columns[1]]
+
         # Zeroes make the CLR transform (in SpiecEasi) fail.
         # Instead transform them so that post-CLR, the values
         # have (empirical) mean zero and variance of one.
@@ -41,7 +42,7 @@ def encode_metadata(metadata):
             encoded[:, i][zero_idx] = 1.
             encoded[:, i][ones_idx] = np.exp(D / np.sqrt(D0 * D1))
         encoded = biom.Table(
-            encoded, sample_ids=values.index, observation_ids=columns)
+            encoded.T, sample_ids=values.index, observation_ids=columns)
 
         encoded_metadata.append(encoded)
     return encoded_metadata
