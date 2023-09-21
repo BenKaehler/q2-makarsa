@@ -1,6 +1,6 @@
 #!/usr/bin/env julia 
 
-using Distributed; addprocs(4)
+using Distributed; addprocs()
 @everywhere using FlashWeave
 using ArgParse
 using GraphIO
