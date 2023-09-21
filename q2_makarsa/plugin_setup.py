@@ -56,6 +56,12 @@ plugin.visualizers.register_function(
     parameters={"metadata": Metadata},
     name="Visualize network",
     description="Create an interactive depiction of your network.",
+    input_descriptions={
+        "network": "network from flashweave or spiec-easi"
+    },
+    parameter_descriptions={
+        "metadata": "path to node metadata"
+    }
 )
 
 
@@ -63,6 +69,7 @@ plugin.methods.register_function(
     function=spiec_easi,
     inputs={"table": List[FeatureTable[Frequency]]},
     parameters={
+        "metadata": Metadata,
         "method": Str,
         "lambda_min_ratio": Float,
         "nlambda": Int,
@@ -86,6 +93,7 @@ plugin.methods.register_function(
         )
     },
     parameter_descriptions={
+        "metadata": "path to sample metadata",
         "method": "Methods available for spieceasi,for example mb,glasso,slr",
         "lambda_min_ratio": (
             "Input parameter of spieceasi which represents "
@@ -148,7 +156,7 @@ plugin.methods.register_function(
         )
     },
     parameter_descriptions={
-        "metadata": "a path which contain file of meta data of input data",
+        "metadata": "path to sample metadata",
         "heterogeneous": (
             "enable heterogeneous mode for multi-habitat or"
             "-protocol data with at least thousands of samples"

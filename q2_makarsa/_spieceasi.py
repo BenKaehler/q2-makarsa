@@ -4,12 +4,60 @@ from pathlib import Path
 
 from networkx import Graph, read_graphml
 import biom
+import qiime2 as q2
+import numpy as np
+from sklearn.preprocessing import OneHotEncoder
 
 from ._run_commands import run_commands
 
 
+def encode_metadata(metadata):
+    encoded_metadata = []
+    for column in metadata.columns:
+        values = metadata.get_column(column)
+
+        if isinstance(values, q2.CategoricalMetadataColumn):
+            values = values.to_dataframe()
+        elif isinstance(values, q2.NumericMetadataColumn):
+            values = values.to_dataframe()
+            values = values >= values.iloc[:, 0].median()
+            values = values.replace({True: "High", False: "Low"})
+
+        encoder = OneHotEncoder(sparse=False)
+        encoded = encoder.fit_transform(values)
+        columns = [f"{column} {c}" for c in encoder.categories_[0]]
+        if len(columns) == 2:
+            encoded = encoded[:, 1].reshape(-1, 1)
+            columns = [columns[1]]
+
+        # Zeroes make the CLR transform (in SpiecEasi) fail.
+        # Instead transform them so that post-CLR, the values
+        # have (empirical) mean zero and variance of one.
+        for i in range(encoded.shape[1]):
+            D = encoded.shape[0]
+            D1 = encoded[:, i].sum()
+            D0 = D - D1
+            zero_idx = encoded[:, i] == 0.
+            ones_idx = np.logical_not(zero_idx)
+            encoded[:, i][zero_idx] = 1.
+            encoded[:, i][ones_idx] = np.exp(D / np.sqrt(D0 * D1))
+        encoded = biom.Table(
+            encoded.T, sample_ids=values.index, observation_ids=columns)
+
+        encoded_metadata.append(encoded)
+    return encoded_metadata
+
+
+def write_table(i, directory, table):
+    table_file = str(directory / f"input-data-{i}.biom")
+    with biom.util.biom_open(table_file, 'w') as fh:
+        table.to_hdf5(fh, 'dummy')
+    return table_file
+
+
 def spiec_easi(
     table: biom.Table,
+    metadata: q2.Metadata = None,
     method: str = "glasso",
     lambda_min_ratio: float = 1e-3,
     nlambda: int = 20,
@@ -29,10 +77,11 @@ def spiec_easi(
         temp_dir = Path(temp_dir_name)
         table_files = []
         for i, one_table in enumerate(table):
-            table_file = str(temp_dir / f"input-data-{i}.biom")
-            table_files.append(table_file)
-            with biom.util.biom_open(table_file, 'w') as fh:
-                one_table.to_hdf5(fh, 'dummy')
+            table_files.append(write_table(i, temp_dir, one_table))
+        if metadata:
+            metadata_tables = encode_metadata(metadata)
+            for i, one_table in enumerate(metadata_tables, i + 1):
+                table_files.append(write_table(i, temp_dir, one_table))
         table_files = ', '.join(table_files)
         network_file = temp_dir / "network.mtx"
 
