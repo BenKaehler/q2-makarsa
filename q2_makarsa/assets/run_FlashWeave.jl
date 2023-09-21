@@ -1,6 +1,7 @@
 #!/usr/bin/env julia 
 
-using FlashWeave
+using Distributed; addprocs(4)
+@everywhere using FlashWeave
 using ArgParse
 using GraphIO
 
