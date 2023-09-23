@@ -25,28 +25,31 @@ class TestSpieceasi(TestPluginBase):
         self.assertTrue(iso.is_isomorphic(observed, expected))
 
     def test_encode_metadata(self):
+        sample_ids = list("ABCD")
         df = pd.DataFrame(
             {"foo": ["a", "b", "c", "a"], "bar": [1, 2, 3, 4]},
-            index=["A", "B", "C", "D"])
+            index=sample_ids)
         df.index.name = "feature id"
 
         metadata = q2.Metadata(df)
-        observed = encode_metadata(metadata)
+        observed = encode_metadata(sample_ids, metadata)
         observed = [t.to_dataframe().sparse.to_dense() for t in observed]
 
         expected = [
-            {'A': {'foo a': 7.38905609893065, 'foo b': 1.0, 'foo c': 1.0},
-             'B': {'foo a': 1.0, 'foo b': 10.06839265447596, 'foo c': 1.0},
-             'C': {'foo a': 1.0, 'foo b': 1.0, 'foo c': 10.06839265447596},
-             'D': {'foo a': 7.38905609893065, 'foo b': 1.0, 'foo c': 1.0}},
-            {'A': {'bar Low': 7.38905609893065},
-             'B': {'bar Low': 7.38905609893065},
-             'C': {'bar Low': 1.0},
-             'D': {'bar Low': 1.0}}
+            {
+                'A': {'foo a': 7.3421447164767955, 'foo b': 0.0, 'foo c': 0.0},
+                'B': {'foo a': 0.0, 'foo b': 7.3421447164767955, 'foo c': 0.0},
+                'C': {'foo a': 0.0, 'foo b': 0.0, 'foo c': 7.3421447164767955},
+                'D': {'foo a': 7.3421447164767955, 'foo b': 0.0, 'foo c': 0.0}
+            },
+            {
+                'A': {'bar High': 0.0, 'bar Low': 6.38905609893065},
+                'B': {'bar High': 0.0, 'bar Low': 6.38905609893065},
+                'C': {'bar High': 6.38905609893065, 'bar Low': 0.0},
+                'D': {'bar High': 6.38905609893065, 'bar Low': 0.0}
+            }
         ]
         expected = [pd.DataFrame(t) for t in expected]
 
-        print(observed[0].dtypes)
-        print(expected[1].dtypes)
         for o, e in zip(observed, expected):
             pd.testing.assert_frame_equal(o, e)
