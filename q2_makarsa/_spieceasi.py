@@ -84,8 +84,10 @@ def spiec_easi(
             sample_ids = one_table.ids(axis='sample')
         if metadata:
             metadata_tables = encode_metadata(sample_ids, metadata)
+            metadata_columns = []
             for i, one_table in enumerate(metadata_tables, i + 1):
                 table_files.append(write_table(i, temp_dir, one_table))
+                metadata_columns.extend(one_table.ids(axis='observation'))
         table_files = ', '.join(table_files)
         network_file = temp_dir / "network.mtx"
 
@@ -137,5 +139,9 @@ def spiec_easi(
                 "stdout and stderr to learn more."
             )
 
-        # EEE would be better to return this without reading it
-        return read_graphml(str(network_file))
+        graph = read_graphml(str(network_file))
+        if metadata:
+            for node in graph.nodes:
+                graph.nodes[node]["mv"] = \
+                    graph.nodes[node]["Feature"] in metadata_columns
+        return graph

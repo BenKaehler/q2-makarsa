@@ -189,7 +189,8 @@ def graph_to_spec(network):
         if key == "Feature":
             continue
         column = attributes[key]
-        if pd.api.types.is_integer_dtype(column):
+        if (pd.api.types.is_integer_dtype(column) or
+                pd.api.types.is_bool_dtype(column)):
             colour_options.append(key)
         elif pd.api.types.is_numeric_dtype(column):
             size_options.append(key)
