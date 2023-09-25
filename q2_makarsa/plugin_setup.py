@@ -146,6 +146,7 @@ plugin.methods.register_function(
         "prec": Int,
         "make_sparse": Bool,
         "update_interval": Float,
+        "num_procs": Int,
     },
     outputs=[("network", Network)],
     input_descriptions={
@@ -218,6 +219,10 @@ plugin.methods.register_function(
         "update_interval": (
             "if verbose=true, determines the interval (seconds) at which"
             " network stat updates are printed"
+        ),
+        "num_procs": (
+            "set the number of additional worker processes Julia should"
+            " use when running Flashweave"
         ),
     },
     output_descriptions={"network": "The inferred network"},
