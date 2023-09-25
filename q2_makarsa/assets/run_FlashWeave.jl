@@ -141,7 +141,9 @@ end
 opts = parseOpts()
 if opts["num_procs"]>0
     addprocs(opts["num_procs"])
+    @everywhere using FlashWeave
+else
+    using FlashWeave
 end
-@everywhere using FlashWeave
 
 main(opts)
