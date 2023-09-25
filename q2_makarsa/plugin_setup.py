@@ -171,13 +171,13 @@ plugin.methods.register_function(
         ),
         "max_k": (
             "maximum size of conditioning sets, high values can"
-            " stronglyincrease runtime. max_k=0 results in no conditioning"
+            " strongly increase runtime. max_k=0 results in no conditioning"
             " (univariate mode)"
         ),
         "alpha": "threshold used to determine statistical significance",
         "conv": (
             "convergence threshold, i.e. if conv=0.01 assume convergence if"
-            " the numberof edges increased by only 1% after 100% more runtime"
+            " the number of edges increased by only 1% after 100% more runtime"
             " (checked in intervals)"
         ),
         "feed_forward": "enable feed-forward heuristic,default = true ",
@@ -190,7 +190,7 @@ plugin.methods.register_function(
         ),
         "fdr": (
             "perform False Discovery Rate correction (Benjamini-Hochberg"
-            " method)on pairwise associations, default = true"
+            " method) on pairwise associations, default = true"
         ),
         "n_obs_min": (
             "don't compute associations between variables having less reliable"
@@ -223,7 +223,7 @@ plugin.methods.register_function(
         ),
         "num_procs": (
             "set the number of additional worker processes Julia should"
-            " use when running Flashweave"
+            " use when running Flashweave, default = 0"
         ),
     },
     output_descriptions={"network": "The inferred network"},

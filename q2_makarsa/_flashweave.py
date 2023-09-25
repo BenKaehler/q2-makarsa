@@ -62,9 +62,9 @@ def flashweave(
             str(prec),
             "--update_interval",
             str(update_interval),
-            "--verbose",
             "--num_procs",
             str(num_procs) 
+            "--verbose"
         ]
         if metadata:
             metadata = metadata.to_dataframe()
