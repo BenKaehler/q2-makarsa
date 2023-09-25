@@ -146,7 +146,6 @@ plugin.methods.register_function(
         "prec": Int,
         "make_sparse": Bool,
         "update_interval": Float,
-        # added by parallel execution
         "num_procs": Int,
     },
     outputs=[("network", Network)],
