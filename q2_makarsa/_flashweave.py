@@ -63,7 +63,7 @@ def flashweave(
             "--update_interval",
             str(update_interval),
             "--num_procs",
-            str(num_procs) 
+            str(num_procs),
             "--verbose"
         ]
         if metadata:
