@@ -29,6 +29,7 @@ def flashweave(
     prec: int = 64,
     make_sparse: bool = True,
     update_interval: float = 30,
+    # added for parallel execution
     num_procs: int = 0,
 ) -> Graph:
 
@@ -62,8 +63,8 @@ def flashweave(
             "--update_interval",
             str(update_interval),
             "--verbose",
-            str(num_procs), 
-            "--num_procs"
+            "--num_procs",
+            str(num_procs) 
         ]
         if metadata:
             metadata = metadata.to_dataframe()

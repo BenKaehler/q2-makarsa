@@ -146,6 +146,7 @@ plugin.methods.register_function(
         "prec": Int,
         "make_sparse": Bool,
         "update_interval": Float,
+        # added by parallel execution
         "num_procs": Int,
     },
     outputs=[("network", Network)],
@@ -282,10 +283,10 @@ plugin.methods.register_function(
         },
     outputs=[("community", NodeMap)],
     input_descriptions={
-        'network': ('OTU co-ocurrence or co-abbundance network')
+        'network': ('OTU co-occurrence or co-abundance network')
     },
     parameter_descriptions={
-        'num_partitions': 'Number of partitions to use to obatain'
+        'num_partitions': 'Number of partitions to use to obtain'
                           'the consensus.',
         'remove_neg': 'Remove negative edges from the network'
                       '[Default uses absolute value].',
@@ -299,6 +300,6 @@ plugin.methods.register_function(
         },
     name='Louvain Community Detection',
     description=("Obtain the consensus community partition of an OTU "
-                 "or co-abbundance network using the louvain algorithm."),
+                 "or co-abundance network using the louvain algorithm."),
 
 )
