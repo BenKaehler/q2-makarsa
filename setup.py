@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="q2-makarsa",
-    version="0.0.0-dev",
+    version="0.0.1-dev",
     packages=find_packages(),
     author="Zakir Hossine, Isaac Towers, Ben Kaehler",
     description="Build webs, maybe understand microbiomes.",

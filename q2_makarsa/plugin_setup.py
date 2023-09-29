@@ -13,7 +13,7 @@ from ._louvain import louvain_communities
 
 plugin = Plugin(
     name="makarsa",
-    version="0.0.0-dev",
+    version="0.0.1-dev",
     website="https://github.com/BenKaehler/q2-makarsa",
     package="q2_makarsa",
     description=(
@@ -149,6 +149,7 @@ plugin.methods.register_function(
         "prec": Int,
         "make_sparse": Bool,
         "update_interval": Float,
+        "num_procs": Int,
     },
     outputs=[("network", Network)],
     input_descriptions={
@@ -173,13 +174,13 @@ plugin.methods.register_function(
         ),
         "max_k": (
             "maximum size of conditioning sets, high values can"
-            " stronglyincrease runtime. max_k=0 results in no conditioning"
+            " strongly increase runtime. max_k=0 results in no conditioning"
             " (univariate mode)"
         ),
         "alpha": "threshold used to determine statistical significance",
         "conv": (
             "convergence threshold, i.e. if conv=0.01 assume convergence if"
-            " the numberof edges increased by only 1% after 100% more runtime"
+            " the number of edges increased by only 1% after 100% more runtime"
             " (checked in intervals)"
         ),
         "feed_forward": "enable feed-forward heuristic,default = true ",
@@ -192,7 +193,7 @@ plugin.methods.register_function(
         ),
         "fdr": (
             "perform False Discovery Rate correction (Benjamini-Hochberg"
-            " method)on pairwise associations, default = true"
+            " method) on pairwise associations, default = true"
         ),
         "n_obs_min": (
             "don't compute associations between variables having less reliable"
@@ -222,6 +223,10 @@ plugin.methods.register_function(
         "update_interval": (
             "if verbose=true, determines the interval (seconds) at which"
             " network stat updates are printed"
+        ),
+        "num_procs": (
+            "set the number of additional worker processes Julia should"
+            " use when running Flashweave, default = 0"
         ),
     },
     output_descriptions={"network": "The inferred network"},
@@ -281,10 +286,10 @@ plugin.methods.register_function(
         },
     outputs=[("community", NodeMap)],
     input_descriptions={
-        'network': ('OTU co-ocurrence or co-abbundance network')
+        'network': ('OTU co-occurrence or co-abundance network')
     },
     parameter_descriptions={
-        'num_partitions': 'Number of partitions to use to obatain'
+        'num_partitions': 'Number of partitions to use to obtain'
                           'the consensus.',
         'remove_neg': 'Remove negative edges from the network'
                       '[Default uses absolute value].',
@@ -298,6 +303,6 @@ plugin.methods.register_function(
         },
     name='Louvain Community Detection',
     description=("Obtain the consensus community partition of an OTU "
-                 "or co-abbundance network using the louvain algorithm."),
+                 "or co-abundance network using the louvain algorithm."),
 
 )

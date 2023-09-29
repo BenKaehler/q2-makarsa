@@ -30,6 +30,8 @@ def flashweave(
     prec: int = 64,
     make_sparse: bool = True,
     update_interval: float = 30,
+    # added for parallel execution
+    num_procs: int = 0,
 ) -> Graph:
 
     with tempfile.TemporaryDirectory() as temp_dir_name:
@@ -61,6 +63,8 @@ def flashweave(
             str(prec),
             "--update_interval",
             str(update_interval),
+            "--num_procs",
+            str(num_procs),
             "--verbose"
         ]
         if metadata:
