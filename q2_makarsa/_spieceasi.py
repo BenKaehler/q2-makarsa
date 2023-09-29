@@ -11,9 +11,11 @@ from sklearn.preprocessing import OneHotEncoder
 from ._run_commands import run_commands
 
 
-def encode_metadata(sample_ids, metadata):
+def encode_metadata(sample_ids, metadata, metadata_column):
     encoded_metadata = []
     for column in metadata.columns:
+        if metadata_column and column not in metadata_column:
+            continue
         values = metadata.get_column(column)
 
         is_numeric = isinstance(values, q2.NumericMetadataColumn)
@@ -61,6 +63,7 @@ def write_table(i, directory, table):
 def spiec_easi(
     table: biom.Table,
     metadata: q2.Metadata = None,
+    metadata_column: list = None,
     method: str = "glasso",
     lambda_min_ratio: float = 1e-3,
     nlambda: int = 20,
@@ -83,7 +86,8 @@ def spiec_easi(
             table_files.append(write_table(i, temp_dir, one_table))
             sample_ids = one_table.ids(axis='sample')
         if metadata:
-            metadata_tables = encode_metadata(sample_ids, metadata)
+            metadata_tables = encode_metadata(
+                sample_ids, metadata, metadata_column)
             metadata_columns = []
             for i, one_table in enumerate(metadata_tables, i + 1):
                 table_files.append(write_table(i, temp_dir, one_table))

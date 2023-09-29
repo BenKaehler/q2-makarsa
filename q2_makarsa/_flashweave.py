@@ -12,6 +12,7 @@ from ._run_commands import run_commands
 def flashweave(
     table: pd.DataFrame,
     metadata: qiime2.Metadata = None,
+    metadata_column: list = None,
     # defaults copied from FlashWeave.jl/src/learning.jl
     heterogeneous: bool = False,
     sensitive: bool = True,
@@ -64,6 +65,8 @@ def flashweave(
         ]
         if metadata:
             metadata = metadata.to_dataframe()
+            if metadata_column:
+                metadata = metadata[metadata_column]
             if set(table.index) <= set(metadata.index):
                 metadata = metadata.reindex(table.index)
                 metadata_file = temp_dir / "meta-input-data.tsv"

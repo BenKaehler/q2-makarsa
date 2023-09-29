@@ -70,6 +70,7 @@ plugin.methods.register_function(
     inputs={"table": List[FeatureTable[Frequency]]},
     parameters={
         "metadata": Metadata,
+        "metadata_column": List[Str],
         "method": Str,
         "lambda_min_ratio": Float,
         "nlambda": Int,
@@ -94,6 +95,7 @@ plugin.methods.register_function(
     },
     parameter_descriptions={
         "metadata": "path to sample metadata",
+        "metadata_column": "only use this or these column or columns",
         "method": "Methods available for spieceasi,for example mb,glasso,slr",
         "lambda_min_ratio": (
             "Input parameter of spieceasi which represents "
@@ -130,6 +132,7 @@ plugin.methods.register_function(
     inputs={"table": FeatureTable[Frequency]},
     parameters={
         "metadata": Metadata,
+        "metadata_column": List[Str],
         "heterogeneous": Bool,
         "sensitive": Bool,
         "max_k": Int,
@@ -157,6 +160,7 @@ plugin.methods.register_function(
     },
     parameter_descriptions={
         "metadata": "path to sample metadata",
+        "metadata_column": "only use this or these column or columns",
         "heterogeneous": (
             "enable heterogeneous mode for multi-habitat or"
             "-protocol data with at least thousands of samples"
