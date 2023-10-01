@@ -26,8 +26,8 @@ jobs:
 
     - name: Create conda environment
       run: |
-        wget https://data.qiime2.org/distro/core/qiime2-2023.2-py38-linux-conda.yml
-        mamba env create -n makarsa-test --file qiime2-2023.2-py38-linux-conda.yml
+        wget https://data.qiime2.org/distro/core/qiime2-2023.7-py38-linux-conda.yml
+        mamba env create -n makarsa-test --file qiime2-2023.7-py38-linux-conda.yml
         mamba init
         
     - name: Install SpiecEasi
