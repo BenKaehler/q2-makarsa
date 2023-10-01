@@ -1,11 +1,10 @@
-#!/usr/bin/env julia
+#!/usr/bin/env julia 
 
-using FlashWeave
+using Distributed
 using ArgParse
 using GraphIO
 
-
-function main()
+function parseOpts()
     # Create ArgParse settings object
     s = ArgParseSettings()
 
@@ -79,11 +78,17 @@ function main()
         help = "if verbose=true, determines the interval (seconds) at which network stat updates are printed"
         arg_type = Float64
         default = 30.0
+        "--num_procs"
+        help = "set the number of additional worker processes"
+        arg_type = Int
+        default = 0
     end
 
-    # Parse command line arguments
-    args = parse_args(s)
+    return parse_args(s)
+end
 
+
+function main(args)
     # Access the values of the arguments
     input_file = args["datapath"]
     input_meta = args["metadatapath"]
@@ -129,8 +134,16 @@ function main()
         update_interval = update_interval,
     )
 
-
     save_network(output, netw_results)
 end
 
-main()
+# create additional worker processes
+opts = parseOpts()
+if opts["num_procs"]>0
+    addprocs(opts["num_procs"])
+    @everywhere using FlashWeave
+else
+    using FlashWeave
+end
+
+main(opts)
