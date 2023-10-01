@@ -1,5 +1,6 @@
 from networkx import Graph, read_graphml, write_graphml
 from q2_types.feature_table import FeatureTable, Frequency
+from q2_types.metadata import ImmutableMetadata
 import qiime2 as q2
 import pandas as pd
 from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str, List
@@ -10,6 +11,7 @@ from ._spieceasi import spiec_easi
 from ._flashweave import flashweave
 from ._visualisation import visualise_network
 from ._louvain import louvain_communities
+from ._neighbours import list_neighbours
 
 plugin = Plugin(
     name="makarsa",
@@ -300,4 +302,23 @@ plugin.methods.register_function(
     description=("Obtain the consensus community partition of an OTU "
                  "or co-abbundance network using the louvain algorithm."),
 
+)
+
+plugin.methods.register_function(
+    function=list_neighbours,
+    inputs={"network": Network},
+    parameters={"feature_id": Str, "metadata": Metadata},
+    outputs=[("neighbours", ImmutableMetadata)],
+    input_descriptions={
+        "network": "The network to search."
+    },
+    parameter_descriptions={
+        "metadata": "Any additional metadata to include in the output.",
+        "feature_id": "The feature for which to list neighbours."
+    },
+    output_descriptions={
+        "neighbours": "The neighbours of the feature, with metadata."
+    },
+    name="List neighbours",
+    description="List the neighbours of a node in a network."
 )

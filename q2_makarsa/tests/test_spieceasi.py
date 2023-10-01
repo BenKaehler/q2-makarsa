@@ -32,7 +32,7 @@ class TestSpieceasi(TestPluginBase):
         df.index.name = "feature id"
 
         metadata = q2.Metadata(df)
-        observed = encode_metadata(sample_ids, metadata)
+        observed = encode_metadata(sample_ids, metadata, [])
         observed = [t.to_dataframe().sparse.to_dense() for t in observed]
 
         expected = [
