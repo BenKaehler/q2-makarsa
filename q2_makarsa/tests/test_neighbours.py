@@ -1,5 +1,3 @@
-import json
-
 from networkx import read_graphml
 from qiime2.plugin.testing import TestPluginBase
 import qiime2 as q2
