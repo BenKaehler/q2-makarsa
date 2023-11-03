@@ -19,5 +19,20 @@ class TestNeighbours(TestPluginBase):
             sep='\t', header=0, index_col=0)
         metadata.index.name = "feature id"
         metadata = q2.Metadata(metadata)
-        observed = list_neighbours(network, "PfvSC", metadata).to_dataframe()
+        observed = list_neighbours(
+            network, "PfvSC", metadata=metadata).to_dataframe()
+        pd.testing.assert_frame_equal(observed, expected)
+
+    def test_list_neighbours_with_radius(self):
+        expected = pd.read_csv(
+            self.get_data_path("neighbourhood.tsv"),
+            sep='\t', header=0, index_col=0)
+        network = read_graphml(self.get_data_path("network.graphml"))
+        metadata = pd.read_csv(
+            self.get_data_path("louvain.tsv"),
+            sep='\t', header=0, index_col=0)
+        metadata.index.name = "feature id"
+        metadata = q2.Metadata(metadata)
+        observed = list_neighbours(
+            network, "rbpyb", radius=3, metadata=metadata).to_dataframe()
         pd.testing.assert_frame_equal(observed, expected)

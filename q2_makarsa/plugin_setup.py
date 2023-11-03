@@ -312,14 +312,15 @@ plugin.methods.register_function(
 plugin.methods.register_function(
     function=list_neighbours,
     inputs={"network": Network},
-    parameters={"feature_id": Str, "metadata": Metadata},
+    parameters={"feature_id": Str, "radius": Int, "metadata": Metadata},
     outputs=[("neighbours", ImmutableMetadata)],
     input_descriptions={
         "network": "The network to search."
     },
     parameter_descriptions={
         "metadata": "Any additional metadata to include in the output.",
-        "feature_id": "The feature for which to list neighbours."
+        "feature_id": "The feature for which to list neighbours.",
+        "radius": "Include neighbourhood up to radius away."
     },
     output_descriptions={
         "neighbours": "The neighbours of the feature, with metadata."
