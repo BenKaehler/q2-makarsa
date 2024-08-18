@@ -92,7 +92,8 @@ TABCONTENT = """
 <div id="{{ tabtitle }}" class="tabcontent">
 
   <div id="nodeTable{{ suffix }}"></div>
-  <button onclick="exportPNG{{ suffix }}()">Download as PNG</button>
+  <button onclick="exportImage{{ suffix }}('png')">Download as PNG</button>
+  <button onclick="exportImage{{ suffix }}('svg')">Download as SVG</button>
   <p></p>
   <div id="view{{ suffix }}"></div>
   <script type="text/javascript">
@@ -139,12 +140,17 @@ TABCONTENT = """
     }
 
     /* thanks https://stackoverflow.com/a/70395566 */
-    function exportPNG{{ suffix }}(){
-      view{{ suffix }}.toImageURL('png').then(function(url) {
+    function exportImage{{ suffix }}(format){
+      if (format !== 'png' && format !== 'svg') {
+        console.error('Unsupported format: ' + format);
+        return;
+      }
+
+      view{{ suffix }}.toImageURL(format).then(function(url) {
         var link = document.createElement('a');
         link.setAttribute('href', url);
         link.setAttribute('target', '_blank');
-        link.setAttribute('download', 'network.png');
+        link.setAttribute('download', 'network.' + format);
         link.dispatchEvent(new MouseEvent('click'));
       }).catch(err => console.error(err));
     }
