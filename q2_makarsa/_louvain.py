@@ -1,5 +1,6 @@
 import networkx as nx
 import pandas as pd
+from joblib import Parallel, delayed
 
 
 def louvain_communities(
@@ -7,6 +8,8 @@ def louvain_communities(
                         num_partitions: int = 100,
                         remove_neg: bool = False,
                         deterministic: bool = False,
+                        num_jobs: int = 1,
+                        max_iter: int = 100,
                         threshold: float = 0.3
                         ) -> pd.DataFrame:
     # load data and create network graph
@@ -38,14 +41,22 @@ def louvain_communities(
                          num_partitions: int = 100,
                          deterministic: bool = False):
         louvain_sum = pd.DataFrame()
-        for i in range(num_partitions):
+
+        def process_partition(i):
             if deterministic is False:
                 best_partition = nx.community.louvain_communities(network)
             else:
                 best_partition = nx.community.louvain_communities(
                     network, seed=i)
-            louvain_df = list_to_dataframe(best_partition)
-            # Add partitons
+            return list_to_dataframe(best_partition)
+
+        # Run partitions in parallel
+        louvain_dfs = Parallel(n_jobs=num_jobs)(
+            delayed(process_partition)(i) for i in range(num_partitions)
+        )
+
+        # Sum up the partitions
+        for louvain_df in louvain_dfs:
             louvain_sum = louvain_sum.add(louvain_df, fill_value=0)
         # Divide by the total number of partitions
         louvain_sum = louvain_sum.applymap(divide_nonzero)
@@ -101,21 +112,27 @@ def louvain_communities(
             if consensus_1.isin([0, 1]).all().all():
                 # convert to networkx community format
                 final_consensus = consensus_to_nodemap(consensus_1)
-                print("Converged at iteration %d \n" % count)
+                print(f"Converged at iteration {count}")
                 break
         # Apply threshold to set variables to 0
         consensus_1 = threshold_filter(consensus_1, threshold)
         # Convert to networkx graph
         graph = nx.from_pandas_adjacency(consensus_1)
         consensus_2 = consensus_matrix(graph, num_partitions, deterministic)
-        if consensus_2.isin([0, 1]).all().all():
+        if consensus_2.isin([0, 1]).all().all() or count == max_iter:
+            if count == max_iter:
+                print("Max iterations reached")
+            else:
+                print(f"Converged at iteration {count}")
             # convert to networkx community format
             final_consensus = consensus_to_nodemap(consensus_2)
             different_consensus = False
-            print("Converged at iteration %d \n" % count)
         else:
             consensus_1 = consensus_2
             count += 1
+            print(f"Iteration {count}:")
+            print(f"{consensus_2.isin([0, 1]).sum().sum()} "
+                  f"true out of {consensus_2.size}")
 
     # Convert to final format in dictionary keys-nodes values-community
     final_partition = pd.DataFrame({

@@ -27,6 +27,17 @@ NetworkDirectoryFormat = model.SingleFileDirectoryFormat(
 Network = qiime2.plugin.SemanticType("Network")
 
 
+class GraphicalModelDirectoryFormat(model.DirectoryFormat):
+    network = model.File("network.graphml", format=NetworkFormat)
+    clr_mean = model.File("clr_mean.tsv", format=model.TextFileFormat)
+    partial_precision = model.File(
+        "partial_precision.tsv", format=model.TextFileFormat
+    )
+
+
+GraphicalModel = qiime2.plugin.SemanticType("GraphicalModel")
+
+
 class NodeMapFormat(model.TextFileFormat):
     def _validate_(self, level):
         try:

@@ -5,7 +5,9 @@ import qiime2 as q2
 import pandas as pd
 from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str, List
 
-from ._network import Network, NetworkDirectoryFormat, NetworkFormat
+from ._network import (
+    Network, NetworkDirectoryFormat, NetworkFormat, GraphicalModel,
+    GraphicalModelDirectoryFormat)
 from ._network import NodeMapFormat, NodeMap, NodeDirectoryFormat
 from ._spieceasi import spiec_easi
 from ._flashweave import flashweave
@@ -33,11 +35,13 @@ plugin = Plugin(
     #    'citations.bib', package='q2_dada2'
 )
 
-plugin.register_semantic_types(Network)
-plugin.register_formats(NetworkDirectoryFormat, NetworkFormat)
+plugin.register_semantic_types(Network, GraphicalModel)
+plugin.register_formats(
+    NetworkDirectoryFormat, NetworkFormat, GraphicalModelDirectoryFormat)
 plugin.register_semantic_type_to_format(
-    Network, artifact_format=NetworkDirectoryFormat
-)
+    Network, artifact_format=NetworkDirectoryFormat)
+plugin.register_semantic_type_to_format(
+    GraphicalModel, artifact_format=GraphicalModelDirectoryFormat)
 
 
 @plugin.register_transformer
@@ -50,6 +54,11 @@ def _1(network: Graph) -> NetworkFormat:
 @plugin.register_transformer
 def _2(ff: NetworkFormat) -> Graph:
     return read_graphml(str(ff))
+
+
+@plugin.register_transformer
+def _7(ff: GraphicalModelDirectoryFormat) -> Graph:
+    return read_graphml(str(ff.network))
 
 
 plugin.visualizers.register_function(
@@ -284,6 +293,8 @@ plugin.methods.register_function(
         "num_partitions": Int,
         "remove_neg": Bool,
         "deterministic": Bool,
+        "num_jobs": Int,
+        "max_iter": Int,
         "threshold": Float
         },
     outputs=[("community", NodeMap)],
@@ -293,9 +304,12 @@ plugin.methods.register_function(
     parameter_descriptions={
         'num_partitions': 'Number of partitions to use to obtain'
                           'the consensus.',
-        'remove_neg': 'Remove negative edges from the network'
+        'remove_neg': 'Remove negative edges from the network '
                       '[Default uses absolute value].',
         'deterministic': 'Run code on deterministic mode.',
+        'num_jobs': 'Number of jobs to run in parallel.',
+        'max_iter': 'Maximum number of iterations to run the Louvain'
+                    'algorithm.',
         'threshold': 'Threshold value used to discard nodes that'
                      'are not well supported in the consensus matrices'
     },
