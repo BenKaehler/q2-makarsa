@@ -1,6 +1,9 @@
 import networkx as nx
 import pandas as pd
 from joblib import Parallel, delayed
+from scipy.sparse import csr_matrix, lil_matrix
+import numpy as np
+from scipy.sparse.csgraph import connected_components
 
 
 def louvain_communities(
@@ -12,10 +15,32 @@ def louvain_communities(
                         max_iter: int = 100,
                         threshold: float = 0.3
                         ) -> pd.DataFrame:
-    # load data and create network graph
-
+    """
+    Perform Louvain community detection on a networkx graph.
+    Parameters
+    ----------
+    network : nx.Graph
+        The input graph.
+    num_partitions : int, optional
+        The number of partitions to create. Default is 100.
+    remove_neg : bool, optional
+        If True, remove negative edges from the graph. Default is False.
+    deterministic : bool, optional
+        If True, use a deterministic seed for the random number generator.
+        Default is False.
+    num_jobs : int, optional
+        The number of parallel jobs to run. Default is 1.
+    max_iter : int, optional
+        The maximum number of iterations to run. Default is 100.
+    threshold : float, optional
+        The threshold for filtering the consensus matrix. Default is 0.3.
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the feature IDs and their corresponding
+        community assignments.
+    """
     def remove_negative_edges(G):
-        # Remove the negative edges from the graph
         G_new = nx.Graph()
         G_new.add_nodes_from(G.nodes())
         for u, v, weight in G.edges(data='weight'):
@@ -23,121 +48,106 @@ def louvain_communities(
                 G_new.add_edge(u, v, weight=weight)
         return G_new
 
-    # Get absolute weights of the graph
     def absolute_value_edges(G):
-        for u, v, data in G.edges(data=True):
+        for _, __, data in G.edges(data=True):
             data['weight'] = abs(data['weight'])
         return G
 
-    if remove_neg is True:
+    if remove_neg:
         network = remove_negative_edges(network)
     else:
         network = absolute_value_edges(network)
 
-    def divide_nonzero(x):
-        return x / num_partitions if x != 0 else 0
+    nodes = list(network.nodes)
+    node_idx = {node: i for i, node in enumerate(nodes)}
 
-    def consensus_matrix(network,  # Networkx graph object
-                         num_partitions: int = 100,
-                         deterministic: bool = False):
-        louvain_sum = pd.DataFrame()
+    def consensus_matrix(network, num_partitions=100, deterministic=False):
+        n = len(nodes)
+        louvain_sum = lil_matrix((n, n), dtype=np.float64)
 
         def process_partition(i):
-            if deterministic is False:
-                best_partition = nx.community.louvain_communities(network)
-            else:
-                best_partition = nx.community.louvain_communities(
+            if deterministic:
+                partition = nx.community.louvain_communities(
                     network, seed=i)
-            return list_to_dataframe(best_partition)
+            else:
+                partition = nx.community.louvain_communities(network)
+            return list_to_sparse_matrix(partition)
 
         # Run partitions in parallel
-        louvain_dfs = Parallel(n_jobs=num_jobs)(
+        louvain_matrices = Parallel(n_jobs=num_jobs)(
             delayed(process_partition)(i) for i in range(num_partitions)
         )
 
         # Sum up the partitions
-        for louvain_df in louvain_dfs:
-            louvain_sum = louvain_sum.add(louvain_df, fill_value=0)
-        # Divide by the total number of partitions
-        louvain_sum = louvain_sum.applymap(divide_nonzero)
-        return louvain_sum
+        for louvain_matrix in louvain_matrices:
+            louvain_sum += louvain_matrix
 
-    def threshold_filter(c_matrix,  # Consensus matrix obtained with
-                         threshold: float = 0.3):
-        c_matrix[c_matrix < threshold] = 0
-        return c_matrix
+        # Divide by the total number of partitions
+        louvain_sum = louvain_sum.multiply(1 / num_partitions)
+        return csr_matrix(louvain_sum)
+
+    def threshold_filter(c_matrix, threshold=0.3):
+        thresholded = c_matrix.multiply(c_matrix >= threshold)
+        thresholded.eliminate_zeros()
+        return thresholded
 
     def consensus_to_nodemap(c_matrix):
-        # convert matrix to graph
-        graph = nx.from_pandas_adjacency(c_matrix)
-        # Obtain communities in Networkx format by iterating over the nodes
-        communities = []
-        visited = set()
-        for node in graph.nodes:
-            if node not in visited:
-                community = set(nx.neighbors(graph, node)) | {node}
-                visited |= community
-                communities.append(community)
-        # Obtain nodemap
-        dic = {}
-        for num, comm in enumerate(communities):
-            for node in comm:
-                dic[node] = num
-        return dic
+        _, labels = connected_components(
+            c_matrix, connection='strong')
+        return {nodes[idx]: label for idx, label in enumerate(labels)}
 
-    def list_to_dataframe(
-                        community_list: list):
-        # Obtain a set of the nodes in the list
-        nodes_set = set()
-        for comm in community_list:
-            nodes_set.update(comm)
-        # Create dataframe for the partition
-        df = pd.DataFrame(columns=list(nodes_set))
-        for node in nodes_set:
-            for comm in community_list:
-                if node in comm:
-                    li = [1 if x in comm else 0 for x in nodes_set]
-                    df.loc[node] = li
-                    break
-        return df
+    def list_to_sparse_matrix(community_list):
+        n = len(nodes)
+        sparse_matrix = lil_matrix((n, n), dtype=np.float64)
+        for community in community_list:
+            indices = [node_idx[node] for node in community]
+            for i in indices:
+                for j in indices:
+                    sparse_matrix[i, j] = 1
+        return sparse_matrix
+    
+    def sparse_matrix_to_graph(sparse_matrix):
+        graph = nx.Graph()
+        sparse_matrix.eliminate_zeros()
+        rows, cols = sparse_matrix.nonzero()
+        for row, col in zip(rows, cols):
+            graph.add_edge(
+                nodes[row], nodes[col], weight=sparse_matrix[row, col])
+        return graph
 
-    # Flag variable to change when the consenus is reached
     different_consensus = True
     count = 1
-    while (different_consensus):
+    while different_consensus:
         if count == 1:
             consensus_1 = consensus_matrix(
-                    network, num_partitions, deterministic)
-            # Check if all the partitions are the same
-            if consensus_1.isin([0, 1]).all().all():
-                # convert to networkx community format
+                network, num_partitions, deterministic)
+            consensus_1.eliminate_zeros()
+            if (consensus_1 == 1).sum() == consensus_1.nnz:
                 final_consensus = consensus_to_nodemap(consensus_1)
-                print(f"Converged at iteration {count}")
                 break
-        # Apply threshold to set variables to 0
         consensus_1 = threshold_filter(consensus_1, threshold)
-        # Convert to networkx graph
-        graph = nx.from_pandas_adjacency(consensus_1)
+        graph = sparse_matrix_to_graph(consensus_1)
         consensus_2 = consensus_matrix(graph, num_partitions, deterministic)
-        if consensus_2.isin([0, 1]).all().all() or count == max_iter:
+        consensus_2.eliminate_zeros()
+        if (consensus_2 == 1).sum() == consensus_2.nnz or count == max_iter:
             if count == max_iter:
                 print("Max iterations reached")
             else:
                 print(f"Converged at iteration {count}")
-            # convert to networkx community format
             final_consensus = consensus_to_nodemap(consensus_2)
             different_consensus = False
         else:
             consensus_1 = consensus_2
             count += 1
             print(f"Iteration {count}:")
-            print(f"{consensus_2.isin([0, 1]).sum().sum()} "
-                  f"true out of {consensus_2.size}")
+            total_elements = consensus_2.shape[0] * consensus_2.shape[1]
+            ok_elements = (consensus_2 == 1).sum() + \
+                total_elements - consensus_2.nnz
+            print(f"{ok_elements} true out of {total_elements}")
 
-    # Convert to final format in dictionary keys-nodes values-community
     final_partition = pd.DataFrame({
         'feature id': [network.nodes[k]['Feature'] for k in final_consensus],
         'Community': final_consensus.values()
-        })
+    })
 
     return final_partition
