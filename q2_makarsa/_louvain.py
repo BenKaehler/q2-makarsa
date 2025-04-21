@@ -1,9 +1,11 @@
 import networkx as nx
+from community import community_louvain
 import pandas as pd
 from joblib import Parallel, delayed
 from scipy.sparse import csr_matrix, lil_matrix
 import numpy as np
 from scipy.sparse.csgraph import connected_components
+from collections import defaultdict
 
 
 def louvain_communities(
@@ -63,56 +65,62 @@ def louvain_communities(
 
     def consensus_matrix(network, num_partitions=100, deterministic=False):
         n = len(nodes)
-        louvain_sum = lil_matrix((n, n), dtype=np.float64)
 
         def process_partition(i):
             if deterministic:
-                partition = nx.community.louvain_communities(
-                    network, seed=i)
+                partition = community_louvain.best_partition(
+                    network, random_state=i)
             else:
-                partition = nx.community.louvain_communities(network)
-            return list_to_sparse_matrix(partition)
+                partition = community_louvain.best_partition(network)
+            return partition_to_sparse_matrix(partition)
 
         # Run partitions in parallel
         louvain_matrices = Parallel(n_jobs=num_jobs)(
             delayed(process_partition)(i) for i in range(num_partitions)
         )
 
-        # Sum up the partitions
+        louvain_sum = csr_matrix((n, n), dtype=np.float64)
         for louvain_matrix in louvain_matrices:
-            louvain_sum += louvain_matrix
+            louvain_sum = louvain_sum + louvain_matrix  # Use csr_matrix for efficient addition
 
         # Divide by the total number of partitions
         louvain_sum = louvain_sum.multiply(1 / num_partitions)
         return csr_matrix(louvain_sum)
 
     def threshold_filter(c_matrix, threshold=0.3):
-        thresholded = c_matrix.multiply(c_matrix >= threshold)
-        thresholded.eliminate_zeros()
-        return thresholded
+        # Retain only elements above the threshold
+        c_matrix.data[c_matrix.data < threshold] = 0
+        c_matrix.eliminate_zeros()
+        return c_matrix
 
     def consensus_to_nodemap(c_matrix):
         _, labels = connected_components(
             c_matrix, connection='strong')
         return {nodes[idx]: label for idx, label in enumerate(labels)}
 
-    def list_to_sparse_matrix(community_list):
+    def partition_to_sparse_matrix(partition):
         n = len(nodes)
         sparse_matrix = lil_matrix((n, n), dtype=np.float64)
-        for community in community_list:
-            indices = [node_idx[node] for node in community]
+
+        # Group nodes by community
+        communities = defaultdict(list)
+        for node, community in partition.items():
+            communities[community].append(node)
+
+        # Fill the sparse matrix
+        for community_nodes in communities.values():
+            indices = [node_idx[node] for node in community_nodes]
             for i in indices:
-                for j in indices:
-                    sparse_matrix[i, j] = 1
+                sparse_matrix[i, indices] = 1  # Vectorized assignment
         return sparse_matrix
     
     def sparse_matrix_to_graph(sparse_matrix):
         graph = nx.Graph()
         sparse_matrix.eliminate_zeros()
         rows, cols = sparse_matrix.nonzero()
-        for row, col in zip(rows, cols):
-            graph.add_edge(
-                nodes[row], nodes[col], weight=sparse_matrix[row, col])
+        for row, col, weight in zip(rows, cols, sparse_matrix.data):
+            if weight > 0:  # Only add edges with positive weights
+                graph.add_edge(nodes[row], nodes[col], weight=weight)
         return graph
 
     different_consensus = True
@@ -122,7 +130,7 @@ def louvain_communities(
             consensus_1 = consensus_matrix(
                 network, num_partitions, deterministic)
             consensus_1.eliminate_zeros()
-            if (consensus_1 == 1).sum() == consensus_1.nnz:
+            if np.all(consensus_1.data == 1):
                 final_consensus = consensus_to_nodemap(consensus_1)
                 break
         consensus_1 = threshold_filter(consensus_1, threshold)
