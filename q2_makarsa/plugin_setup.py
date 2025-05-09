@@ -5,9 +5,7 @@ import qiime2 as q2
 import pandas as pd
 from qiime2.plugin import Bool, Float, Int, Metadata, Plugin, Str, List
 
-from ._network import (
-    Network, NetworkDirectoryFormat, NetworkFormat, GraphicalModel,
-    GraphicalModelDirectoryFormat)
+from ._network import Network, NetworkDirectoryFormat, NetworkFormat
 from ._network import NodeMapFormat, NodeMap, NodeDirectoryFormat
 from ._spieceasi import spiec_easi
 from ._flashweave import flashweave
@@ -35,13 +33,10 @@ plugin = Plugin(
     #    'citations.bib', package='q2_dada2'
 )
 
-plugin.register_semantic_types(Network, GraphicalModel)
-plugin.register_formats(
-    NetworkDirectoryFormat, NetworkFormat, GraphicalModelDirectoryFormat)
+plugin.register_semantic_types(Network)
+plugin.register_formats(NetworkDirectoryFormat, NetworkFormat)
 plugin.register_semantic_type_to_format(
     Network, artifact_format=NetworkDirectoryFormat)
-plugin.register_semantic_type_to_format(
-    GraphicalModel, artifact_format=GraphicalModelDirectoryFormat)
 
 
 @plugin.register_transformer
@@ -54,11 +49,6 @@ def _1(network: Graph) -> NetworkFormat:
 @plugin.register_transformer
 def _2(ff: NetworkFormat) -> Graph:
     return read_graphml(str(ff))
-
-
-@plugin.register_transformer
-def _7(ff: GraphicalModelDirectoryFormat) -> Graph:
-    return read_graphml(str(ff.network))
 
 
 plugin.visualizers.register_function(
