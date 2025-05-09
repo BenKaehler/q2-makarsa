@@ -84,10 +84,10 @@ conda install -c bioconda -c conda-forge r-spieceasi julia
 julia -e 'using Pkg; Pkg.add(["FlashWeave", "ArgParse", "GraphIO"])'
 ```
 
-**Optional:** To speed up Louvain community detection, you can install the python-louvain package:
+**Optional:** To speed up Louvain community detection, you can install the scikit-network package:
 
 ```bash
-conda install -c conda-forge python-louvain
+pip install scikit-network
 ```
 
 In the same conda environment pip install from the q2-makarsa github repo:

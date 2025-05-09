@@ -8,12 +8,14 @@ import q2_makarsa._louvain
 class TestLouvain(TestPluginBase):
     package = "q2_makarsa.tests"
 
-    def test_defaults(self):
+    def test_scikit_network(self):
+        if not q2_makarsa._louvain.scikit_network:
+            return  # scikit_network is not installed
         network = read_graphml(self.get_data_path("network.graphml"))
         observed = q2_makarsa._louvain.louvain_communities(
             network=network, deterministic=True)
         expected = read_csv(
-            self.get_data_path("louvain.tsv"), sep='\t', header=0)
+            self.get_data_path("skn-louvain.tsv"), sep='\t', header=0)
         observed = self.dataframe_to_partition(observed)
         expected = self.dataframe_to_partition(expected)
         print(f"Observed: {observed}")
@@ -42,9 +44,9 @@ class TestLouvain(TestPluginBase):
         Convert a DataFrame to a partition dictionary.
         """
         partitions = set()
-        for parttions in df['Community'].unique():
+        for partition in df['Community'].unique():
             partitions.add(
-                frozenset(df[df['Community'] == parttions]['feature id']))
+                frozenset(df[df['Community'] == partition]['feature id']))
         return partitions
 
     def test_graph_to_sparse_matrix(self):
@@ -56,7 +58,8 @@ class TestLouvain(TestPluginBase):
         self.assertEqual(len(network.nodes), len(round_trip.nodes))
         self.assertEqual(len(network.edges), len(round_trip.edges))
         for u, v in network.edges:
-            self.assertEqual(network[u][v]['weight'], round_trip[u][v]['weight'])
+            self.assertEqual(
+                network[u][v]['weight'], round_trip[u][v]['weight'])
         for u, v in round_trip.edges:
-            self.assertEqual(network[u][v]['weight'], round_trip[u][v]['weight'])
-        
+            self.assertEqual(
+                network[u][v]['weight'], round_trip[u][v]['weight'])
