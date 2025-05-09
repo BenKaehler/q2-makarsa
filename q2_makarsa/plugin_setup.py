@@ -36,8 +36,7 @@ plugin = Plugin(
 plugin.register_semantic_types(Network)
 plugin.register_formats(NetworkDirectoryFormat, NetworkFormat)
 plugin.register_semantic_type_to_format(
-    Network, artifact_format=NetworkDirectoryFormat
-)
+    Network, artifact_format=NetworkDirectoryFormat)
 
 
 @plugin.register_transformer
@@ -281,9 +280,13 @@ plugin.methods.register_function(
     function=louvain_communities,
     inputs={"network": Network},
     parameters={
-        "num_partitions": Int,
+        "num_partitions_consensus": Int,
+        "num_partitions_convergence": Int,
         "remove_neg": Bool,
         "deterministic": Bool,
+        "num_jobs_consensus": Int,
+        "num_jobs_convergence": Int,
+        "max_iter": Int,
         "threshold": Float
         },
     outputs=[("community", NodeMap)],
@@ -291,12 +294,23 @@ plugin.methods.register_function(
         'network': ('OTU co-occurrence or co-abundance network')
     },
     parameter_descriptions={
-        'num_partitions': 'Number of partitions to use to obtain'
-                          'the consensus.',
-        'remove_neg': 'Remove negative edges from the network'
+        'num_partitions_consensus': 'Number of partitions to use to obtain '
+                                    'initial consensus on input graph.',
+        'num_partitions_convergence': 'Number of partitions to use when '
+                                      'iterating on consensus graph. Much '
+                                      'more cpu intensive than initial '
+                                      'consensus.',
+        'remove_neg': 'Remove negative edges from the network '
                       '[Default uses absolute value].',
         'deterministic': 'Run code on deterministic mode.',
-        'threshold': 'Threshold value used to discard nodes that'
+        'num_jobs_consensus': 'Number of jobs to run in parallel to obtain '
+                              'initial consensus.',
+        'num_jobs_convergence': 'Number of jobs to run in parallel when '
+                                'iterating on consensus graph. Much more '
+                                'memory intensive than initial consensus.',
+        'max_iter': 'Maximum number of iterations to run the Louvain '
+                    'algorithm.',
+        'threshold': 'Threshold value used to discard nodes that '
                      'are not well supported in the consensus matrices'
     },
     output_descriptions={

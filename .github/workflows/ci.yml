@@ -37,6 +37,11 @@ jobs:
         mamba install -y -c conda-forge -c bioconda r-spieceasi flake8 julia
         julia -e 'using Pkg; Pkg.add(["FlashWeave", "ArgParse", "GraphIO"])'
 
+    - name: Install scikit-network
+      run: |
+        source /home/runner/.bashrc
+        pip install scikit-network
+
     - name: Install Makarsa
       run: |
         source /home/runner/.bashrc

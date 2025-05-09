@@ -79,21 +79,27 @@ is outdated, please navigate there in the latest QIIME 2
 Make sure your conda environment is activated (as described in the QIIME 2
 installation instructions), then install the dependencies:
 
-```
+```bash
 conda install -c bioconda -c conda-forge r-spieceasi julia
 julia -e 'using Pkg; Pkg.add(["FlashWeave", "ArgParse", "GraphIO"])'
 ```
 
+**Optional:** To speed up Louvain community detection, you can install the scikit-network package:
+
+```bash
+pip install scikit-network
+```
+
 In the same conda environment pip install from the q2-makarsa github repo:
 
-```
+```bash
 pip install git+https://github.com/BenKaehler/q2-makarsa.git
 ```
 
 ## Usage Examples
 
 From within the conda environment create a working folder and move into it
-```
+```bash
 mkdir plugin-example
 cd plugin-example/
 ```
@@ -110,8 +116,8 @@ sponges.
 
 Download the data
 
-``` wget
-https://github.com/ramellose/networktutorials/raw/master/Workshop%202021/sponges/Suberitida.biom
+```bash
+wget https://github.com/ramellose/networktutorials/raw/master/Workshop%202021/sponges/Suberitida.biom
 ```
 <details><summary>File details</summary>
 The data file is in BIOM format with the following attributes
@@ -131,7 +137,7 @@ The data file is in BIOM format with the following attributes
 
 The next step is to import the BIOM file as a frequency [FeatureTable](https://docs.qiime2.org/2022.8/semantic-types/) within QIIME 2.
 
-```
+```bash
 qiime tools import \
     --input-path Suberitida.biom \
     --type 'FeatureTable[Frequency]' \
@@ -148,7 +154,7 @@ the microbial network. The most minimal command to generate the network
 requires the name of artefact containing the FeatureTable and the name of the
 intended output artefact containing the inferred network. 
 
-```
+```bash
 qiime makarsa spiec-easi \
     --i-table sponge-feature-table.qza \
     --o-network sponge-net.qza
@@ -157,7 +163,7 @@ qiime makarsa spiec-easi \
 From the ```sponge-net.qza``` network artefact a visualisation can be created
 and then viewed
 
-```
+```bash
 qiime makarsa visualise-network \
     --i-network sponge-net.qza \
     --o-visualization sponge-net.qzv
@@ -194,7 +200,7 @@ parameter switch and one of 3 keywords:
 For example to infer the network from the example data using the MB method
 execute the command
 
-```
+```bash
 qiime makarsa spiec-easi \ 
    --i-table sponge-feature-table.qza \ 
    --o-network sponge-net.qza \ 
@@ -220,19 +226,19 @@ The lambda range is sampled logarithmically  ```--p-nlambda``` times.
 Alternatively, we can use FlashWeave to infer the network. The commands are
 similar. Create the network.
 
-```
+```bash
 qiime makarsa flashweave \
     --i-table sponge-feature-table.qza \
     --o-network sponge-fw-net.qza
 ```
 Then generate the visualisation.
-```
+```bash
 qiime makarsa visualise-network \
     --i-network sponge-fw-net.qza \
     --o-visualization sponge-fw-net.qzv
 ```
 View the visualisation as usual
-```
+```bash
 qiime tools view sponge-net.qzv
 ```
 
@@ -245,14 +251,14 @@ co-occurring features. This is useful for, e.g., grouping these features
 for downstream analyses. For module detection, q2-makarsa employs the 
 [Louvain method](https://doi.org/10.1088%2F1742-5468%2F2008%2F10%2FP10008).
 
-```
+```bash
 qiime makarsa louvain-communities \
    --i-network sponge-net.qza \
    --o-community node-map.qza
 ```
 
 Now you can colour your nodes by community.
-```
+```bash
 qiime makarsa visualise-network \
     --i-network sponge-net.qza \
     --m-metadata-file node-map.qza \
@@ -261,7 +267,7 @@ qiime makarsa visualise-network \
 
 Alternatively you can view the resulting node map (showing which features belong to 
 each module).
-```
+```bash
 qiime metadata tabulate \
    --m-input-file node-map.qza \
    --o-visualization node-map.qzv
@@ -270,7 +276,7 @@ qiime metadata tabulate \
 The node map can be input as feature metadata to other QIIME 2 actions. For
 example, the following action can be used to group the features in a feature
 table based on their community affiliation.
-```
+```bash
 qiime feature-table group \
 	--i-table sponge-feature-table.qza \
 	--p-axis feature \
